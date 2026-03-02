@@ -66,16 +66,16 @@ rules:
   - report_cost_before_heavy: true
 ```
 
-### brother-routing.yaml
+### multi-agent-routing.yaml (Template)
 ```yaml
-# Multi-agent coordination
+# Multi-agent coordination - SESUAIKAN DENGAN KEBUTUHAN KAMU
 agents:
-  radit:
+  main:
     role: orchestrator
     handles: [general, coordination, default]
     priority: 1
 
-  raka:
+  creative:
     role: creative
     handles:
       - content_creation
@@ -85,7 +85,7 @@ agents:
       - marketing
     keywords: [content, marketing, brand, copy, creative]
 
-  rama:
+  analytical:
     role: analytical
     handles:
       - data_analysis
@@ -94,7 +94,7 @@ agents:
       - forecasting
     keywords: [data, analysis, research, report, forecast]
 
-  rafi:
+  technical:
     role: technical
     handles:
       - coding
@@ -106,48 +106,49 @@ agents:
 routing_rules:
   - check_keywords_first: true
   - parallel_if_multiple_domains: true
-  - default_to_radit: true
+  - default_to_main: true
 ```
 
 ---
 
 ## ⏰ Cron Templates
 
-### crontab-automation.txt
+### crontab-automation.txt (Template)
 ```bash
 # OpenClaw Automation Cron Jobs
 # Install: crontab crontab-automation.txt
+# GANTI PATH DAN SCRIPT SESUAI SETUP KAMU
 
 # Git auto-sync (every 15 min)
-*/15 * * * * cd /root/.openclaw/workspace && git pull && git push 2>/dev/null
+*/15 * * * * cd ~/.openclaw/workspace && git pull && git push 2>/dev/null
 
 # Morning briefing (07:00 WITA = 23:00 UTC)
-0 23 * * * /root/.openclaw/workspace-radit/skills/morning-briefing/scripts/generate.sh --send
+0 23 * * * ~/.openclaw/workspace/skills/morning-briefing/scripts/generate.sh --send
 
 # Gold price check (08:00, 10:10, 18:00 WITA)
-0 0,2,10 * * * /root/.openclaw/workspace-radit/scripts/gold-price-monitor.sh
+0 0,2,10 * * * ~/.openclaw/scripts/gold-price-monitor.sh
 
-# UNO Attendance (weekdays 08:15 WITA)
-15 0 * * 1-5 python3 /root/.openclaw/workspace-radit/automation/uno-attendance.py $(date -u -d '+8 hours' +%Y-%m-%d) | jq -r '.report' | telegram-send
+# Attendance report (weekdays 08:15 WITA)
+15 0 * * 1-5 ~/.openclaw/scripts/attendance-report.sh
 
 # Night shift janitor (01:00)
-0 17 * * * /root/.openclaw/workspace-radit/scripts/night-shift-janitor.sh
+0 17 * * * ~/.openclaw/scripts/night-shift-janitor.sh
 
 # Service health check (every 5 min)
-*/5 * * * * /root/.openclaw/workspace-radit/scripts/service-health-check.sh
+*/5 * * * * ~/.openclaw/scripts/service-health-check.sh
 
 # SSH login monitor (every minute)
-* * * * * /root/.openclaw/workspace-radit/scripts/ssh-login-monitor.sh
+* * * * * ~/.openclaw/scripts/ssh-login-monitor.sh
 ```
 
 ---
 
 ## 🔌 Integration Configs
 
-### n8n-webhooks.yaml
+### n8n-webhooks.yaml (Template)
 ```yaml
-# n8n Integration Endpoints
-base_url: https://n8n-po9vt01k.sumopod.my
+# n8n Integration Endpoints - GANTI DENGAN URL KAMU SENDIRI
+base_url: https://your-n8n-instance.com
 webhooks:
   gmail_read: /webhook/gmail-read
   gmail_send: /webhook/gmail-send
@@ -163,30 +164,30 @@ circuit_breaker:
   cooldown_seconds: 60
 ```
 
-### telegram-bots.yaml
+### telegram-bots.yaml (Template)
 ```yaml
-# Multi-agent Telegram bots
+# Multi-agent Telegram bots - GANTI DENGAN BOT KAMU SENDIRI
 bots:
-  radit:
-    token: ${RADIT_BOT_TOKEN}
-    handle: @RaditClaw_bot
+  main:
+    token: ${MAIN_BOT_TOKEN}
+    handle: @YourMainBot_username
     
-  raka:
-    token: ${RAKA_BOT_TOKEN}
-    handle: @RakaClaw_bot
+  creative:
+    token: ${CREATIVE_BOT_TOKEN}
+    handle: @YourCreativeBot_username
     
-  rama:
-    token: ${RAMA_BOT_TOKEN}
-    handle: @RamaClaw_bot
+  analytical:
+    token: ${ANALYTICAL_BOT_TOKEN}
+    handle: @YourAnalyticalBot_username
     
-  rafi:
-    token: ${RAFI_BOT_TOKEN}
-    handle: @RafiClaw_bot
+  technical:
+    token: ${TECHNICAL_BOT_TOKEN}
+    handle: @YourTechnicalBot_username
 
 group_settings:
-  sumopod_main:
-    id: -1001234567890
-    bots: [radit, raka, rama, rafi]
+  your_group:
+    id: -1001234567890  # GANTI DENGAN GROUP ID KAMU
+    bots: [main, creative, analytical, technical]
 ```
 
 ---
@@ -754,4 +755,4 @@ Punya konfigurasi yang bisa dishare? [Tambahkan ke examples/](../../tree/main/do
 
 ---
 
-*Templates by: @fanani-radian*
+*Templates by: Sumopod Community*

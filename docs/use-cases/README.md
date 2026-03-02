@@ -248,25 +248,24 @@ actions:
 
 ## 🤖 Multi-Agent Coordination
 
-**By:** @fanani-radian  
-**Use Case:** 4 agents dengan spesialisasi berbeda
+**Use Case:** Multiple agents dengan spesialisasi berbeda
 
 ### Overview
 | Agent | Role | Tasks |
 |-------|------|-------|
-| **Radit** | Main | Orchestration, general tasks |
-| **Raka** | Creative | Content, marketing, copywriting |
-| **Rama** | Analytical | Data analysis, research |
-| **Rafi** | Technical | Coding, infrastructure |
+| **Main** | Orchestrator | General, coordination |
+| **Creative** | Creative | Content, marketing, copywriting |
+| **Analytical** | Analytical | Data analysis, research |
+| **Technical** | Technical | Coding, infrastructure |
 
 ### Routing Logic
 ```yaml
-# config/brother-routing.yaml
+# config/multi-agent-routing.yaml
 routes:
   creative: ["content", "marketing", "social media", "copy"]
   analytical: ["data", "research", "report", "analysis"]
   technical: ["code", "deploy", "server", "bug"]
-  default: "radit"
+  default: "main"
 ```
 
 ---
@@ -525,13 +524,8 @@ Prediksi: Arsenal 60% - MU 40%
 
 ## 🏢 Private/Company Use Cases
 
-> 📝 **Note:** Use cases berikut bersifat private/company-specific dan tidak dishare di repo public.
-> Jika kamu adalah member organisasi yang sama, hubungi admin untuk akses ke dokumentasi internal.
-
-### Contoh use case private:
-- **Attendance Report** - Internal HR system integration
-- **Morning Briefing** - Company-specific daily summary
-- **Custom ERP Integration** - Internal business system
+> 📝 **Note:** Use cases berikut bersifat private/company-specific dan **TIDAK** ada di repo public.
+> Contoh: Attendance Report, Custom ERP Integration, dll.
 
 ---
 

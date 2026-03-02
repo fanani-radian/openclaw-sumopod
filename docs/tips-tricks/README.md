@@ -491,4 +491,4 @@ Punya tips lain? [Tambahkan ke repo](../../issues/new?template=tips.md)
 
 ---
 
-*Contributors: @fanani-radian, [add yours!]*
+*Contributors: Sumopod Community*
