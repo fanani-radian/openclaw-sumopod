@@ -8,8 +8,14 @@ Kumpulan video tutorial tentang OpenClaw dari komunitas Sumopod.
 
 Video-tutorial lengkap tentang OpenClaw Sumopod & Telegram integration.
 
+---
+
 ### 1. Introduction to OpenClaw Sumopod
-**🎬 Watch:** https://www.youtube.com/watch?v=npGVBw1FFrU  
+
+[![Introduction to OpenClaw](https://img.youtube.com/vi/npGVBw1FFrU/mqdefault.jpg)](https://www.youtube.com/watch?v=npGVBw1FFrU)
+
+**▶️ [Watch on YouTube](https://www.youtube.com/watch?v=npGVBw1FFrU)**
+
 **📋 Summary:**  
 Overview lengkap tentang OpenClaw, apa itu AI agent framework, dan bagaimana Sumopod menggunakan OpenClaw untuk otomasi.
 
@@ -22,7 +28,11 @@ Overview lengkap tentang OpenClaw, apa itu AI agent framework, dan bagaimana Sum
 ---
 
 ### 2. Setup & Installation
-**🎬 Watch:** https://www.youtube.com/watch?v=hn6yc6dvJ3A  
+
+[![Setup & Installation](https://img.youtube.com/vi/hn6yc6dvJ3A/mqdefault.jpg)](https://www.youtube.com/watch?v=hn6yc6dvJ3A)
+
+**▶️ [Watch on YouTube](https://www.youtube.com/watch?v=hn6yc6dvJ3A)**
+
 **📋 Summary:**  
 Panduan step-by-step instalasi OpenClaw di VPS Sumopod, dari zero to running.
 
@@ -36,7 +46,11 @@ Panduan step-by-step instalasi OpenClaw di VPS Sumopod, dari zero to running.
 ---
 
 ### 3. Telegram Bot Integration
-**🎬 Watch:** https://www.youtube.com/watch?v=qgShz6HGZjI  
+
+[![Telegram Bot Integration](https://img.youtube.com/vi/qgShz6HGZjI/mqdefault.jpg)](https://www.youtube.com/watch?v=qgShz6HGZjI)
+
+**▶️ [Watch on YouTube](https://www.youtube.com/watch?v=qgShz6HGZjI)**
+
 **📋 Summary:**  
 Cara menghubungkan OpenClaw dengan Telegram Bot untuk komunikasi dua arah.
 
@@ -50,7 +64,11 @@ Cara menghubungkan OpenClaw dengan Telegram Bot untuk komunikasi dua arah.
 ---
 
 ### 4. Advanced Configuration
-**🎬 Watch:** https://www.youtube.com/watch?v=mdXbOPcwnoo  
+
+[![Advanced Configuration](https://img.youtube.com/vi/mdXbOPcwnoo/mqdefault.jpg)](https://www.youtube.com/watch?v=mdXbOPcwnoo)
+
+**▶️ [Watch on YouTube](https://www.youtube.com/watch?v=mdXbOPcwnoo)**
+
 **📋 Summary:**  
 Konfigurasi advanced untuk optimize OpenClaw performance dan fitur-fitur powerful.
 
@@ -64,7 +82,11 @@ Konfigurasi advanced untuk optimize OpenClaw performance dan fitur-fitur powerfu
 ---
 
 ### 5. Tips, Tricks & Real-world Use Cases
-**🎬 Watch:** https://www.youtube.com/watch?v=jRtxAWNDPvQ  
+
+[![Tips & Tricks](https://img.youtube.com/vi/jRtxAWNDPvQ/mqdefault.jpg)](https://www.youtube.com/watch?v=jRtxAWNDPvQ)
+
+**▶️ [Watch on YouTube](https://www.youtube.com/watch?v=jRtxAWNDPvQ)**
+
 **📋 Summary:**  
 Tips praktis dan contoh penggunaan nyata OpenClaw di Sumopod.
 
