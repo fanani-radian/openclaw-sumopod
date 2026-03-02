@@ -219,90 +219,6 @@ actions:
 
 ---
 
-## 🏢 UNO Attendance Report
-
-**By:** @fanani-radian  
-**Use Case:** Daily attendance report otomatis
-
-### Overview
-Setiap weekday jam 8:15 AM, agent:
-1. Fetch data absensi dari sistem UNO
-2. Generate report (who's in, late, absent)
-3. Kirim ke Telegram group
-
-### Tools Used
-- Internal UNO API
-- Telegram Bot API
-- Cron scheduler
-
-### Key Script
-```bash
-# scripts/uno-attendance.sh
-python3 uno-attendance.py $(date +%Y-%m-%d) | \
-  jq -r '.report' | \
-  telegram-send --format markdown
-```
-
----
-
-## 📊 Gold Price Monitor
-
-**By:** @fanani-radian  
-**Use Case:** Track harga emas real-time
-
-### Overview
-- Fetch harga Antam dari LogamMulia.com
-- Cache dengan TTL 5 menit
-- Alert kalau perubahan > 2%
-- Auto-share ke WhatsApp/Telegram
-
-### Tools Used
-- Scrapling (bypass Cloudflare)
-- Redis cache
-- WhatsApp API
-- Telegram Bot
-
-### Key Config
-```python
-# config/gold-monitor.yaml
-sources:
-  - logammulia:
-      url: "https://www.logammulia.com/id/harga-emas-hari-ini"
-      method: "scrapling"
-  - hargaemas:
-      url: "https://hargaemas.com"
-      method: "fetch"
-cache_ttl: 300  # 5 minutes
-alert_threshold: 0.02  # 2%
-notifications:
-  - whatsapp
-  - telegram
-```
-
----
-
-## 🌅 Morning Briefing
-
-**By:** @fanani-radian  
-**Use Case:** Daily summary otomatis
-
-### Overview
-Setiap pagi jam 7 AM WITA, kirim briefing:
-- 📧 Unread emails summary
-- 📅 Calendar events hari ini
-- 📋 Pending tasks
-- 💰 Gold price
-- 🖥️ Server health
-- 🏢 UNO attendance (weekdays)
-
-### Tools Used
-- Gmail API
-- Google Calendar
-- Google Tasks
-- Custom gold/attendance scripts
-
----
-
 ## 🔒 Security Monitoring
 
 **By:** @fanani-radian  
@@ -352,6 +268,18 @@ routes:
   technical: ["code", "deploy", "server", "bug"]
   default: "radit"
 ```
+
+---
+
+## 🏢 Private/Company Use Cases
+
+> 📝 **Note:** Use cases berikut bersifat private/company-specific dan tidak dishare di repo public.
+> Jika kamu adalah member organisasi yang sama, hubungi admin untuk akses ke dokumentasi internal.
+
+### Contoh use case private:
+- **Attendance Report** - Internal HR system integration
+- **Morning Briefing** - Company-specific daily summary
+- **Custom ERP Integration** - Internal business system
 
 ---
 
