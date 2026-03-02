@@ -72,20 +72,87 @@ Kalo udah dapet tulisan **$0.99/month** atau **¥7/month** → **BUY IMMEDIATELY
 
 ## 🔑 Dapatkan API Key
 
-### Untuk Kimi Code (Recommended)
+### Jenis API Key
+
+Ada **2 jenis** API Key Kimi yang berbeda:
+
+| Jenis | Dari Platform | Prefix | Digunakan di OpenClaw Onboard |
+|-------|--------------|--------|------------------------------|
+| **Kimi Code API Key** | kimi.com/code | `sk-...` | Pilih **[3] Kimi coding** |
+| **Moonshot API Key** | platform.moonshot.cn | `sk-...` | Pilih **[1] AI** atau **[2] China** |
+
+> ⚠️ **Walaupun prefix sama (`sk-`)**, kedua key ini **tidak interchangeable**! Key dari kimi.com/code tidak bisa dipakai di platform.moonshot.cn, dan sebaliknya.
+
+### Untuk Kimi Code (Recommended - $0.99/mo)
+
+Kalau udah berhasil nego harga $0.99/month:
 
 1. **Login** ke [kimi.com/code](https://kimi.com/code)
 2. **Subscribe** dengan harga nego ($0.99)
 3. **Go to Settings** → API Keys
 4. **Generate new key**
 5. **Copy** key-nya (starts with `sk-`)
+6. **Saat onboard OpenClaw** → Pilih **[3] Kimi coding**
 
-### Untuk Moonshot (Alternative)
+### Untuk Moonshot (PAYG)
+
+Kalau prefer pay-as-you-go:
 
 1. **Register** di [platform.moonshot.cn](https://platform.moonshot.cn)
 2. **Top up** dengan Alipay/WeChat/CC
 3. **Create API Key** di dashboard
 4. **Copy** key-nya
+5. **Saat onboard OpenClaw** → Pilih **[1] AI** atau **[2] China**
+
+---
+
+## 🚀 OpenClaw Onboard - Pilihan Model Kimi
+
+Saat pertama kali setup OpenClaw via terminal, kamu akan ditanya untuk memilih model Kimi. Ada **3 pilihan**:
+
+```
+[1] AI
+[2] China  
+[3] Kimi coding
+```
+
+### Penjelasan Pilihan:
+
+| Pilihan | Platform | Tipe | Keterangan |
+|---------|----------|------|------------|
+| **AI** | Moonshot | PAYG | API key pay-as-you-go |
+| **China** | Moonshot | PAYG | Route China ( sama aja, beda endpoint ) |
+| **Kimi coding** | Kimi Code | Subscription | API key subscription ($0.99/mo) |
+
+### Pilih yang Mana?
+
+**✅ Pilih [3] Kimi coding** kalau:
+- Udah subscribe Kimi Code dengan harga nego $0.99/month
+- Mau pakai subscription API key
+- Ini yang **recommended** untuk OpenClaw!
+
+**⚠️ Pilih [1] AI atau [2] China** kalau:
+- Pakai Moonshot platform (platform.moonshot.cn)
+- Top up saldo pay-as-you-go
+- Budget usage tinggi/bervariasi
+
+### Contoh Onboard:
+
+```bash
+$ openclaw onboard
+
+Pilih AI provider:
+> [1] AI
+  [2] China
+  [3] Kimi coding
+
+Select: 3  ← Pilih ini untuk subscription!
+
+Masukkan API Key: sk-your-kimi-code-key-here
+✅ Connected to kimi-coding/k2p5
+```
+
+> 💡 **Note:** "AI" dan "China" itu sama-sama Moonshot, cuma beda route/endpoint. Kalau udah subscribe Kimi Code, **wajib pilih "Kimi coding"**!
 
 ---
 
