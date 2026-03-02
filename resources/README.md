@@ -11,7 +11,8 @@ Kumpulan video, link, dan referensi tentang OpenClaw.
 - [OpenClaw Tutorials](https://www.youtube.com/playlist?list=xxx) - Tutorial series
 
 ### Community (Sumopod)
-- *Coming soon* - Submit your videos!
+- [📺 OpenClaw Sumopod Tutorials](./youtube-tutorials.md) - Video series by Kodingworks
+- *Submit your videos!*
 
 ### Related Topics
 - [Claude AI](https://www.youtube.com/@Anthropic) - Official Anthropic channel
