@@ -333,6 +333,264 @@ Thumbs.db
 
 ---
 
+## 🔧 All Config Options Reference
+
+Complete list of what can be configured in OpenClaw.
+
+---
+
+### openclaw.yaml (Main Config)
+
+```yaml
+# ~/.openclaw/config/openclaw.yaml
+
+# Gateway Settings
+gateway:
+  host: "0.0.0.0"
+  port: 8080                    # Change if port conflict
+  workers: 4                    # Number of worker processes
+  timeout: 300                  # Request timeout (seconds)
+  max_request_size: "10MB"
+
+# Logging
+logging:
+  level: "info"                 # debug, info, warn, error
+  format: "json"                # json, text
+  file: "~/.openclaw/logs/gateway.log"
+  max_size: "100MB"
+  max_files: 5                  # Keep last N log files
+
+# Models
+models:
+  default: "kimi-coding/k2p5"
+  fallback: "deepseek-v3"
+  max_tokens: 8192
+  temperature: 0.7
+  
+# Context Management
+context:
+  max_context_tokens: 8000
+  compress_threshold: 6000      # Auto-compact when reached
+  keep_system_prompt: true      # Always keep system prompt
+  
+# Memory
+memory:
+  enabled: true
+  directory: "~/.openclaw/workspace/memory"
+  max_file_size: "1MB"
+  auto_archive: true
+  archive_after_days: 30
+
+# Channels (Integrations)
+channels:
+  telegram:
+    enabled: true
+    bot_token: "${TELEGRAM_BOT_TOKEN}"
+    allowed_chats: []
+    
+  discord:
+    enabled: false
+    bot_token: "${DISCORD_BOT_TOKEN}"
+    
+  slack:
+    enabled: false
+    bot_token: "${SLACK_BOT_TOKEN}"
+
+# Sub-agents
+subagents:
+  max_concurrent: 5
+  timeout: 120
+  default_model: "kimi-coding/k2p5"
+  
+# Skills
+skills:
+  directory: "~/.openclaw/workspace/skills"
+  auto_reload: true             # Hot reload on change
+  allow_untrusted: false        # Scan before loading
+  
+# Cron
+cron:
+  enabled: true
+  jobs_file: "~/.openclaw/config/cron-jobs.json"
+  
+# Security
+security:
+  allowed_hosts: ["localhost", "127.0.0.1"]
+  api_key_required: true
+  rate_limit:
+    enabled: true
+    requests_per_minute: 60
+```
+
+---
+
+### Environment Variables (.env)
+
+```bash
+# API Keys
+OPENAI_API_KEY="sk-xxx"
+ANTHROPIC_API_KEY="sk-ant-xxx"
+MOONSHOT_API_KEY="sk-xxx"
+DEEPSEEK_API_KEY="sk-xxx"
+GEMINI_API_KEY="xxx"
+
+# Telegram
+TELEGRAM_BOT_TOKEN="123456:ABC-DEF1234..."
+TELEGRAM_CHAT_ID="123456789"
+
+# Discord
+DISCORD_BOT_TOKEN="xxx"
+
+# Database
+REDIS_URL="redis://localhost:6379"
+POSTGRES_URL="postgresql://user:pass@localhost/db"
+
+# GitHub
+GITHUB_TOKEN="ghp_xxx"
+
+# n8n
+N8N_BASE_URL="https://n8n.example.com"
+N8N_API_KEY="xxx"
+
+# Custom
+MY_CUSTOM_VAR="value"
+```
+
+---
+
+### Cron Jobs Config
+
+```json
+{
+  "jobs": [
+    {
+      "name": "gold-price-check",
+      "schedule": "0 8,18 * * *",
+      "command": "scripts/gold-price-monitor.sh",
+      "enabled": true
+    },
+    {
+      "name": "git-sync",
+      "schedule": "*/15 * * * *",
+      "command": "git-sync.sh",
+      "enabled": true
+    },
+    {
+      "name": "backup",
+      "schedule": "0 2 * * *",
+      "command": "backup.sh",
+      "enabled": true,
+      "retry": 3
+    }
+  ]
+}
+```
+
+---
+
+### Model Providers Config
+
+```yaml
+# ~/.openclaw/config/providers.yaml
+
+providers:
+  openai:
+    api_key: "${OPENAI_API_KEY}"
+    base_url: "https://api.openai.com/v1"
+    models:
+      - gpt-4o
+      - gpt-4o-mini
+      
+  anthropic:
+    api_key: "${ANTHROPIC_API_KEY}"
+    models:
+      - claude-3-opus-4.6
+      - claude-3-sonnet-4.5
+      
+  moonshot:
+    api_key: "${MOONSHOT_API_KEY}"
+    base_url: "https://api.moonshot.cn/v1"
+    models:
+      - kimi-k2.5
+      - kimi-coding/k2p5
+      
+  deepseek:
+    api_key: "${DEEPSEEK_API_KEY}"
+    models:
+      - deepseek-chat
+      - deepseek-coder
+      
+  ollama:
+    base_url: "http://localhost:11434"
+    models:
+      - llama3.1
+      - phi3
+```
+
+---
+
+### Rate Limiting Config
+
+```yaml
+# ~/.openclaw/config/rate-limits.yaml
+
+limits:
+  # Per IP
+  ip:
+    requests_per_minute: 60
+    burst: 10
+    
+  # Per user (if authenticated)
+  user:
+    requests_per_minute: 120
+    tokens_per_day: 100000
+    
+  # Per model
+  models:
+    "gpt-4o":
+      requests_per_minute: 20
+    "kimi-coding/k2p5":
+      requests_per_minute: 50
+```
+
+---
+
+### Notification Templates
+
+```yaml
+# ~/.openclaw/config/notifications.yaml
+
+templates:
+  error:
+    title: "❌ Error Alert"
+    color: "#FF0000"
+    format: |
+      **Error:** {{ message }}
+      **Time:** {{ timestamp }}
+      **Session:** {{ session_id }}
+      
+  success:
+    title: "✅ Success"
+    color: "#00FF00"
+    
+  warning:
+    title: "⚠️ Warning"
+    color: "#FFA500"
+
+channels:
+  telegram:
+    default_chat: "${TELEGRAM_CHAT_ID}"
+  
+  email:
+    smtp_host: "smtp.gmail.com"
+    smtp_port: 587
+    username: "${EMAIL_USER}"
+    password: "${EMAIL_PASS}"
+    to: "admin@example.com"
+```
+
+---
+
 ## Share Your Config!
 
 Punya konfigurasi yang bisa dishare? [Tambahkan ke examples/](../../tree/main/docs/config/examples/)

@@ -92,6 +92,7 @@ sessions_spawn with runtime="subagent" untuk parallel execution
 ## Next Steps
 
 - [🤖 Setup Kimi AI](./kimi-setup.md) - Dapatkan API Key Kimi dengan harga $0.99/month!
+- [📱 Setup Telegram Bot](./telegram-setup.md) - Hubungkan OpenClaw dengan Telegram!
 - [Konfigurasi Skills](../config/README.md)
 - [Contoh Use Cases](../use-cases/README.md)
 - [Tips & Tricks](../tips-tricks/README.md)

@@ -271,6 +271,258 @@ routes:
 
 ---
 
+## 🇮🇩 Indonesian Daily Life Use Cases
+
+Use case yang relevan untuk kehidupan sehari-hari di Indonesia.
+
+---
+
+### 🌤️ Cuaca BMKG & Gempa Alert
+
+**Use Case:** Pantau cuaca dan gempa real-time untuk lokasi proyek/lokasi tinggal
+
+**Overview:**
+- Fetch data cuaca dari BMKG API
+- Alert gempa magnitude >5.0 di wilayah terdekat
+- Notifikasi hujan deras, banjir, atau cuaca ekstrem
+
+**Tools:**
+- BMKG API (bmkg.go.id)
+- Telegram Bot (notifikasi)
+- Cron (check setiap 30 menit)
+
+**Key Script:**
+```bash
+# Check cuaca dan gempa
+python3 bmkg-monitor.py --locations "Jakarta,Bandung,Surabaya"
+```
+
+**Output:**
+```
+🌤️ Cuaca Jakarta: 32°C, Berawan
+🌡️ Feels like: 36°C
+🌧️ Hujan: 20% chance (15:00-17:00)
+
+⚠️ Gempa terkini:
+📍 Laut 50km barat Sumatera
+📊 M4.2 - Tidak berpotensi tsunami
+🕐 10 menit yang lalu
+```
+
+---
+
+### 📱 Cek Pulsa & Kuota Otomatis
+
+**Use Case:** Monitor pulsa dan kuota internet dari provider (Telkomsel, XL, Indosat)
+
+**Overview:**
+- Auto-refresh USSD/mySMS untuk cek pulsa
+- Alert kalau pulsa < Rp 10.000
+- Alert kalau kuota < 1GB
+- Auto-buy paket kalau habis (via API provider)
+
+**Tools:**
+- Provider API (Telkomsel, XL, Indosat)
+- SMS Gateway (Twilio/ local)
+- Telegram notifications
+
+**Key Config:**
+```yaml
+# config/pulsa-monitor.yaml
+providers:
+  telkomsel:
+    api_key: ${TELKOMSEL_API_KEY}
+    phone: "0812xxxxxxxxx"
+    alert_threshold:
+      pulsa: 10000  # Rp
+      kuota: 1024   # MB
+```
+
+---
+
+### 🏦 Cek Saldo Rekening Multi-Bank
+
+**Use Case:** Aggregate saldo dari beberapa bank (BCA, BNI, Mandiri, etc)
+
+**Overview:**
+- Connect ke API/ scraping e-banking
+- Daily summary total saldo
+- Alert untuk transaksi masuk/keluar besar
+- Track cash flow bulanan otomatis
+
+**Tools:**
+- Bank API (jika tersedia)
+- Playwright scraping (e-banking)
+- Google Sheets (log transaksi)
+
+**Output:**
+```
+💰 Ringkasan Saldo - 02 Mar 2026
+
+🏦 BCA     : Rp 12.450.000
+🏦 BNI     : Rp  8.320.000  
+🏦 Mandiri : Rp  5.100.000
+━━━━━━━━━━━━━━━
+💵 Total   : Rp 25.870.000
+
+🔄 Transaksi hari ini:
+➖ Rp 150.000 - Transfer ke BCA
+➕ Rp 500.000 - Gaji masuk
+```
+
+---
+
+### 🛒 Harga BBM & Indomaret/Alfamat Tracker
+
+**Use Case:** Track harga BBM Pertamina dan promo Indomaret/Alfamart
+
+**Overview:**
+- Scrape harga BBM dari Pertamina website
+- Track promo diskon Indomaret/Alfamart
+- Alert untuk promo beras, minyak goreng, dll
+- Compare harga antar minimarket
+
+**Tools:**
+- Web scraping (BeautifulSoup)
+- Image OCR (untuk promo banner)
+- Telegram channel broadcast
+
+---
+
+### 🎫 Tiket Kereta & Pesawat Price Alert
+
+**Use Case:** Pantau harga tiket KAI/Traveloka untuk liburan
+
+**Overview:**
+- Monitor harga tiket KAI (kereta api)
+- Track harga pesawat dari Traveloka/Tiket.com
+- Alert kalau harga turun di bawah threshold
+- Compare harga antar tanggal
+
+**Tools:**
+- KAI Access API
+- Traveloka/Tiket.com scraping
+- Cron check 2x sehari
+
+**Key Script:**
+```bash
+# Cek harga Jakarta-Surabaya
+python3 ticket-monitor.py \
+  --route "JKTA-SBY" \
+  --date "2026-03-15" \
+  --alert-below 500000
+```
+
+---
+
+### 📦 Tracking Paket JNE/J&T/SiCepat
+
+**Use Case:** Auto-track paket dari marketplace (Tokopedia, Shopee, Lazada)
+
+**Overview:**
+- Input resi otomatis dari email notifikasi marketplace
+- Track status paket via API ekspedisi
+- Alert status perubahan (dikirim, transit, sampai)
+- Forward ke WhatsApp/Telegram
+
+**Tools:**
+- JNE API, J&T API, SiCepat API
+- Gmail API (auto-extract resi)
+- WhatsApp/Telegram Bot
+
+**Output:**
+```
+📦 Update Paket
+
+Resi: JNE1234567890
+Toko: Tokopedia - Elektronik Shop
+Status: 🚚 Dalam Perjalanan
+📍 Lokasi: Jakarta Hub
+⏰ Estimasi: 1-2 hari lagi
+```
+
+---
+
+### 🍽️ Menu Kantin/Restoran Harian
+
+**Use Case:** Bot yang ngasih tau menu kantin/restoran favorit hari ini
+
+**Overview:**
+- Scrape menu dari Instagram kantin/restoran
+- Daily menu broadcast ke group WhatsApp/Telegram
+- Vote makan siang bersama tim
+- Alert kalau ada menu favorit
+
+**Tools:**
+- Instagram scraping
+- Telegram Bot
+- Voting system (poll)
+
+---
+
+### 📺 Jadwal Bioskop XXI/CGV
+
+**Use Case:** Pantau jadwal film baru dan harga tiket bioskop
+
+**Overview:**
+- Scrape jadwal dari XXI/CGV website
+- Track film baru release
+- Compare harga antar lokasi bioskop
+- Alert untuk early bird promo
+
+**Tools:**
+- Web scraping (XXI/CGV)
+- Telegram notifications
+- Google Calendar integration (reminder nonton)
+
+---
+
+### ⚽ Jadwal Liga Inggris & Livescore
+
+**Use Case:** Notifikasi jadwal pertandingan bola favorit (Arsenal, MU, Liverpool)
+
+**Overview:**
+- Fetch jadwal dari football-data.org API
+- Notifikasi H-24 jam sebelum match
+- Livescore update saat match berlangsung
+- Goal alert untuk tim favorit
+
+**Tools:**
+- football-data.org API
+- Telegram Bot
+- Cron (check setiap jam)
+
+**Output:**
+```
+⚽ Match Day!
+
+Arsenal vs Manchester United
+🏟️ Emirates Stadium
+🕐 22:30 WIB
+📺 Streaming: Mola TV
+
+Prediksi: Arsenal 60% - MU 40%
+```
+
+---
+
+### 💡 Token PLN & Tagihan Listrik
+
+**Use Case:** Monitor tagihan listrik dan beli token otomatis
+
+**Overview:**
+- Cek tagihan listrik PLN bulanan
+- Alert sebelum jatuh tempo
+- Auto-buy token listrik kalau habis
+- Track penggunaan kWh harian
+
+**Tools:**
+- PLN API (atau scraping)
+- Payment gateway (Midtrans, etc)
+- Telegram notifications
+
+---
+
 ## 🏢 Private/Company Use Cases
 
 > 📝 **Note:** Use cases berikut bersifat private/company-specific dan tidak dishare di repo public.
