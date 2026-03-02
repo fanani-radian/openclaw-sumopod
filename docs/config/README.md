@@ -591,6 +591,163 @@ channels:
 
 ---
 
+## 📢 requireMention — Group Chat Behavior
+
+Pengaturan penting untuk kontrol bot di **group chat**.
+
+### Apa itu `requireMention`?
+
+`requireMention` mengontrol kapan bot akan merespon pesan di grup:
+
+| Nilai | Perilaku |
+|-------|----------|
+| `true` | Bot **hanya merespon** kalau di-mention (`@bot`) atau ada trigger keyword |
+| `false` | Bot **merespon SEMUA pesan** di grup (tidak perlu di-mention) |
+
+**Default:** `true` (aman, anti-spam)
+
+### Cara Setting
+
+#### Via `openclaw.json` (JSON5)
+
+**Global untuk semua grup:**
+```json5
+{
+  channels: {
+    telegram: {
+      enabled: true,
+      botToken: "123:abc",
+      groups: {
+        "*": { requireMention: false }  // semua grup, bebas mention
+      }
+    }
+  }
+}
+```
+
+**Per grup spesifik:**
+```json5
+{
+  channels: {
+    telegram: {
+      groups: {
+        "-1001234567890": {  // ID grup (ambil dari @userinfobot)
+          requireMention: false,
+          groupPolicy: "open",
+          allowFrom: ["tg:123456789"]  // siapa saja yang bisa pakai
+        }
+      }
+    }
+  }
+}
+```
+
+**Grup forum dengan topic:**
+```json5
+{
+  channels: {
+    telegram: {
+      groups: {
+        "-1001234567890": {
+          requireMention: true,      // default grup: perlu mention
+          topics: {
+            "42": {                  // topic ID 42
+              requireMention: false  // topic ini bebas
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+#### Via CLI (tanpa edit file)
+
+```bash
+# 1. Ambil hash config saat ini
+openclaw gateway call config.get --params '{}'
+# Copy nilai "hash" dari output
+
+# 2. Patch config (ubah ke requireMention: false)
+openclaw gateway call config.patch --params '{
+  "raw": "{ channels: { telegram: { groups: { \"*\": { requireMention: false } } } } }",
+  "baseHash": "<paste-hash-here>"
+}'
+```
+
+### Impact/Pengaruh
+
+| `requireMention: true` | `requireMention: false` |
+|------------------------|-------------------------|
+| ✅ Aman — cuma jalan kalau diminta | ✅ Responsif — bantu moderasi otomatis |
+| ✅ Tidak spam grup | ✅ Natural — kayak asisten grup |
+| ❌ Member baru bingung kenapa nggak respon | ⚠️ **Risiko spam** — tiap pesan dianalisa |
+| | ⚠️ **Cost tinggi** — banyak API calls |
+
+### ⚠️ Catatan Penting
+
+1. **Privacy Mode** — Setelah ganti ke `false`, disable Privacy Mode di @BotFather:
+   - Chat `@BotFather` → `/setprivacy` → pilih bot → **Disable**
+   - Remove & re-add bot ke grup
+
+2. **Cari Group ID:**
+   - Forward pesan grup ke `@userinfobot`
+   - Atau lihat log: `openclaw logs --follow`
+
+3. **Mention Patterns** (alternatif selain `@bot`):
+```json5
+{
+  agents: {
+    list: [{
+      id: "main",
+      groupChat: {
+        mentionPatterns: ["@openclaw", "openclaw", "bot", "radit"]
+      }
+    }]
+  }
+}
+```
+
+### Contoh Use Case
+
+**Komunitas support (kaya Sumopod):**
+```json5
+{
+  channels: {
+    telegram: {
+      groups: {
+        "-1001234567890": {
+          requireMention: false,      // bebas nanya
+          groupPolicy: "open",        // siapapun boleh
+          reactionLevel: "minimal",   // reaksi emoji ringan
+          skills: []                  // semua skill aktif
+        }
+      }
+    }
+  }
+}
+```
+
+**Grup kerja (batasi interaksi):**
+```json5
+{
+  channels: {
+    telegram: {
+      groups: {
+        "-1009876543210": {
+          requireMention: true,       // cuma respon kalau dimention
+          allowFrom: ["tg:111222333", "tg:444555666"],  // cuma member ini
+          skills: ["github", "docs"]  // skill terbatas
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
 ## Share Your Config!
 
 Punya konfigurasi yang bisa dishare? [Tambahkan ke examples/](../../tree/main/docs/config/examples/)
