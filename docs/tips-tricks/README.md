@@ -4,6 +4,59 @@ Kumpulan tips untuk optimize OpenClaw dari pengalaman komunitas Sumopod.
 
 ---
 
+## 🖥️ Windows Tips
+
+### 1. File Organizer - Downloads Folder
+
+**Gunakan OpenClaw untuk bersih-bersih PC!**
+
+OpenClaw bisa scan dan organize folder Downloads otomatis:
+
+```
+💬 Kamu: "Rapikan folder Downloads ku"
+🤖 OpenClaw: 
+   - Buat folder: Installers, Documents, Images, Media, Archives
+   - Pindahkan file sesuai tipe
+   - Report: "Done! 50 files organized"
+```
+
+**Cara:** Chat ke bot: *"Di folder C:\Users\[NAMA]\Downloads, rapikan file-nya jadi 4-5 kategori"*
+
+**Hasil:**
+- `01-Installers/` → EXE, MSI
+- `02-Documents/` → PDF, DOCX, XLSX
+- `03-Images/` → JPG, PNG
+- `04-Media/` → MP4, M4A
+- `05-Archives/` → ZIP, JSON
+
+### 2. Install OpenClaw di Windows
+
+```powershell
+# Install via npm
+npm install -g openclaw@latest
+
+# Start gateway
+openclaw gateway start
+
+# Kalau service error, run manual dan biarkan tetap buka
+```
+
+### 3. Auto-Start saat Boot
+
+Windows Task Scheduler kadang bermasalah dengan OpenClaw. Alternatif:
+
+**Opsi A: Startup Folder**
+1. `Win + R` → ketik `shell:startup`
+2. Buat shortcut: `openclaw gateway start`
+3. Set "Run minimized"
+
+**Opsi B: Keep Terminal Open**
+- Bikin batch file di desktop
+- Double-click untuk start
+- Minimize window (jangan close!)
+
+---
+
 ## 💰 Cost Optimization
 
 ### 1. Model Tiering

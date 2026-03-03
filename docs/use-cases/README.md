@@ -4,7 +4,70 @@ Kumpulan contoh penggunaan OpenClaw dari komunitas Sumopod.
 
 ---
 
-## 📊 Gold Price Monitor with Fallback Chain
+## 🖥️ Windows PC Organizer
+
+**Use Case:** Auto-organize file Downloads di Windows by category
+
+### Overview
+
+Bosan dengan folder Downloads yang berantakan? OpenClaw bisa bantu rapikan otomatis! 
+
+Bot akan:
+1. **Scan** isi folder Downloads
+2. **Buat kategori folder** (Installers, Documents, Images, Media, Archives)
+3. **Pindahkan file** ke folder sesuai tipe file-nya
+
+![Contoh hasil organizer](windows-pc-organizer-example.jpg)
+
+### Kategori Folder
+
+| Folder | File Types |
+|--------|------------|
+| **01-Installers** | EXE, MSI (installer apps) |
+| **02-Documents** | PDF, DOCX, XLSX, HTML, MD |
+| **03-Images** | JPG, JPEG, PNG, AVIF |
+| **04-Media** | MP4, M4A (video/audio) |
+| **05-Archives-Config** | ZIP, JSON, ENC |
+
+### Cara Pakai
+
+**Via Telegram/Chat:**
+```
+Di folder C:\Users\[USERNAME]\Downloads
+Bisa gak kamu rapikan? Buat folder 4-5 macam untuk semua kategori item yang ada di folder download itu
+Lalu masukkan item ke masing-masing folder sesuai dengan kategorinya
+```
+
+**OpenClaw akan:**
+1. Cek isi Downloads
+2. Buat 5 folder kategori
+3. Pindahkan semua file otomatis
+
+### Setup di Windows
+
+1. **Install OpenClaw di Windows:**
+   ```powershell
+   npm install -g openclaw@latest
+   ```
+
+2. **Start Gateway:**
+   ```powershell
+   openclaw gateway start
+   ```
+
+3. **Connect Telegram Bot** (optional tapi recommended)
+   - Bikin bot di @BotFather
+   - Connect ke OpenClaw
+   - Chat dari HP untuk kontrol PC
+
+### Keuntungan
+
+- ✅ Downloads folder selalu rapi
+- ✅ Cari file lebih gampang
+- ✅ Bisa jalanin dari HP (via Telegram)
+- ✅ Bisa schedule otomatis (mingguan/bulanan)
+
+---
 
 **By:** @fanani-radian  
 **Use Case:** Track harga emas dengan multiple fallback methods
