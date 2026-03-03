@@ -11,6 +11,7 @@ Repositori komunitas untuk belajar, berbagi, dan berkolaborasi tentang [OpenClaw
 | Section | Deskripsi |
 |---------|-----------|
 | [🚀 Getting Started](./docs/getting-started/README.md) | Panduan instalasi dan setup pertama |
+| [🖥️ Windows Install](./docs/getting-started/windows-install.md) | Tutorial lengkap Windows + auto-start + management |
 | [🔄 Sync Memory ke GitHub](./docs/getting-started/github-sync.md) | Sinkronisasi memory antar device/PC/VPS |
 | [❓ FAQ](./faq/README.md) | Pertanyaan yang sering ditanyakan |
 | [💡 Use Cases](./docs/use-cases/README.md) | Contoh penggunaan real-world |
