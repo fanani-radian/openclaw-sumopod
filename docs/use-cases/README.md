@@ -69,6 +69,63 @@ Lalu masukkan item ke masing-masing folder sesuai dengan kategorinya
 
 ---
 
+## 🎬 AI Video Generation & Editing
+
+**Use Case:** Generate dan edit video menggunakan AI — low cost, optimized, practical!
+
+### Overview
+
+Buat video AI dengan harga murah (mulai dari FREE) dan edit menggunakan FFmpeg (GRATIS). Cocok untuk:
+- Social media content (Instagram Reels, TikTok)
+- Product showcase
+- Meme videos
+- Auto-subtitle untuk podcast/video
+
+### 💰 Cost Comparison
+
+| Workflow | Cost/5s | Kualitas |
+|----------|---------|----------|
+| **Image-to-Video (Kling)** | ~$0.015 | ⭐⭐⭐⭐ |
+| **Text-to-Video (Kling)** | ~$0.02 | ⭐⭐⭐⭐ |
+| **Hedra (FREE)** | $0 | ⭐⭐⭐ |
+| **Runway** | ~$0.10 | ⭐⭐⭐⭐⭐ |
+| **FFmpeg Editing** | FREE | N/A |
+
+### 🛠️ APIs yang Dibutuhkan
+
+**Tier 1 (FREE/Ultra Low Cost):**
+- **Hedra** — Image-to-Video, FREE unlimited (watermark)
+- **Viggle** — Character animation, FREE
+- **FFmpeg** — Video editing, FREE local
+
+**Tier 2 (Best Value):**
+- **Kling AI** — ~$0.02/video, realistic motion ⭐ Recommended
+- **Luma Dream Machine** — ~$0.05/video, fast generation
+
+### 🚀 Quick Start
+
+```bash
+# 1. Install FFmpeg (REQUIRED)
+sudo apt install ffmpeg
+
+# 2. Get API Key (Kling - cheapest)
+# Signup: https://klingai.com
+
+# 3. Generate video from text
+video-generate "sunset over Bali beach" --duration 5 --provider kling
+
+# 4. Edit video (FREE)
+video-edit output.mp4 compress final.mp4
+```
+
+### 📁 Resources
+
+- [Tutorial Lengkap](./ai-video-generation.md)
+- Sample scripts: `skills/video-generate/`, `skills/video-edit/`
+- API signup links included
+
+---
+
 **By:** @fanani-radian  
 **Use Case:** Track harga emas dengan multiple fallback methods
 
