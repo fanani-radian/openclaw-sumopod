@@ -13,6 +13,7 @@ Repositori komunitas untuk belajar, berbagi, dan berkolaborasi tentang [OpenClaw
 | [🚀 Getting Started](./docs/getting-started/README.md) | Panduan instalasi dan setup pertama |
 | [🖥️ Windows Install](./docs/getting-started/windows-install.md) | Tutorial lengkap Windows + auto-start + management |
 | [🔄 Sync Memory ke GitHub](./docs/getting-started/github-sync.md) | Sinkronisasi memory antar device/PC/VPS |
+| [☁️ Alibaba Cloud Coding Plan](./tutorials/openclaw-alibaba-coding-plan.md) | 8 model AI dengan 1 API key mulai $5/bulan |
 | [❓ FAQ](./faq/README.md) | Pertanyaan yang sering ditanyakan |
 | [💡 Use Cases](./docs/use-cases/README.md) | Contoh penggunaan real-world |
 | [🎯 Tips & Tricks](./docs/tips-tricks/README.md) | Trik optimize OpenClaw |
