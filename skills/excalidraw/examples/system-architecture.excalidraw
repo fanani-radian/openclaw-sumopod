@@ -1,0 +1,147 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "radit-system-architecture",
+  "elements": [
+    {
+      "type": "rectangle",
+      "x": 80,
+      "y": 80,
+      "width": 240,
+      "height": 360,
+      "strokeColor": "#1971c2",
+      "backgroundColor": "#e7f5ff",
+      "strokeWidth": 2
+    },
+    {
+      "type": "text",
+      "x": 140,
+      "y": 95,
+      "width": 120,
+      "height": 40,
+      "text": "\ud83d\udda5\ufe0f VPS Server",
+      "fontSize": 20,
+      "strokeColor": "#1971c2"
+    },
+    {
+      "type": "rectangle",
+      "x": 100,
+      "y": 150,
+      "width": 200,
+      "height": 50,
+      "strokeColor": "#2f9e44",
+      "backgroundColor": "#d3f9d8",
+      "strokeWidth": 2
+    },
+    {
+      "type": "text",
+      "x": 130,
+      "y": 165,
+      "width": 140,
+      "height": 25,
+      "text": "\u26a1 OpenClaw",
+      "fontSize": 16,
+      "strokeColor": "#2f9e44"
+    },
+    {
+      "type": "rectangle",
+      "x": 100,
+      "y": 220,
+      "width": 200,
+      "height": 50,
+      "strokeColor": "#e67700",
+      "backgroundColor": "#fff9db",
+      "strokeWidth": 2
+    },
+    {
+      "type": "text",
+      "x": 135,
+      "y": 235,
+      "width": 130,
+      "height": 25,
+      "text": "\ud83d\udd0c n8n",
+      "fontSize": 16,
+      "strokeColor": "#e67700"
+    },
+    {
+      "type": "rectangle",
+      "x": 100,
+      "y": 290,
+      "width": 200,
+      "height": 50,
+      "strokeColor": "#1864ab",
+      "backgroundColor": "#e7f5ff",
+      "strokeWidth": 2
+    },
+    {
+      "type": "text",
+      "x": 135,
+      "y": 305,
+      "width": 130,
+      "height": 25,
+      "text": "\ud83d\udcca Redis",
+      "fontSize": 16,
+      "strokeColor": "#1864ab"
+    },
+    {
+      "type": "arrow",
+      "x": 320,
+      "y": 240,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          120,
+          0
+        ]
+      ],
+      "strokeColor": "#e8590c",
+      "strokeWidth": 3
+    },
+    {
+      "type": "rectangle",
+      "x": 460,
+      "y": 80,
+      "width": 260,
+      "height": 360,
+      "strokeColor": "#1a1a2e",
+      "backgroundColor": "#f8f9fa",
+      "strokeWidth": 2
+    },
+    {
+      "type": "text",
+      "x": 520,
+      "y": 95,
+      "width": 140,
+      "height": 40,
+      "text": "\ud83d\udc19 GitHub",
+      "fontSize": 20,
+      "strokeColor": "#1a1a2e"
+    },
+    {
+      "type": "rectangle",
+      "x": 480,
+      "y": 150,
+      "width": 220,
+      "height": 60,
+      "strokeColor": "#495057",
+      "backgroundColor": "#ffffff",
+      "strokeWidth": 2
+    },
+    {
+      "type": "text",
+      "x": 500,
+      "y": 170,
+      "width": 180,
+      "height": 25,
+      "text": "\ud83d\udce6 radit repo",
+      "fontSize": 15,
+      "strokeColor": "#495057"
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#ffffff"
+  }
+}

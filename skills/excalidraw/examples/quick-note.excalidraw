@@ -1,0 +1,40 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "radit-quick-note",
+  "elements": [
+    {
+      "type": "rectangle",
+      "x": 50,
+      "y": 50,
+      "width": 500,
+      "height": 300,
+      "strokeColor": "#e67700",
+      "backgroundColor": "#fff9db",
+      "strokeWidth": 3
+    },
+    {
+      "type": "text",
+      "x": 200,
+      "y": 70,
+      "width": 200,
+      "height": 40,
+      "text": "\ud83d\udcdd QUICK NOTE",
+      "fontSize": 24,
+      "strokeColor": "#e67700"
+    },
+    {
+      "type": "text",
+      "x": 80,
+      "y": 130,
+      "width": 440,
+      "height": 180,
+      "text": "\u2022 Point 1\n\u2022 Point 2\n\u2022 Point 3",
+      "fontSize": 18,
+      "strokeColor": "#495057"
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#ffffff"
+  }
+}
