@@ -37,6 +37,29 @@ python3 skills/excalidraw/scripts/export.py \
   my-diagram.png
 ```
 
+## Example Output
+
+Here's what generated diagrams look like:
+
+### Memory Sync Flow
+![Memory Sync Flow](../skills/excalidraw/examples/memory-sync-flow.png)
+*Example: RADIT memory synchronization with GitHub*
+
+### System Architecture
+![System Architecture](../skills/excalidraw/examples/system-architecture.png)
+*Example: VPS server architecture overview*
+
+### Quick Note
+![Quick Note](../skills/excalidraw/examples/quick-note.png)
+*Example: Simple note template*
+
+**Characteristics:**
+- ✅ Clean white background
+- ✅ Hand-drawn style (rough edges)
+- ✅ Solid colors (no patterns)
+- ✅ Readable text
+- ✅ Professional look
+
 ## Available Templates
 
 | Template | Description | Best For |
