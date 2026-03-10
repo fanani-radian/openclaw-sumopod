@@ -6,6 +6,25 @@ Repositori komunitas untuk belajar, berbagi, dan berkolaborasi tentang [OpenClaw
 
 ---
 
+## 🚨 CRITICAL ALERT: Jangan Update ke 2026.3.7+!
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  ⚠️  OPENCLAW 2026.3.7 & 2026.3.8 BREAK KIMI 2.5!       │
+│                                                          │
+│  ❌ Tool calling RUSAK — model cuma output text literal  │
+│  ❌ Infinite loop "Executing..." tanpa jalan             │
+│  ❌ Fake "success" padahal gak jalan                     │
+│                                                          │
+│  ✅ SOLUTION: Stay di 2026.3.2                           │
+│  🔧 FIX: pkill -f openclaw; npm i -g openclaw@2026.3.2  │
+│                                                          │
+│  📖 Detail: [Tutorial lengkap](./tutorials/avoid-openclaw-2026-3-7-kimi-bug.md) │
+└──────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## 📚 Navigasi Cepat
 
 | Section | Deskripsi |
@@ -31,6 +50,7 @@ Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
 |----------|-----------|-------|
 | [☁️ Alibaba Cloud Coding Plan](./tutorials/openclaw-alibaba-coding-plan.md) | 8 model AI dengan 1 API key mulai $5/bulan | Beginner |
 | [🖥️ Windows Install](./docs/getting-started/windows-install.md) | Instalasi lengkap Windows + auto-start | Beginner |
+| [⚠️ Avoid 2026.3.7+ Bug](./tutorials/avoid-openclaw-2026-3-7-kimi-bug.md) | Jangan update! Kimi 2.5 tool calling broken | **CRITICAL** |
 
 ### 🤖 AI Automation
 | Tutorial | Deskripsi | Level |
