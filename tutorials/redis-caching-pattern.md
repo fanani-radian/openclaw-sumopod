@@ -1,580 +1,743 @@
 # ⚡ Redis Caching Pattern for Speed
 
-> **Speed up 20x dengan Redis cache — dari 1 detik jadi 50ms!** 🚀
+> Speed up your OpenClaw automations 20x with Redis caching — from 1 second to 50ms! 🚀
+
+---
+
+## 🎯 Before vs After
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    ⚡ SPEED COMPARISON ⚡                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   WITHOUT CACHE                    WITH CACHE                   │
-│   ─────────────                    ──────────                   │
-│                                                                 │
-│   🐌 1000ms                         ⚡ 50ms                      │
-│   ████████████████████████████      █░                          │
-│   1.0 second                        0.05 second                 │
-│                                                                 │
-│   ❌ API call every time           ✅ Cache hit 95%             │
-│   ❌ Rate limit risk               ✅ Protect API               │
-│   ❌ Slow user experience          ✅ Instant response          │
-│                                                                 │
-│   Speedup: 20x faster! 🚀                                       │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                  SPEED COMPARISON                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  WITHOUT CACHE ❌                    WITH CACHE ✅          │
+│                                                             │
+│  ┌──────────────┐                   ┌──────────────┐        │
+│  │ Request      │                   │ Request      │        │
+│  └──────┬───────┘                   └──────┬───────┘        │
+│         │                                  │                │
+│         ▼                                  ▼                │
+│  ┌──────────────┐                   ┌──────────────┐        │
+│  │ API Call     │  800ms            │ Check Redis  │  5ms   │
+│  │ (External)   │                   └──────┬───────┘        │
+│         │                                  │                │
+│         ▼                                  ▼                │
+│  ┌──────────────┐                   ┌──────────────┐        │
+│  │ Parse Data   │  200ms            │ Cache Hit!   │  50ms  │
+│  └──────┬───────┘                   └──────┬───────┘        │
+│         │                                  │                │
+│         ▼                                  ▼                │
+│  ┌──────────────┐                   ┌──────────────┐        │
+│  │ Total: 1s    │                   │ Total: 50ms  │        │
+│  │ 😫 Slow      │                   │ 🚀 20x Faster│        │
+│  └──────────────┘                   └──────────────┘        │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Real Numbers
+
+| Operation | Without Cache | With Cache | Speedup |
+|-----------|---------------|------------|---------|
+| Gold Price API | 1,200ms | 45ms | **27x** 🚀 |
+| Weather API | 800ms | 12ms | **67x** 🚀 |
+| Health Check | 500ms | 8ms | **62x** 🚀 |
+| User Session | 300ms | 5ms | **60x** 🚀 |
+
+---
+
+## 🎯 What You'll Build
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              REDIS CACHING ARCHITECTURE                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   YOUR SCRIPT                    REDIS SERVER               │
+│   ┌──────────────┐              ┌──────────────┐           │
+│   │              │              │              │           │
+│   │ 1. Check     │─────────────▶│ Key exists?  │           │
+│   │    Cache     │              │              │           │
+│   │              │◀─────────────│ YES → Return │           │
+│   └──────┬───────┘              │      value   │           │
+│          │                      │              │           │
+│          │ NO                   └──────────────┘           │
+│          ▼                             ▲                    │
+│   ┌──────────────┐                     │                    │
+│   │ 2. Fetch from│                     │                    │
+│   │    External  │                     │                    │
+│   │    API       │                     │                    │
+│   └──────┬───────┘                     │                    │
+│          │                             │                    │
+│          ▼                             │                    │
+│   ┌──────────────┐                     │                    │
+│   │ 3. Store in  │─────────────────────┘                    │
+│   │    Cache     │         (with TTL)                        │
+│   │              │                                          │
+│   └──────────────┘                                          │
+│                                                             │
+│   TTL = Time To Live (auto-expire)                         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🎯 Kenapa Caching Penting?
+## 🛠️ Installation
 
-### Real Example: Gold Price Checker
-
-| Metric | Without Cache | With Cache | Improvement |
-|--------|--------------|------------|-------------|
-| Response Time | 1000ms | 50ms | **20x faster** 🚀 |
-| API Calls/Hour | 60 | 4 | **15x less** 📉 |
-| Rate Limit Risk | ⚠️ High | ✅ Low | Protected |
-| User Experience | 😴 Slow | ⚡ Instant | Happy! |
-
-### When to Cache?
-
-```
-✅ GOOD for Caching:
-   • Data yang jarang berubah (harga, cuaca, rates)
-   • API calls mahal/limited
-   • Data yang sering di-request
-   • Computation-heavy results
-
-❌ BAD for Caching:
-   • Real-time critical data
-   • User-specific sensitive data
-   • Data yang berubah tiap detik
-   • Financial transactions
-```
-
----
-
-## 🏗️ Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         REQUEST FLOW                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   User Request                                                  │
-│       │                                                         │
-│       ▼                                                         │
-│   ┌──────────────┐                                              │
-│   │ Check Cache? │                                              │
-│   └──────┬───────┘                                              │
-│          │                                                      │
-│    ┌─────┴─────┐                                                │
-│    ▼           ▼                                                │
-│  HIT ❌      MISS ✅                                            │
-│    │           │                                                │
-│    │           ▼                                                │
-│    │    ┌─────────────┐                                         │
-│    │    │ Fetch from  │                                         │
-│    │    │ API/Source  │                                         │
-│    │    └──────┬──────┘                                         │
-│    │           │                                                │
-│    │           ▼                                                │
-│    │    ┌─────────────┐                                         │
-│    │    │ Store to    │                                         │
-│    │    │ Redis       │                                         │
-│    │    │ (TTL: 5min) │                                         │
-│    │    └─────────────┘                                         │
-│    │           │                                                │
-│    └───────────┘                                                │
-│          │                                                      │
-│          ▼                                                      │
-│   ┌──────────────┐                                              │
-│   │ Return Data  │                                              │
-│   └──────────────┘                                              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 🚀 Setup Redis
-
-### Step 1: Install Redis
+### Install Redis
 
 ```bash
 # Ubuntu/Debian
 sudo apt-get update
-sudo apt-get install -y redis-server
+sudo apt-get install redis-server
 
 # macOS
 brew install redis
-brew services start redis
 
-# Docker
-docker run -d --name redis -p 6379:6379 redis:7-alpine
-```
+# Start Redis
+sudo systemctl start redis    # Linux
+brew services start redis     # macOS
 
-### Step 2: Verify Installation
-
-```bash
-# Test connection
+# Verify
 redis-cli ping
-
-# Expected output: PONG ✅
+# Should return: PONG
 ```
 
-### Step 3: Check Status
+### Install Redis Client (Bash)
 
 ```bash
-# Redis info
-redis-cli info server | grep version
+# redis-cli included with server install
+# For scripts, use redis-cli directly
 
-# Output: redis_version:7.2.7
+# Test connection
+redis-cli set test "hello"
+redis-cli get test
+# Returns: hello
+
+redis-cli del test
 ```
 
 ---
 
-## 📜 Helper Script
+## 📋 Step 1: Create Helper Functions
 
-**File:** `redis-utils.sh`
+Save this as `~/scripts/redis-utils.sh`:
 
 ```bash
 #!/bin/bash
 
-# ⚡ Redis Helper Functions
-# Source this file: source redis-utils.sh
+# =============================================================================
+# ⚡ Redis Helper Functions for OpenClaw
+# =============================================================================
 
+# Default Redis connection
 REDIS_HOST="${REDIS_HOST:-localhost}"
 REDIS_PORT="${REDIS_PORT:-6379}"
 
-# ─────────────────────────────────────────────────────────────
+# =============================================================================
+# 🔧 CORE FUNCTIONS
+# =============================================================================
 
+# Set a key with optional TTL (Time To Live in seconds)
 redis_set() {
     local key="$1"
     local value="$2"
-    local ttl="${3:-300}"  # Default 5 minutes
+    local ttl="${3:-}"
     
-    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" SETEX "$key" "$ttl" "$value"
-    echo "✅ Cached: $key (TTL: ${ttl}s)"
+    if [ -n "$ttl" ]; then
+        redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" setex "$key" "$ttl" "$value" >/dev/null
+    else
+        redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" set "$key" "$value" >/dev/null
+    fi
 }
 
+# Get a key value
 redis_get() {
     local key="$1"
-    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" GET "$key"
+    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" get "$key"
 }
 
+# Delete a key
 redis_delete() {
     local key="$1"
-    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" DEL "$key"
-    echo "🗑️  Deleted: $key"
+    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" del "$key" >/dev/null
 }
 
+# Check if key exists (returns 1 if exists, 0 if not)
 redis_exists() {
     local key="$1"
-    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" EXISTS "$key"
+    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" exists "$key"
 }
 
+# Get TTL of a key (returns seconds remaining, -1 if no TTL, -2 if not exists)
 redis_ttl() {
     local key="$1"
-    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" TTL "$key"
+    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" ttl "$key"
 }
 
+# List keys matching pattern (default: all)
 redis_keys() {
     local pattern="${1:-*}"
-    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" KEYS "$pattern"
+    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" keys "$pattern"
 }
 
-# ─────────────────────────────────────────────────────────────
-# Use Case Functions
+# =============================================================================
+# 🎯 CONVENIENCE FUNCTIONS
+# =============================================================================
 
+# Cache JSON data with TTL
+redis_cache_json() {
+    local key="$1"
+    local json_data="$2"
+    local ttl="${3:-300}"  # Default 5 minutes
+    
+    # Compress JSON to single line
+    local compressed
+    compressed=$(echo "$json_data" | jq -c . 2>/dev/null || echo "$json_data")
+    
+    redis_set "$key" "$compressed" "$ttl"
+}
+
+# Get and parse cached JSON
+redis_get_json() {
+    local key="$1"
+    local value
+    value=$(redis_get "$key")
+    
+    if [ -n "$value" ] && [ "$value" != "nil" ]; then
+        echo "$value" | jq . 2>/dev/null || echo "$value"
+    else
+        echo "null"
+    fi
+}
+
+# Cache with automatic expiration for different data types
 redis_cache_weather() {
-    local city="$1"
+    local location="$1"
     local data="$2"
-    redis_set "weather:$city" "$data" 1800  # 30 min TTL
+    # Cache weather for 30 minutes
+    redis_cache_json "weather:$location" "$data" 1800
 }
 
 redis_cache_price() {
     local item="$1"
-    local price="$2"
-    redis_set "price:$item" "$price" 300   # 5 min TTL
+    local data="$2"
+    # Cache prices for 5 minutes
+    redis_cache_json "price:$item" "$data" 300
 }
 
-redis_cache_api_response() {
-    local endpoint="$1"
-    local response="$2"
-    redis_set "api:$endpoint" "$response" 600  # 10 min TTL
+redis_cache_health() {
+    local service="$1"
+    local data="$2"
+    # Cache health for 1 minute
+    redis_cache_json "health:$service" "$data" 60
+}
+
+redis_cache_session() {
+    local session_id="$1"
+    local data="$2"
+    # Cache sessions for 1 hour
+    redis_cache_json "session:$session_id" "$data" 3600
+}
+
+# =============================================================================
+# 📊 MONITORING FUNCTIONS
+# =============================================================================
+
+# Show cache statistics
+redis_stats() {
+    echo "📊 Redis Statistics"
+    echo "=================="
+    
+    # Memory usage
+    echo -n "Memory Used: "
+    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" info memory | grep "used_memory_human" | cut -d: -f2
+    
+    # Number of keys
+    echo -n "Total Keys: "
+    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" dbsize
+    
+    # Connected clients
+    echo -n "Connected Clients: "
+    redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" info clients | grep "connected_clients" | cut -d: -f2
+}
+
+# Clear all cache (use with caution!)
+redis_flush() {
+    echo "⚠️  This will delete ALL cached data!"
+    read -p "Type 'yes' to confirm: " confirm
+    
+    if [ "$confirm" = "yes" ]; then
+        redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" flushdb
+        echo "✅ Cache cleared"
+    else
+        echo "❌ Cancelled"
+    fi
+}
+
+# Show keys by prefix
+redis_list_by_prefix() {
+    local prefix="$1"
+    echo "🔑 Keys with prefix '$prefix':"
+    redis_keys "${prefix}*" | while read -r key; do
+        local ttl
+        ttl=$(redis_ttl "$key")
+        printf "  %-40s (TTL: %s)\n" "$key" "$ttl"
+    done
 }
 ```
 
+Make it executable:
+
 ```bash
-chmod +x redis-utils.sh
+chmod +x ~/scripts/redis-utils.sh
 ```
 
 ---
 
-## 💡 Implementation Examples
+## 📋 Step 2: Use Cases with Code Examples
 
-### Example 1: Weather Cache
+### Use Case 1: Gold/Price Caching
 
 ```bash
 #!/bin/bash
-source redis-utils.sh
 
-get_weather() {
-    local city="$1"
+source ~/scripts/redis-utils.sh
+
+fetch_gold_price() {
+    local cache_key="price:gold:xauusd"
+    
+    # 1. Check cache first
+    local cached
+    cached=$(redis_get_json "$cache_key")
+    
+    if [ "$cached" != "null" ]; then
+        echo "💰 Cache HIT! Gold price (cached):"
+        echo "$cached" | jq -r '.price'
+        return 0
+    fi
+    
+    echo "🔄 Cache MISS — Fetching from API..."
+    
+    # 2. Fetch from external API
+    local api_response
+    api_response=$(curl -s "https://api.goldapi.io/v1/XAU/USD" \
+        -H "x-access-token: YOUR_API_KEY")
+    
+    # 3. Parse and format
+    local price
+    price=$(echo "$api_response" | jq -r '.price')
+    
+    local formatted_data
+    formatted_data=$(jq -n \
+        --arg price "$price" \
+        --arg time "$(date -Iseconds)" \
+        '{price: $price, timestamp: $time, source: "goldapi"}')
+    
+    # 4. Store in cache (5 minutes)
+    redis_cache_price "gold:xauusd" "$formatted_data"
+    
+    echo "💰 Gold price (fresh): $price"
+    echo "✅ Cached for 5 minutes"
+}
+
+# Run
+fetch_gold_price
+```
+
+### Use Case 2: Weather Caching
+
+```bash
+#!/bin/bash
+
+source ~/scripts/redis-utils.sh
+
+fetch_weather() {
+    local city="${1:-Jakarta}"
     local cache_key="weather:$city"
     
     # Check cache
-    cached=$(redis_get "$cache_key")
+    local cached
+    cached=$(redis_get_json "$cache_key")
     
-    if [ -n "$cached" ] && [ "$cached" != "nil" ]; then
-        echo "⚡ Cache HIT: Weather for $city"
-        echo "$cached"
-        return
+    if [ "$cached" != "null" ]; then
+        echo "🌤️  Weather for $city (cached):"
+        echo "$cached" | jq -r '.condition, .temperature'
+        return 0
     fi
     
-    # Cache miss - fetch from API
-    echo "🌐 Cache MISS: Fetching weather for $city..."
-    weather_data=$(curl -s "https://api.weather.com/v1/current?city=$city")
+    echo "🔄 Fetching weather for $city..."
     
-    # Store to cache (30 min TTL)
+    # API call (example)
+    local weather_data
+    weather_data=$(curl -s "https://api.weather.com/v1/current?city=$city" \
+        -H "Authorization: Bearer YOUR_KEY")
+    
+    # Cache for 30 minutes
     redis_cache_weather "$city" "$weather_data"
     
-    echo "$weather_data"
+    echo "🌤️  Weather for $city:"
+    echo "$weather_data" | jq -r '.condition, .temperature'
 }
 
-# Usage
-get_weather "Jakarta"
-get_weather "Jakarta"  # Second call = cache hit!
+fetch_weather "Singapore"
 ```
 
-### Example 2: Price Checker with Cache
+### Use Case 3: Health Status Caching
 
 ```bash
 #!/bin/bash
-source redis-utils.sh
 
-get_gold_price() {
-    local cache_key="gold:price"
+source ~/scripts/redis-utils.sh
+
+check_service_health() {
+    local service="$1"
+    local url="$2"
+    local cache_key="health:$service"
     
-    # Check cache
-    cached=$(redis_get "$cache_key")
+    # Check cache first (1 minute TTL)
+    local cached
+    cached=$(redis_get_json "$cache_key")
     
-    if [ -n "$cached" ] && [ "$cached" != "nil" ]; then
-        echo "💰 Cache HIT: Rp $cached"
-        echo "⏱️  TTL: $(redis_ttl $cache_key) seconds left"
-        return
+    if [ "$cached" != "null" ]; then
+        local status
+        status=$(echo "$cached" | jq -r '.status')
+        echo "[$service] $status (cached)"
+        return 0
     fi
     
-    # Fetch fresh data
-    echo "🌐 Fetching fresh price..."
-    price=$(curl -s "https://hargaemas.com/api/price" | jq -r '.antam_1gr')
+    # Check service
+    local start_time end_time duration
+    start_time=$(date +%s%N)
     
-    # Cache for 5 minutes
-    redis_cache_price "gold" "$price"
-    
-    echo "💰 Fresh: Rp $price"
-}
-
-# Benchmark
-echo "First call (cache miss):"
-time get_gold_price
-
-echo ""
-echo "Second call (cache hit):"
-time get_gold_price
-```
-
-### Example 3: API Response Cache
-
-```bash
-#!/bin/bash
-source redis-utils.sh
-
-api_call_with_cache() {
-    local endpoint="$1"
-    local cache_key="api:$endpoint"
-    local ttl="${2:-600}"  # Default 10 min
-    
-    # Try cache
-    cached=$(redis_get "$cache_key")
-    
-    if [ -n "$cached" ] && [ "$cached" != "nil" ]; then
-        echo '{"cached":true,"data":'"$cached"'}'
-        return
-    fi
-    
-    # Call API
-    response=$(curl -s -w "\n%{http_code}" "https://api.example.com/$endpoint")
-    http_code=$(echo "$response" | tail -1)
-    body=$(echo "$response" | head -n -1)
-    
-    if [ "$http_code" = "200" ]; then
-        # Cache successful response
-        redis_set "$cache_key" "$body" "$ttl"
-        echo '{"cached":false,"data":'"$body"'}'
+    if curl -s --max-time 5 "$url" >/dev/null 2>&1; then
+        end_time=$(date +%s%N)
+        duration=$(( (end_time - start_time) / 1000000 ))
+        
+        local result
+        result=$(jq -n \
+            --arg status "UP" \
+            --argjson response_time "$duration" \
+            --arg checked_at "$(date -Iseconds)" \
+            '{status: $status, response_time: $response_time, checked_at: $checked_at}')
+        
+        redis_cache_health "$service" "$result"
+        echo "[$service] UP (${duration}ms)"
     else
-        echo '{"error":"API failed","code":'"$http_code"'}'
+        local result
+        result=$(jq -n \
+            --arg status "DOWN" \
+            --arg checked_at "$(date -Iseconds)" \
+            '{status: $status, checked_at: $checked_at}')
+        
+        redis_cache_health "$service" "$result"
+        echo "[$service] DOWN"
     fi
 }
 
-# Usage
-api_call_with_cache "users/list" 300      # Cache 5 min
-api_call_with_cache "config/app" 3600     # Cache 1 hour
+# Check multiple services
+echo "🏥 Health Check (with caching):"
+check_service_health "api" "https://api.example.com/health"
+check_service_health "database" "https://db.example.com/ping"
+check_service_health "website" "https://example.com"
 ```
 
----
-
-## 🧪 Performance Testing
-
-**File:** `cache-benchmark.sh`
-
-```bash
-#!/bin/bash
-source redis-utils.sh
-
-echo "🧪 CACHE BENCHMARK"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
-TEST_KEY="benchmark:test"
-
-# Clear cache
-redis_delete "$TEST_KEY" 2>/dev/null
-
-echo ""
-echo "1️⃣ Cache MISS (API call simulation):"
-echo "─────────────────────────────────────"
-
-start=$(date +%s%N)
-result=$(redis_get "$TEST_KEY")
-
-if [ -z "$result" ] || [ "$result" = "nil" ]; then
-    # Simulate API call
-    sleep 1
-    redis_set "$TEST_KEY" "test_data" 300
-fi
-
-end=$(date +%s%N)
-duration_ms=$(( (end - start) / 1000000 ))
-
-echo "   Time: ${duration_ms}ms (includes 1s API simulation)"
-
-echo ""
-echo "2️⃣ Cache HIT (Redis only):"
-echo "─────────────────────────────────────"
-
-start=$(date +%s%N)
-result=$(redis_get "$TEST_KEY")
-end=$(date +%s%N)
-duration_ms=$(( (end - start) / 1000000 ))
-
-echo "   Time: ${duration_ms}ms"
-echo "   Data: $result"
-
-echo ""
-echo "📊 RESULT:"
-echo "   Speedup: $((1000 / duration_ms))x faster!"
-
-# Cleanup
-redis_delete "$TEST_KEY" 2>/dev/null
-```
-
-**Run benchmark:**
-```bash
-chmod +x cache-benchmark.sh
-./cache-benchmark.sh
-
-# Output:
-# 🧪 CACHE BENCHMARK
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-#
-# 1️⃣ Cache MISS (API call simulation):
-# ─────────────────────────────────────
-#    Time: 1005ms
-#
-# 2️⃣ Cache HIT (Redis only):
-# ─────────────────────────────────────
-#    Time: 3ms
-#    Data: test_data
-#
-# 📊 RESULT:
-#    Speedup: 335x faster! 🚀
-```
-
----
-
-## 📊 Cache Statistics
-
-Check cache performance:
+### Use Case 4: Session Caching
 
 ```bash
 #!/bin/bash
 
-echo "📊 CACHE STATISTICS"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+source ~/scripts/redis-utils.sh
 
-echo ""
-echo "🗝️  Total Keys:"
-redis-cli DBSIZE
+# Store user session
+save_session() {
+    local session_id="$1"
+    local user_data="$2"
+    
+    redis_cache_session "$session_id" "$user_data"
+    echo "✅ Session saved (1 hour)"
+}
 
-echo ""
-echo "📁 Key Prefixes:"
-redis-cli KEYS "*" | cut -d: -f1 | sort | uniq -c | sort -rn | head -10
+# Retrieve user session
+get_session() {
+    local session_id="$1"
+    local session_data
+    
+    session_data=$(redis_get_json "session:$session_id")
+    
+    if [ "$session_data" != "null" ]; then
+        echo "$session_data"
+    else
+        echo "{}"
+    fi
+}
 
-echo ""
-echo "⏱️  Memory Usage:"
-redis-cli INFO memory | grep used_memory_human
+# Example usage
+user_session='{"user_id": "123", "name": "Alex", "preferences": {"theme": "dark"}}'
+save_session "sess_abc123" "$user_session"
 
-echo ""
-echo "🔑 Sample Keys:"
-redis-cli KEYS "*" | head -10
+retrieved=$(get_session "sess_abc123")
+echo "User: $(echo "$retrieved" | jq -r '.name')"
 ```
 
 ---
 
-## 🎯 Best Practices
+## 📋 Step 3: Complete Working Example
 
-### TTL Guidelines
-
-```
-Data Type              Recommended TTL
-─────────────────────────────────────────
-Weather               30 minutes (1800s)
-Gold/Stock Prices     5 minutes (300s)
-API Responses         10 minutes (600s)
-User Sessions         1 hour (3600s)
-Config/Settings       1 day (86400s)
-Static Content        1 day (86400s)
-```
-
-### Key Naming Convention
-
-```
-format:   category:subcategory:id
-
-examples:
-  weather:jakarta
-  price:gold:antam
-  api:users:list
-  session:user:12345
-  config:app:theme
-```
-
-### Error Handling
+Save this as `~/scripts/cached-api-call.sh`:
 
 ```bash
-redis_safe_get() {
+#!/bin/bash
+
+source ~/scripts/redis-utils.sh
+
+# =============================================================================
+# ⚡ Generic Cached API Caller
+# =============================================================================
+
+cached_api_call() {
+    local cache_key="$1"
+    local api_url="$2"
+    local cache_seconds="${3:-300}"  # Default 5 minutes
+    local api_headers="${4:-}"
+    
+    echo "🔍 Checking cache for: $cache_key"
+    
+    # Try cache first
+    local cached_data
+    cached_data=$(redis_get_json "$cache_key")
+    
+    if [ "$cached_data" != "null" ]; then
+        local cache_age
+        cache_age=$(redis_ttl "$cache_key")
+        echo "✅ Cache HIT! (expires in ${cache_age}s)"
+        echo "$cached_data"
+        return 0
+    fi
+    
+    echo "🔄 Cache miss — calling API..."
+    
+    # Make API call
+    local response
+    if [ -n "$api_headers" ]; then
+        response=$(curl -s -H "$api_headers" "$api_url")
+    else
+        response=$(curl -s "$api_url")
+    fi
+    
+    # Validate response (simple JSON check)
+    if ! echo "$response" | jq -e . >/dev/null 2>&1; then
+        echo "❌ Invalid API response" >&2
+        return 1
+    fi
+    
+    # Cache the response
+    redis_cache_json "$cache_key" "$response" "$cache_seconds"
+    echo "✅ Cached for ${cache_seconds} seconds"
+    
+    echo "$response"
+}
+
+# Example usage
+echo "Fetching data with caching..."
+result=$(cached_api_call "users:list" "https://jsonplaceholder.typicode.com/users" 600)
+echo "$result" | jq '.[0].name'
+```
+
+---
+
+## 🔧 TTL (Time To Live) Guidelines
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              RECOMMENDED CACHE DURATIONS                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Data Type          TTL          Reason                     │
+│  ─────────────────────────────────────────────────────────  │
+│  💰 Stock/Prices    5 min        Changes frequently          │
+│  🌤️  Weather        30 min       Updates ~hourly             │
+│  🏥 Health Status   1 min        Need fresh status          │
+│  👤 User Sessions   1 hour       Security + usability       │
+│  📊 API Rate Limits 1 hour       Static configuration       │
+│  🗺️  Locations      24 hours      Rarely change             │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📊 Performance Testing
+
+Compare cached vs non-cached:
+
+```bash
+#!/bin/bash
+
+source ~/scripts/redis-utils.sh
+
+API_URL="https://api.example.com/data"
+CACHE_KEY="perf:test"
+
+echo "🚀 Performance Test: Cached vs Non-Cached"
+echo "=========================================="
+
+# Test 1: Non-cached
+echo -e "\n❌ Without Cache:"
+for i in 1 2 3; do
+    redis_delete "$CACHE_KEY"  # Clear cache
+    
+    start=$(date +%s%N)
+    curl -s "$API_URL" > /dev/null
+    end=$(date +%s%N)
+    
+    duration=$(( (end - start) / 1000000 ))
+    echo "  Request $i: ${duration}ms"
+done
+
+# Test 2: Cached
+echo -e "\n✅ With Cache:"
+# Pre-populate cache
+cached_api_call "$CACHE_KEY" "$API_URL" 300 >/dev/null
+
+for i in 1 2 3; do
+    start=$(date +%s%N)
+    redis_get "$CACHE_KEY" > /dev/null
+    end=$(date +%s%N)
+    
+    duration=$(( (end - start) / 1000000 ))
+    echo "  Request $i: ${duration}ms"
+done
+```
+
+---
+
+## 🎓 Best Practices
+
+### 1. Cache Key Naming
+
+```bash
+# Good: Hierarchical, descriptive
+cache_key="weather:singapore:daily"
+cache_key="user:123:profile"
+cache_key="api:github:rate_limit"
+
+# Bad: Vague, collision-prone
+cache_key="data"
+cache_key="temp"
+```
+
+### 2. Error Handling
+
+```bash
+fetch_with_cache() {
     local key="$1"
-    local default="${2:-null}"
+    local url="$2"
     
-    # Check Redis connection
-    if ! redis-cli ping > /dev/null 2>&1; then
-        echo "⚠️  Redis down, returning default"
-        echo "$default"
+    # Try cache first
+    local cached
+    cached=$(redis_get_json "$key")
+    
+    if [ "$cached" != "null" ]; then
+        echo "$cached"
+        return 0
+    fi
+    
+    # Fetch with error handling
+    local response
+    response=$(curl -s --max-time 10 "$url")
+    
+    if [ $? -ne 0 ] || [ -z "$response" ]; then
+        # Return stale cache if available (optional)
+        echo "⚠️  API failed, no cache" >&2
         return 1
     fi
     
-    result=$(redis_get "$key")
-    
-    if [ -z "$result" ] || [ "$result" = "nil" ]; then
-        echo "$default"
-        return 1
-    fi
-    
-    echo "$result"
+    # Cache successful response
+    redis_cache_json "$key" "$response" 300
+    echo "$response"
 }
+```
+
+### 3. Cache Warming
+
+```bash
+# Pre-populate cache before peak hours
+warm_cache() {
+    echo "🔥 Warming cache..."
+    
+    # Pre-fetch common data
+    cached_api_call "config:main" "$API_BASE/config" 3600 >/dev/null
+    cached_api_call "users:top" "$API_BASE/users/top" 300 >/dev/null
+    cached_api_call "prices:all" "$API_BASE/prices" 300 >/dev/null
+    
+    echo "✅ Cache warmed"
+}
+
+# Run on cron at 8 AM
+0 8 * * * ~/scripts/warm-cache.sh
 ```
 
 ---
 
-## 🔧 Troubleshooting
+## ✅ Verification Checklist
 
-### Redis Connection Failed
+- [ ] Redis installed and running (`redis-cli ping` returns PONG)
+- [ ] Helper functions saved and executable
+- [ ] API calls include error handling
+- [ ] Appropriate TTL selected for each data type
+- [ ] Cache keys follow naming convention
+- [ ] Performance tested (cached vs non-cached)
+- [ ] Memory usage monitored (`redis_stats`)
+
+---
+
+## 🐛 Troubleshooting
+
+### Redis not running
 
 ```bash
-# Check if Redis running
+# Check status
 sudo systemctl status redis
 
-# Restart Redis
-sudo systemctl restart redis
+# Start Redis
+sudo systemctl start redis
 
-# Check port
-sudo netstat -tlnp | grep 6379
+# Auto-start on boot
+sudo systemctl enable redis
 ```
 
-### Cache Not Working
+### Connection refused
 
 ```bash
-# Debug: Manual test
-redis-cli SET testkey "hello" EX 60
-redis-cli GET testkey
-redis-cli TTL testkey
+# Check Redis is listening
+netstat -tlnp | grep 6379
+
+# Check firewall
+sudo ufw allow 6379  # If needed locally
 ```
 
-### Memory Full
+### Memory issues
 
 ```bash
-# Check memory
-redis-cli INFO memory
+# Check memory usage
+redis-cli info memory
 
-# Clear old keys
-redis-cli --eval clear-old-keys.lua
-
-# Or set maxmemory policy in redis.conf
-maxmemory-policy allkeys-lru
+# Set max memory in redis.conf
+maxmemory 256mb
+maxmemory-policy allkeys-lru  # Evict least recently used
 ```
 
 ---
 
-## 🚀 Production Tips
+## 📚 Related Tutorials
 
-### 1. Redis Persistence
-
-```bash
-# Enable RDB snapshot in redis.conf
-save 900 1      # Save if 1+ keys changed in 15 min
-save 300 10     # Save if 10+ keys changed in 5 min
-save 60 10000   # Save if 10000+ keys changed in 1 min
-```
-
-### 2. Monitoring
-
-```bash
-# Log slow queries
-redis-cli SLOWLOG GET 10
-
-# Monitor commands (dev only!)
-redis-cli MONITOR
-```
-
-### 3. Backup
-
-```bash
-# Backup script
-#!/bin/bash
-BACKUP_DIR="/backup/redis"
-mkdir -p "$BACKUP_DIR"
-cp /var/lib/redis/dump.rdb "$BACKUP_DIR/dump-$(date +%Y%m%d).rdb"
-```
+- [📧 Smart Email Forward with PDF](./smart-email-forward-pdf.md)
+- [🏥 Service Health Dashboard](./service-health-dashboard.md)
+- [📊 Visual Data Alert](./visual-data-alert.md)
 
 ---
 
-## 📚 Referensi
-
-| Command | Description |
-|---------|-------------|
-| `SETEX key ttl value` | Set dengan TTL |
-| `GET key` | Get value |
-| `DEL key` | Delete key |
-| `TTL key` | Check remaining TTL |
-| `EXISTS key` | Check if exists |
-| `KEYS pattern` | Find keys |
-| `FLUSHALL` | Clear all (⚠️ DANGER) |
-
----
-
-**Selamat!** Aplikasi-mu sekarang ⚡ **20x lebih cepat** dengan Redis cache! 🎉
-
----
-
-*Tutorial ini dibuat untuk OpenClaw Sumopod Community*
+> **Questions?** Join the [OpenClaw Discord](https://discord.com/invite/clawd) ⚡

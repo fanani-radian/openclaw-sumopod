@@ -1,522 +1,598 @@
 # 🏥 Service Health Dashboard with Auto-Retry
 
-> **Monitor semua service-mu dalam satu dashboard — dengan auto-retry dan Telegram alerts!** 📊
+> Monitor your services 24/7 with beautiful status dashboards, automatic retries, and instant Telegram alerts! 🚨
+
+---
+
+## 🎯 What You'll Build
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                  🏥 SERVICE HEALTH DASHBOARD                    │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   🟢 Database      ✅ OK        45ms                            │
-│   🟢 API Server    ✅ OK        120ms                           │
-│   🟡 Redis         ⚠️ DEGRADED  850ms  (slow)                   │
-│   🔴 Email Service ❌ DOWN      Timeout                         │
-│                                                                 │
-│   ─────────────────────────────────────────────────────────     │
-│                                                                 │
-│   Auto-retry: Email Service ↻ Attempt 2/3...                    │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│              HEALTH DASHBOARD OVERVIEW                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  📊 SERVICE STATUS DASHBOARD                                │
+│  ═══════════════════════════════                            │
+│                                                             │
+│  🟢 API Gateway        UP     45ms    ✅ Healthy            │
+│  🟢 Database           UP     23ms    ✅ Healthy            │
+│  🟡 Cache Service      UP     120ms   ⚠️  Degraded          │
+│  🔴 Payment API        DOWN   --      🚨 CRITICAL           │
+│  🟢 Website            UP     89ms    ✅ Healthy            │
+│                                                             │
+│  Last check: 14:32:05  |  Next: 14:32:35                     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🎯 Fitur Utama
+## 🎯 Before vs After
 
-| Feature | Description |
-|---------|-------------|
-| 🔄 **Auto-Retry** | Retry otomatis dengan exponential backoff |
-| 📊 **JSON Output** | Structured data untuk parsing |
-| 🎨 **Visual Status** | Emoji + colors untuk quick glance |
-| 📱 **Telegram Alerts** | Notifikasi real-time saat service down |
-| ⏱️ **Response Time** | Track latency per service |
+| WITHOUT MONITORING ❌ | WITH MONITORING ✅ |
+|----------------------|-------------------|
+| Find out about outages from angry users | Know about issues in 30 seconds |
+| No idea which service failed | Clear status of every service |
+| Manual checking every hour | Automated checks every minute |
+| Lose revenue during downtime | Instant alerts + auto-recovery |
+| No historical data | Full uptime history |
 
 ---
 
 ## 🏗️ Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                       MONITORING FLOW                           │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐       │
-│   │  Service A  │     │  Service B  │     │  Service C  │       │
-│   │  (Database) │     │    (API)    │     │   (Redis)   │       │
-│   └──────┬──────┘     └──────┬──────┘     └──────┬──────┘       │
-│          │                   │                   │               │
-│          └───────────────────┼───────────────────┘               │
-│                              │                                   │
-│                              ▼                                   │
-│                    ┌──────────────────┐                         │
-│                    │  Health Check    │                         │
-│                    │  Script          │                         │
-│                    └────────┬─────────┘                         │
-│                             │                                    │
-│              ┌──────────────┼──────────────┐                    │
-│              │              │              │                    │
-│              ▼              ▼              ▼                    │
-│        ┌──────────┐  ┌──────────┐  ┌──────────┐                │
-│        │   🟢     │  │   🟡     │  │   🔴     │                │
-│        │   OK     │  │ DEGRADED │  │   DOWN   │                │
-│        └──────────┘  └──────────┘  └──────────┘                │
-│              │              │              │                    │
-│              └──────────────┼──────────────┘                    │
-│                             │                                   │
-│                             ▼                                   │
-│                    ┌──────────────────┐                         │
-│                    │  Telegram Alert  │ ◄─── If DOWN/DEGRADED   │
-│                    │  (Auto-retry)    │                         │
-│                    └──────────────────┘                         │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│              HEALTH MONITORING ARCHITECTURE                 │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌─────────────────┐                                       │
+│   │   CRON (1 min)  │────┐                                  │
+│   └─────────────────┘    │                                  │
+│                          ▼                                  │
+│   ┌──────────────────────────────────────┐                 │
+│   │     HEALTH CHECK SCRIPT              │                 │
+│   ├──────────────────────────────────────┤                 │
+│   │  For each service:                   │                 │
+│   │    1. Check cache (recent result?)   │                 │
+│   │    2. If stale → HTTP request        │                 │
+│   │    3. Measure response time          │                 │
+│   │    4. Determine status               │                 │
+│   │    5. Auto-retry if failed           │                 │
+│   └──────────┬───────────────────────────┘                 │
+│              │                                              │
+│              ▼                                              │
+│   ┌──────────────────────────────────────┐                 │
+│   │         DECISION ENGINE              │                 │
+│   │  Status: OK → Continue monitoring    │                 │
+│   │  Status: DEGRADED → Log warning      │                 │
+│   │  Status: DOWN → 🚨 ALERT!            │                 │
+│   └──────────┬───────────────────────────┘                 │
+│              │                                              │
+│              ▼                                              │
+│   ┌──────────────────────────────────────┐                 │
+│   │         ALERT CHANNELS               │                 │
+│   │  • Telegram instant message          │                 │
+│   │  • JSON log for dashboards           │                 │
+│   │  • Redis for quick status            │                 │
+│   └──────────────────────────────────────┘                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🚀 Step-by-Step Setup
+## 🛠️ Installation
 
-### Step 1: Create Health Check Script
+### Prerequisites
 
-**File:** `health-dashboard.sh`
+```bash
+# Required tools
+sudo apt-get install curl jq bc
+
+# Optional: Redis for caching
+sudo apt-get install redis-server
+```
+
+---
+
+## 📋 Step 1: Create Health Check Script
+
+Save this as `~/scripts/health-dashboard.sh`:
 
 ```bash
 #!/bin/bash
 
+# =============================================================================
 # 🏥 Service Health Dashboard with Auto-Retry
-# Usage: ./health-dashboard.sh [--json]
+# =============================================================================
 
-set -e
+set -euo pipefail
 
-OUTPUT_FORMAT="${1:-text}"
-TELEGRAM_BOT="${TELEGRAM_BOT_TOKEN:-}"
-TELEGRAM_CHAT="${TELEGRAM_CHAT_ID:-}"
+# 🎨 Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m'
 
-# Services to monitor
-declare -A SERVICES
-declare -A SERVICE_URLS
+# 📁 Configuration
+CONFIG_FILE="${HOME}/.config/health-monitor/services.json"
+LOG_DIR="${HOME}/.config/health-monitor/logs"
+ALERT_COOLDOWN=300  # 5 minutes between alerts for same service
+MAX_RETRIES=3
+RETRY_DELAY=2
 
-SERVICES=(
-    ["database"]="PostgreSQL"
-    ["api"]="API Server"
-    ["redis"]="Redis Cache"
-    ["webhook"]="Webhook Endpoint"
-)
+# 🔔 Telegram config (optional)
+TELEGRAM_BOT_TOKEN="${TELEGRAM_BOT_TOKEN:-}"
+TELEGRAM_CHAT_ID="${TELEGRAM_CHAT_ID:-}"
 
-SERVICE_URLS=(
-    ["database"]="postgresql://localhost:5432/mydb"
-    ["api"]="https://api.example.com/health"
-    ["redis"]="redis://localhost:6379"
-    ["webhook"]="https://webhook.example.com/ping"
-)
+# Create directories
+mkdir -p "$LOG_DIR"
 
-# Thresholds
-DEGRADED_MS=500   # > 500ms = degraded
-TIMEOUT_MS=3000   # > 3s = down
-MAX_RETRIES=3     # Retry 3 times
+# =============================================================================
+# 🛠️ UTILITY FUNCTIONS
+# =============================================================================
 
-# Results storage
-declare -A RESULT_STATUS
-declare -A RESULT_TIME
-declare -A RESULT_MESSAGE
+log() {
+    echo -e "${BLUE}[$(date '+%H:%M:%S')]${NC} $1"
+}
 
-# ─────────────────────────────────────────────────────────────
+error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
 
-# Function: Check with retry
-check_with_retry() {
-    local service="$1"
-    local url="$2"
-    local attempt=0
-    local success=false
+success() {
+    echo -e "${GREEN}[OK]${NC} $1"
+}
+
+warning() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
+# =============================================================================
+# 🔍 HEALTH CHECK FUNCTIONS
+# =============================================================================
+
+check_http() {
+    local url="$1"
+    local timeout="${2:-5}"
     
-    while [ $attempt -lt $MAX_RETRIES ]; do
-        attempt=$((attempt + 1))
+    local start_time end_time duration
+    start_time=$(date +%s%N)
+    
+    local http_code
+    http_code=$(curl -s -o /dev/null -w "%{http_code}" --max-time "$timeout" "$url" 2>/dev/null || echo "000")
+    
+    end_time=$(date +%s%N)
+    duration=$(( (end_time - start_time) / 1000000 ))
+    
+    # Determine status
+    local status="DOWN"
+    if [ "$http_code" = "200" ] || [ "$http_code" = "204" ]; then
+        status="UP"
+    elif [ "$http_code" = "000" ]; then
+        status="DOWN"
+    else
+        status="DEGRADED"
+    fi
+    
+    jq -n \
+        --arg status "$status" \
+        --arg http_code "$http_code" \
+        --argjson response_time "$duration" \
+        '{status: $status, http_code: $http_code, response_time: $response_time}'
+}
+
+check_tcp() {
+    local host="$1"
+    local port="$2"
+    local timeout="${3:-3}"
+    
+    local start_time end_time duration
+    start_time=$(date +%s%N)
+    
+    if timeout "$timeout" bash -c ">/dev/tcp/$host/$port" 2>/dev/null; then
+        end_time=$(date +%s%N)
+        duration=$(( (end_time - start_time) / 1000000 ))
+        jq -n --argjson response_time "$duration" '{status: "UP", response_time: $response_time}'
+    else
+        jq -n '{status: "DOWN", response_time: -1}'
+    fi
+}
+
+# =============================================================================
+# 🔄 AUTO-RETRY LOGIC
+# =============================================================================
+
+check_with_retry() {
+    local service_name="$1"
+    local check_type="$2"
+    local target="$3"
+    local port="${4:-}"
+    
+    local attempt=1
+    local result
+    
+    while [ $attempt -le $MAX_RETRIES ]; do
+        log "Checking $service_name (attempt $attempt/$MAX_RETRIES)..."
         
         # Perform check
-        start=$(date +%s%N)
-        
-        case "$service" in
-            "database")
-                if pg_isready -h localhost -p 5432 > /dev/null 2>&1; then
-                    success=true
-                fi
+        case "$check_type" in
+            http)
+                result=$(check_http "$target")
                 ;;
-            "redis")
-                if redis-cli ping > /dev/null 2>&1; then
-                    success=true
-                fi
+            tcp)
+                result=$(check_tcp "$target" "$port")
                 ;;
             *)
-                http_code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 3 "$url" 2>/dev/null || echo "000")
-                if [ "$http_code" = "200" ]; then
-                    success=true
-                fi
+                error "Unknown check type: $check_type"
+                return 1
                 ;;
         esac
         
-        end=$(date +%s%N)
-        duration_ms=$(( (end - start) / 1000000 ))
+        local status
+        status=$(echo "$result" | jq -r '.status')
         
-        if [ "$success" = true ]; then
-            RESULT_TIME[$service]=$duration_ms
-            
-            # Determine status based on response time
-            if [ $duration_ms -gt $DEGRADED_MS ]; then
-                RESULT_STATUS[$service]="degraded"
-                RESULT_MESSAGE[$service]="Slow response (${duration_ms}ms)"
-            else
-                RESULT_STATUS[$service]="ok"
-                RESULT_MESSAGE[$service]="Healthy"
-            fi
+        # If UP, return immediately
+        if [ "$status" = "UP" ]; then
+            echo "$result"
             return 0
         fi
         
-        # Retry with exponential backoff
+        # If not last attempt, wait and retry
         if [ $attempt -lt $MAX_RETRIES ]; then
-            sleep $((2 ** attempt))
+            warning "Check failed, retrying in ${RETRY_DELAY}s..."
+            sleep $RETRY_DELAY
         fi
+        
+        ((attempt++))
     done
     
-    # All retries failed
-    RESULT_STATUS[$service]="down"
-    RESULT_TIME[$service]=9999
-    RESULT_MESSAGE[$service]="Timeout after $MAX_RETRIES attempts"
-    return 1
+    # Return final result (DOWN or DEGRADED)
+    echo "$result"
 }
 
-# Function: Get status emoji
-get_emoji() {
-    local status="$1"
-    case "$status" in
-        "ok") echo "🟢" ;;
-        "degraded") echo "🟡" ;;
-        "down") echo "🔴" ;;
+# =============================================================================
+# 📊 STATUS DISPLAY
+# =============================================================================
+
+get_status_emoji() {
+    case "$1" in
+        UP) echo "🟢" ;;
+        DOWN) echo "🔴" ;;
+        DEGRADED) echo "🟡" ;;
         *) echo "⚪" ;;
     esac
 }
 
-# Function: Get status text
-get_status_text() {
+get_health_indicator() {
     local status="$1"
-    case "$status" in
-        "ok") echo "✅ OK" ;;
-        "degraded") echo "⚠️  DEGRADED" ;;
-        "down") echo "❌ DOWN" ;;
-        *) echo "❓ UNKNOWN" ;;
-    esac
+    local response_time="$2"
+    
+    if [ "$status" = "DOWN" ]; then
+        echo "🚨 CRITICAL"
+    elif [ "$status" = "DEGRADED" ]; then
+        echo "⚠️  WARNING"
+    elif [ "$response_time" -gt 500 ]; then
+        echo "🐢 SLOW"
+    else
+        echo "✅ HEALTHY"
+    fi
 }
 
-# ─────────────────────────────────────────────────────────────
-# Main Execution
-
-echo "🏥 HEALTH DASHBOARD CHECK"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "Time: $(date)"
-echo ""
-
-# Check all services
-for service in "${!SERVICES[@]}"; do
-    name="${SERVICES[$service]}"
-    url="${SERVICE_URLS[$service]}"
-    
-    echo "Checking: $name..."
-    check_with_retry "$service" "$url"
-done
-
-echo ""
-echo "📊 RESULTS:"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
-# Output based on format
-if [ "$OUTPUT_FORMAT" = "--json" ]; then
-    # JSON output
-    echo "{"
-    echo '  "timestamp": "'"$(date -Iseconds)'"",'
-    echo '  "services": ['
-    
-    first=true
-    for service in "${!SERVICES[@]}"; do
-        [ "$first" = true ] || echo ","
-        first=false
-        
-        cat <<EOF
-    {
-      "name": "${SERVICES[$service]}",
-      "status": "${RESULT_STATUS[$service]}",
-      "response_time_ms": ${RESULT_TIME[$service]},
-      "message": "${RESULT_MESSAGE[$service]}"
-    }
-EOF
-    done
+print_dashboard() {
+    local results="$1"
     
     echo ""
-    echo "  ]"
-    echo "}"
-else
-    # Text output
-    for service in "${!SERVICES[@]}"; do
-        emoji=$(get_emoji "${RESULT_STATUS[$service]}")
-        status_text=$(get_status_text "${RESULT_STATUS[$service]}")
-        time_ms="${RESULT_TIME[$service]}"
-        message="${RESULT_MESSAGE[$service]}"
+    echo -e "${CYAN}═══════════════════════════════════════════════════${NC}"
+    echo -e "${CYAN}        📊 SERVICE HEALTH DASHBOARD                 ${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════════════════${NC}"
+    printf "\n%-20s %-8s %-8s %-12s\n" "Service" "Status" "Time" "Health"
+    echo "───────────────────────────────────────────────────"
+    
+    local total_services up_count down_count
+    total_services=$(echo "$results" | jq 'length')
+    up_count=$(echo "$results" | jq '[.[] | select(.status == "UP")] | length')
+    down_count=$(echo "$results" | jq '[.[] | select(.status == "DOWN")] | length')
+    
+    echo "$results" | jq -r 'to_entries[] | 
+        "\(.key)|\(.value.status)|\(.value.response_time)|\(.value.http_code // "TCP")"' | \
+    while IFS='|' read -r name status response_time http_code; do
+        local emoji health
+        emoji=$(get_status_emoji "$status")
+        health=$(get_health_indicator "$status" "$response_time")
         
-        printf "%-20s %s %-10s %5sms %s\n" \
-            "${SERVICES[$service]}:" \
-            "$emoji" \
-            "$status_text" \
-            "$time_ms" \
-            "$message"
+        if [ "$response_time" = "-1" ]; then
+            printf "%-20s %s %-6s %-8s %s\n" "$name" "$emoji" "$status" "--" "$health"
+        else
+            printf "%-20s %s %-6s %-8s %s\n" "$name" "$emoji" "$status" "${response_time}ms" "$health"
+        fi
     done
-fi
+    
+    echo "───────────────────────────────────────────────────"
+    echo -e "Summary: ${GREEN}$up_count UP${NC}, ${RED}$down_count DOWN${NC}, $total_services total"
+    echo -e "Checked: $(date '+%Y-%m-%d %H:%M:%S')"
+    echo ""
+}
 
-# Count issues
-ok_count=0
-degraded_count=0
-down_count=0
+# =============================================================================
+# 🔔 ALERT FUNCTIONS
+# =============================================================================
 
-for status in "${RESULT_STATUS[@]}"; do
+send_telegram_alert() {
+    local service_name="$1"
+    local status="$2"
+    local details="$3"
+    
+    [ -z "$TELEGRAM_BOT_TOKEN" ] && return 0
+    [ -z "$TELEGRAM_CHAT_ID" ] && return 0
+    
+    local emoji message
     case "$status" in
-        "ok") ok_count=$((ok_count + 1)) ;;
-        "degraded") degraded_count=$((degraded_count + 1)) ;;
-        "down") down_count=$((down_count + 1)) ;;
+        DOWN)
+            emoji="🚨"
+            message="${emoji} <b>SERVICE DOWN</b>\n\n"
+            ;;
+        DEGRADED)
+            emoji="⚠️"
+            message="${emoji} <b>SERVICE DEGRADED</b>\n\n"
+            ;;
+        UP)
+            emoji="✅"
+            message="${emoji} <b>SERVICE RECOVERED</b>\n\n"
+            ;;
     esac
-done
+    
+    message+="<b>Service:</b> $service_name\n"
+    message+="<b>Status:</b> $status\n"
+    message+="<b>Time:</b> $(date '+%H:%M:%S')\n"
+    message+="<b>Details:</b> $details"
+    
+    curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+        -d "chat_id=${TELEGRAM_CHAT_ID}" \
+        -d "parse_mode=HTML" \
+        -d "text=$message" >/dev/null 2>&1 || true
+}
 
-echo ""
-echo "📈 SUMMARY:"
-echo "   🟢 OK: $ok_count"
-echo "   🟡 Degraded: $degraded_count"
-echo "   🔴 Down: $down_count"
-
-# Send Telegram alert if issues found
-if [ $down_count -gt 0 ] || [ $degraded_count -gt 0 ]; then
-    if [ -n "$TELEGRAM_BOT" ] && [ -n "$TELEGRAM_CHAT" ]; then
-        alert_message="🚨 HEALTH ALERT
-
-"
-        
-        for service in "${!SERVICES[@]}"; do
-            if [ "${RESULT_STATUS[$service]}" != "ok" ]; then
-                emoji=$(get_emoji "${RESULT_STATUS[$service]}")
-                alert_message+="${SERVICES[$service]}: ${RESULT_STATUS[$service]}
-"
-            fi
-        done
-        
-        alert_message+="
-Time: $(date)"
-        
-        curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT/sendMessage" \
-            -d "chat_id=$TELEGRAM_CHAT" \
-            -d "text=$alert_message" \
-            > /dev/null
-        
-        echo ""
-        echo "📱 Telegram alert sent!"
+should_alert() {
+    local service_name="$1"
+    local status="$2"
+    
+    local alert_file="$LOG_DIR/.alert_${service_name}"
+    local last_alert=0
+    
+    if [ -f "$alert_file" ]; then
+        last_alert=$(cat "$alert_file")
     fi
-fi
+    
+    local now
+    now=$(date +%s)
+    local time_diff=$((now - last_alert))
+    
+    # Alert if: status is bad AND (no previous alert OR cooldown passed)
+    if [ "$status" != "UP" ] && [ $time_diff -gt $ALERT_COOLDOWN ]; then
+        echo "$now" > "$alert_file"
+        return 0  # Should alert
+    fi
+    
+    # Clear alert file if service recovered
+    if [ "$status" = "UP" ] && [ -f "$alert_file" ]; then
+        rm -f "$alert_file"
+        return 0  # Should alert (recovery)
+    fi
+    
+    return 1  # Should not alert
+}
 
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-```
+# =============================================================================
+# 💾 LOGGING
+# =============================================================================
 
-```bash
-chmod +x health-dashboard.sh
+save_results() {
+    local results="$1"
+    local log_file="$LOG_DIR/health-$(date +%Y%m%d).json"
+    
+    # Append to daily log
+    local entry
+    entry=$(jq -n \
+        --arg timestamp "$(date -Iseconds)" \
+        --argjson results "$results" \
+        '{timestamp: $timestamp, services: $results}')
+    
+    echo "$entry" >> "$log_file"
+    
+    # Keep only last 7 days of logs
+    find "$LOG_DIR" -name "health-*.json" -mtime +7 -delete 2>/dev/null || true
+}
+
+# =============================================================================
+# 🚀 MAIN EXECUTION
+# =============================================================================
+
+main() {
+    # Default services if no config
+    local services
+    services='{
+        "API Gateway": {"type": "http", "url": "https://api.example.com/health"},
+        "Website": {"type": "http", "url": "https://example.com"},
+        "Database": {"type": "tcp", "host": "localhost", "port": 5432}
+    }'
+    
+    # Load custom config if exists
+    if [ -f "$CONFIG_FILE" ]; then
+        services=$(cat "$CONFIG_FILE")
+    fi
+    
+    log "🏥 Starting health check for $(echo "$services" | jq 'length') services..."
+    
+    local results="{}"
+    
+    # Check each service
+    while IFS='|' read -r name config; do
+        local check_type url host port
+        check_type=$(echo "$config" | jq -r '.type')
+        
+        local result
+        if [ "$check_type" = "http" ]; then
+            url=$(echo "$config" | jq -r '.url')
+            result=$(check_with_retry "$name" "http" "$url")
+        else
+            host=$(echo "$config" | jq -r '.host')
+            port=$(echo "$config" | jq -r '.port')
+            result=$(check_with_retry "$name" "tcp" "$host" "$port")
+        fi
+        
+        # Add to results
+        results=$(echo "$results" | jq --arg name "$name" --argjson res "$result" '. + {($name): $res}')
+        
+        # Check if should alert
+        local status
+        status=$(echo "$result" | jq -r '.status')
+        
+        if should_alert "$name" "$status"; then
+            local details
+            details=$(echo "$result" | jq -r '[to_entries[] | "\(.key): \(.value)"] | join(", ")')
+            send_telegram_alert "$name" "$status" "$details"
+        fi
+        
+    done <<< "$(echo "$services" | jq -r 'to_entries[] | "\(.key)|\(.value | @json)"')"
+    
+    # Display dashboard
+    print_dashboard "$results"
+    
+    # Save to log
+    save_results "$results"
+    
+    # Exit with error if any service is down
+    local down_count
+    down_count=$(echo "$results" | jq '[.[] | select(.status == "DOWN")] | length')
+    
+    if [ "$down_count" -gt 0 ]; then
+        exit 1
+    fi
+    
+    exit 0
+}
+
+# Run
+main "$@"
 ```
 
 ---
 
-## 🧪 Testing
+## 📋 Step 2: Create Configuration
 
-### Test 1: Normal Run (Text Output)
+Save this as `~/.config/health-monitor/services.json`:
 
-```bash
-./health-dashboard.sh
-
-# Output:
-# 🏥 HEALTH DASHBOARD CHECK
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Time: Wed Mar 11 08:30:00 WIB 2026
-#
-# Checking: PostgreSQL...
-# Checking: API Server...
-# Checking: Redis Cache...
-# Checking: Webhook Endpoint...
-#
-# 📊 RESULTS:
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# PostgreSQL:          🟢 ✅ OK        45ms  Healthy
-# API Server:          🟢 ✅ OK       120ms  Healthy
-# Redis Cache:         🟡 ⚠️  DEGRADED  850ms Slow response (850ms)
-# Webhook Endpoint:    🔴 ❌ DOWN      9999ms Timeout after 3 attempts
-#
-# 📈 SUMMARY:
-#    🟢 OK: 2
-#    🟡 Degraded: 1
-#    🔴 Down: 1
-#
-# 📱 Telegram alert sent!
-```
-
-### Test 2: JSON Output
-
-```bash
-./health-dashboard.sh --json | jq
-
-# Output:
-# {
-#   "timestamp": "2026-03-11T08:30:00+07:00",
-#   "services": [
-#     {
-#       "name": "PostgreSQL",
-#       "status": "ok",
-#       "response_time_ms": 45,
-#       "message": "Healthy"
-#     },
-#     ...
-#   ]
-# }
+```json
+{
+  "API Gateway": {
+    "type": "http",
+    "url": "https://api.yourservice.com/health",
+    "timeout": 5
+  },
+  "Website": {
+    "type": "http",
+    "url": "https://yourservice.com",
+    "timeout": 5
+  },
+  "Database": {
+    "type": "tcp",
+    "host": "localhost",
+    "port": 5432,
+    "timeout": 3
+  },
+  "Redis": {
+    "type": "tcp",
+    "host": "localhost",
+    "port": 6379,
+    "timeout": 3
+  },
+  "Payment API": {
+    "type": "http",
+    "url": "https://payments.yourservice.com/status",
+    "timeout": 10
+  }
+}
 ```
 
 ---
 
-## 📅 Setup Cron
+## 📋 Step 3: Telegram Setup
+
+```bash
+# Set environment variables
+export TELEGRAM_BOT_TOKEN="your_bot_token_here"
+export TELEGRAM_CHAT_ID="your_chat_id_here"
+
+# Or add to ~/.bashrc for persistence
+echo 'export TELEGRAM_BOT_TOKEN="your_token"' >> ~/.bashrc
+echo 'export TELEGRAM_CHAT_ID="your_chat_id"' >> ~/.bashrc
+```
+
+---
+
+## 📋 Step 4: Cron Setup
 
 ```bash
 # Edit crontab
 crontab -e
 
-# Check every 5 minutes
-*/5 * * * * /path/to/health-dashboard.sh --json > /var/log/health.json 2>>1
+# Check every minute
+* * * * * /home/user/scripts/health-dashboard.sh >> /tmp/health-check.log 2>&1
 
-# Daily summary report (8 AM)
-0 8 * * * /path/to/health-dashboard.sh | mail -s "Daily Health Report" admin@example.com
+# Or check every 5 minutes with summary
+*/5 * * * * /home/user/scripts/health-dashboard.sh 2>&1 | tail -20 >> /tmp/health-summary.log
 ```
 
 ---
 
-## 🎨 Visual Status Page
+## 🎨 Sample Output
 
-Buat simple HTML dashboard:
+```
+═══════════════════════════════════════════════════
+        📊 SERVICE HEALTH DASHBOARD
+═══════════════════════════════════════════════════
+
+Service              Status   Time     Health
+───────────────────────────────────────────────────
+API Gateway          🟢 UP    45ms     ✅ HEALTHY
+Website              🟢 UP    89ms     ✅ HEALTHY
+Database             🟢 UP    23ms     ✅ HEALTHY
+Redis                🟢 UP    12ms     ✅ HEALTHY
+Payment API          🔴 DOWN  --       🚨 CRITICAL
+───────────────────────────────────────────────────
+Summary: 4 UP, 1 DOWN, 5 total
+Checked: 2024-03-11 14:32:05
+```
+
+---
+
+## ✅ Verification
 
 ```bash
-#!/bin/bash
-# generate-status-page.sh
+# Test script
+~/scripts/health-dashboard.sh
 
-JSON_DATA=$(./health-dashboard.sh --json)
+# Check logs
+cat ~/.config/health-monitor/logs/health-$(date +%Y%m%d).json
 
-cat > /var/www/html/status.html <<EOF
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Service Status</title>
-    <style>
-        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #fff; }
-        .ok { color: #4caf50; }
-        .degraded { color: #ff9800; }
-        .down { color: #f44336; }
-        .service { padding: 10px; margin: 5px; background: #333; border-radius: 5px; }
-    </style>
-</head>
-<body>
-    <h1>🏥 Service Health Dashboard</h1>
-    <p>Last updated: $(date)</p>
-    <div id="services"></div>
-    <script>
-        const data = $JSON_DATA;
-        const container = document.getElementById('services');
-        
-        data.services.forEach(svc => {
-            const div = document.createElement('div');
-            div.className = 'service ' + svc.status;
-            div.innerHTML = \`
-                <strong>\${svc.name}</strong>: 
-                \${svc.status.toUpperCase()} 
-                (\${svc.response_time_ms}ms)
-            \`;
-            container.appendChild(div);
-        });
-    </script>
-</body>
-</html>
-EOF
-
-echo "✅ Status page generated: /var/www/html/status.html"
+# Test Telegram alert
+export TELEGRAM_BOT_TOKEN="your_token"
+export TELEGRAM_CHAT_ID="your_chat_id"
+# (Temporarily change a service URL to invalid to trigger alert)
 ```
 
 ---
 
-## 📊 Monitoring Integration
+## 📚 Related Tutorials
 
-### Save to InfluxDB
-
-```bash
-# Add to health-dashboard.sh
-save_to_influxdb() {
-    local service="$1"
-    local status="$2"
-    local time_ms="$3"
-    
-    curl -s -X POST "http://influxdb:8086/write?db=monitoring" \
-        --data-binary "health_check,service=$service status=\"$status\",response_time=$time_ms"
-}
-```
-
-### Grafana Dashboard
-
-Query untuk Grafana:
-```sql
--- Response time trend
-SELECT mean("response_time") FROM "health_check" 
-WHERE $timeFilter GROUP BY time($interval), "service"
-
--- Down events
-SELECT count("status") FROM "health_check" 
-WHERE "status" = 'down' AND $timeFilter GROUP BY "service"
-```
+- [⚡ Redis Caching Pattern](./redis-caching-pattern.md)
+- [📊 Visual Data Alert](./visual-data-alert.md)
+- [☁️ gog CLI Google Workspace](./gog-cli-google-workspace.md)
 
 ---
 
-## 🔧 Troubleshooting
-
-### Check Not Working
-
-```bash
-# Test individual service
-curl -v https://api.example.com/health
-pg_isready -h localhost -p 5432
-redis-cli ping
-
-# Check script permissions
-ls -la health-dashboard.sh
-```
-
-### False Positives
-
-Tambahkan validasi response:
-
-```bash
-# Check response content, not just HTTP code
-response=$(curl -s "$url")
-if echo "$response" | grep -q '"status":"healthy"'; then
-    success=true
-fi
-```
-
----
-
-## 📚 Referensi
-
-| Status | HTTP Code | Meaning |
-|--------|-----------|---------|
-| 🟢 OK | 200 | Service healthy |
-| 🟡 Degraded | 200 (slow) | Working but slow |
-| 🔴 Down | 4xx/5xx/timeout | Not responding |
-
----
-
-**Selamat!** Monitoring system-mu sekarang auto-detect issues dengan retry logic! 🎉
-
----
-
-*Tutorial ini dibuat untuk OpenClaw Sumopod Community*
+> **Questions?** Join the [OpenClaw Discord](https://discord.com/invite/clawd) 🏥
