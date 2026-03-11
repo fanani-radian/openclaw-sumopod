@@ -1,425 +1,440 @@
-# OpenClaw + gog CLI Tutorial
+# 🔍 gog CLI — Google Workspace dari Terminal
 
-Connect OpenClaw to Google Workspace (Gmail, Drive, Docs, Sheets, Calendar) via gog CLI.
+> Kontrol Gmail, Drive, Docs, Sheets, Calendar langsung dari command line!
 
-## Overview
+---
 
-This tutorial shows how to integrate Google Workspace services into your OpenClaw workflow using the `gog` CLI tool.
+## 🎯 Apa itu gog CLI?
 
-## What You'll Learn
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    TANPA gog CLI                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Buka Browser → Login Gmail → Klik-klik manual 🐢          │
+│                                                             │
+│   Slow, ribet, gabisa di-automate                          │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 
-- Install and configure gog CLI
-- Authenticate with Google OAuth
-- Access Gmail, Drive, Docs, Sheets, Calendar
-- Build automation scripts
+                         ⬇️
 
-## Example Output
+┌─────────────────────────────────────────────────────────────┐
+│                    DENGAN gog CLI                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Terminal: gog gmail send "Hello" → ✅ Sent!              │
+│                                                             │
+│   Cepat, bisa script, full automation 🚀                   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-Here's what you can do after setup:
+---
 
-### OAuth Flow
-![OAuth Flow](images/gog-oauth-flow.png)
-*Authentication flow from terminal to Google and back*
+## 📦 Install gog CLI
 
-### Available Services
-![Google Services](images/gog-services.png)
-*All Google Workspace services accessible via gog CLI*
-
-## Prerequisites
-
-- Google Account (Gmail)
-- OpenClaw installed
-- Terminal access
-
-## Step 1: Install gog CLI
-
-### Download Binary
+### One-Liner Install
 
 ```bash
-# Download latest release
-curl -fsSL https://github.com/rubiojr/gog/releases/latest/download/gog-linux-amd64 \
+# Download latest release (Linux/macOS/Windows)
+curl -fsSL https://github.com/steipete/gogcli/releases/latest/download/gog-$(uname -s)-$(uname -m) \
   -o /usr/local/bin/gog
 
-# Make executable
+# Kasih permission executable
 chmod +x /usr/local/bin/gog
 
-# Verify installation
+# Cek versi
 gog version
 ```
 
-**Expected Output:**
-```
-v0.9.0 (99d9575 2026-01-22T04:15:12Z)
-```
-
-## Step 2: Google Cloud Setup
-
-### Create OAuth Client
-
-```
-┌─────────────────────────────────────────┐
-│  1. Go to Google Cloud Console          │
-│     console.cloud.google.com            │
-│                                         │
-│  2. Create New Project                  │
-│     → "My OpenClaw Project"             │
-│                                         │
-│  3. Enable APIs:                        │
-│     ☑ Gmail API                        │
-│     ☑ Drive API                        │
-│     ☑ Docs API                         │
-│     ☑ Sheets API                       │
-│     ☑ Calendar API                     │
-│                                         │
-│  4. Credentials → OAuth Client          │
-│     → "Desktop App"                     │
-│     → Download JSON                     │
-└─────────────────────────────────────────┘
-```
-
-### Required Scopes
-
-Add these scopes in OAuth consent screen:
-
-```
-https://www.googleapis.com/auth/gmail.modify
-https://www.googleapis.com/auth/drive
-https://www.googleapis.com/auth/calendar
-https://www.googleapis.com/auth/tasks
-https://www.googleapis.com/auth/documents
-https://www.googleapis.com/auth/spreadsheets
-https://www.googleapis.com/auth/contacts
-```
-
-## Step 3: Authenticate
-
-### First Login
+### Verifikasi Install
 
 ```bash
-# Set keyring password (for secure token storage)
-export GOG_KEYRING_PASSWORD="your-secure-password"
+$ gog version
 
-# Add account
-gog auth add your-email@gmail.com
+┌─────────────────────────────────────┐
+│  gog CLI v0.12.0                    │
+│  Build: 2026-03-09                  │
+│  OS: Linux x86_64                   │
+│  Status: ✅ Ready                   │
+└─────────────────────────────────────┘
 ```
 
-**Flow Diagram:**
+---
+
+## 🔐 Setup Pertama Kali
+
+### Step 1: Login ke Google
+
+```bash
+# Tambahin akun Gmail/Workspace
+gog auth add fanani@cvrfm.com
+```
+
+**Yang terjadi:**
 
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Terminal   │────▶│  Browser     │────▶│  Google      │
-│   gog auth   │     │  OAuth URL   │     │  Login       │
-└──────────────┘     └──────────────┘     └──────┬───────┘
-                                                  │
-                       ┌──────────────────────────┘
-                       ▼
-              ┌────────────────┐
-              │ Grant Access   │
-              │ to OpenClaw    │
-              └───────┬────────┘
-                      │
-        ┌─────────────┘
-        ▼
+┌──────────────┐
+│   Terminal   │
+│  gog auth    │
+└──────┬───────┘
+       │
+       ▼
 ┌──────────────┐     ┌──────────────┐
-│   Token      │◀────│   Redirect   │
-│   Stored     │     │   to CLI     │
-└──────────────┘     └──────────────┘
+│  Browser     │────▶│  Google      │
+│  Terbuka     │     │  Login Page  │
+└──────────────┘     └──────┬───────┘
+                            │
+                            ▼
+                     ┌──────────────┐
+                     │  Izinkan     │
+                     │  Akses?      │
+                     └──────┬───────┘
+                            │
+                            ▼
+                     ┌──────────────┐
+                     │  Token       │
+                     │  Tersimpan   │
+                     └──────────────┘
 ```
 
-**What Happens:**
-1. CLI opens browser with Google OAuth URL
-2. You login and grant permissions
-3. Google redirects back to CLI
-4. Token securely stored in keyring
+**Klik "Allow" di browser** → Done! ✅
 
-### Verify Auth
+### Step 2: Cek Status
 
 ```bash
-# Check auth status
-gog auth status
-
-# List available services
-gog auth services
-
-# List connected accounts
+# Lihat akun yang terhubung
 gog auth list
+
+# Output:
+# ✅ fanani@cvrfm.com (Gmail, Drive, Calendar)
 ```
 
-## Step 4: Quick Start Examples
+---
 
-### 4.1 Gmail - Check Inbox
+## 📧 Gmail — Command Cheat Sheet
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    GMAIL COMMANDS                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  📖 Baca Email                                              │
+│  ─────────────────                                          │
+│  gog gmail list --max=10           # 10 email terakhir      │
+│  gog gmail search "invoice"        # Cari invoice           │
+│  gog gmail search "is:unread"      # Email belum dibaca     │
+│                                                             │
+│  ✉️  Kirim Email                                            │
+│  ─────────────────                                          │
+│  gog gmail send \\
+│    --to "client@email.com" \\
+│    --subject "Project Update" \\
+│    --body "Halo, ini update..."
+│                                                             │
+│  📎 Dengan Attachment                                       │
+│  ─────────────────                                          │
+│  gog gmail send \\
+│    --to "finance@cvrfm.com" \\
+│    --subject "Invoice PO123" \\
+│    --attach "invoice.pdf"
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Contoh: Check Email Hari Ini
 
 ```bash
-# Set env vars
-export GOG_KEYRING_PASSWORD="your-password"
-export GOG_ACCOUNT="your-email@gmail.com"
+# Cek email masuk hari ini
+gog gmail search "newer_than:1d" --json | jq '.[].subject'
 
-# Search unread emails
-gog gmail search "is:unread" --max=5
-
-# Send email
-gog gmail send \
-  --to "recipient@example.com" \
-  --subject "Hello from OpenClaw" \
-  --body "This email was sent via CLI"
+# Output:
+# "Meeting besok jam 9"
+# "Invoice PT ABC"
+# "Update project"
 ```
 
-### 4.2 Drive - List Files
+---
+
+## ☁️ Google Drive — Command Cheat Sheet
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    DRIVE COMMANDS                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  📁 List File                                               │
+│  ─────────────────                                          │
+│  gog drive ls                      # Root folder            │
+│  gog drive ls --folder FOLDER_ID   # Folder spesifik        │
+│  gog drive ls --query "rfm"        # Search "rfm"           │
+│                                                             │
+│  ⬆️  Upload File                                            │
+│  ─────────────────                                          │
+│  gog drive upload report.pdf       # Upload ke root         │
+│  gog drive upload *.pdf --folder FOLDER_ID                 │
+│                                                             │
+│  ⬇️  Download File                                          │
+│  ─────────────────                                          │
+│  gog drive download FILE_ID        # Download file          │
+│                                                             │
+│  📂 Buat Folder                                             │
+│  ─────────────────                                          │
+│  gog drive mkdir "Project 2026"    # Buat folder baru       │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Contoh: Upload ke Folder Tertentu
 
 ```bash
-# List files
-gog drive ls --max=10
+# 1. Cari folder dulu
+gog drive ls --query "RFM Documents" --json | jq '.[0].id'
+# Output: "1c6t6w9ehaBTsm9VfJPj7KwmsJ9wv4qoA"
 
-# Create folder
-gog drive mkdir "OpenClaw Documents"
+# 2. Upload ke folder itu
+gog drive upload laporan.pdf --folder "1c6t6w9ehaBTsm9VfJPj7KwmsJ9wv4qoA"
 
-# Upload file
-gog drive upload report.pdf --name "Q1 Report"
-
-# Download file
-gog drive download FILE_ID
+# ✅ File uploaded to RFM Documents
 ```
 
-### 4.3 Sheets - Read Data
+---
 
-```bash
-# Read range
-gog sheets get SPREADSHEET_ID "A1:D10"
+## 📊 Google Sheets — Command Cheat Sheet
 
-# Update cell
-gog sheets update SPREADSHEET_ID "A1" "New Value"
-
-# Append row
-gog sheets append SPREADSHEET_ID "Sheet1!A1" "col1,col2,col3"
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   SHEETS COMMANDS                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  📖 Baca Data                                               │
+│  ─────────────────                                          │
+│  gog sheets get SHEET_ID "A1:D10"  # Range A1:D10           │
+│  gog sheets get SHEET_ID "Sheet1"  # Full sheet             │
+│                                                             │
+│  ✏️  Update Cell                                            │
+│  ─────────────────                                          │
+│  gog sheets update SHEET_ID "B5" "Rp 3.000.000"            │
+│                                                             │
+│  ➕ Tambah Baris                                            │
+│  ─────────────────                                          │
+│  gog sheets append SHEET_ID "Sheet1!A1" "data1,data2,data3" │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### 4.4 Docs - Create Document
-
-```bash
-# Create new doc
-gog docs create "My Document"
-
-# Get content
-gog docs get DOC_ID
-
-# Append text
-gog docs update DOC_ID --append "New paragraph here"
-```
-
-### 4.5 Calendar - Check Events
-
-```bash
-# List today's events
-gog calendar list --today
-
-# Create event
-gog calendar create "Team Meeting" \
-  --start "2026-03-08T14:00:00" \
-  --duration 60m \
-  --description "Weekly sync"
-```
-
-## Step 5: Automation Scripts
-
-### Daily Email Summary Script
+### Contoh: Log Gold Price ke Sheets
 
 ```bash
 #!/bin/bash
-# daily-email-check.sh
 
-export GOG_KEYRING_PASSWORD="your-password"
-export GOG_ACCOUNT="your-email@gmail.com"
+SHEET_ID="1bzm7vLJ2L2XPtCyIZYj3oA0obBqcJIoJp6Va3LdDOTk"
+TODAY=$(date +%d/%m/%Y)
+PRICE="3087000"
+YESTERDAY="3047000"
+CHANGE="40000"
+
+gog sheets append "$SHEET_ID" "Sheet1!A1" \
+  "$TODAY|$PRICE|$YESTERDAY|$CHANGE|UP"
+
+echo "✅ Gold price logged to Sheets"
+```
+
+---
+
+## 📅 Google Calendar — Command Cheat Sheet
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  CALENDAR COMMANDS                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  📖 Lihat Event                                             │
+│  ─────────────────                                          │
+│  gog calendar list --today         # Hari ini               │
+│  gog calendar list --tomorrow      # Besok                  │
+│  gog calendar list --week          # Minggu ini             │
+│                                                             │
+│  ➕ Buat Event                                              │
+│  ─────────────────                                          │
+│  gog calendar create "Meeting Client" \\
+│    --start "2026-03-12T14:00:00" \\
+│    --duration 60m \\
+│    --description "Diskus project baru"
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Contoh: Check Jadwal Hari Ini
+
+```bash
+# Morning briefing script
+echo "📅 Jadwal hari ini:"
+gog calendar list --today --json | jq -r '.[].summary'
+
+# Output:
+# "Meeting dengan PT ABC"
+# "Site visit proyek X"
+# "Review laporan keuangan"
+```
+
+---
+
+## 🔥 Automation Script Examples
+
+### Script 1: Email Summary Harian
+
+```bash
+#!/bin/bash
+# daily-email-summary.sh
+
+export GOG_ACCOUNT="fanani@cvrfm.com"
 
 # Count unread
 UNREAD=$(gog gmail search "is:unread" --json | jq '. | length')
 
 # Get today's events
-echo "📧 Unread emails: $UNREAD"
-echo "📅 Today's events:"
-gog calendar list --today
+echo "📧 Email belum dibaca: $UNREAD"
+echo "📅 Jadwal hari ini:"
+gog calendar list --today | head -5
 ```
 
-### Backup to Drive Script
+### Script 2: Auto-Backup ke Drive
 
 ```bash
 #!/bin/bash
 # backup-to-drive.sh
 
-export GOG_KEYRING_PASSWORD="your-password"
-export GOG_ACCOUNT="your-email@gmail.com"
+export GOG_ACCOUNT="fanani@cvrfm.com"
 
-# Create timestamped backup folder
 DATE=$(date +%Y-%m-%d)
-gog drive mkdir "Backup-$DATE"
+FOLDER_NAME="Backup-$DATE"
 
-# Upload files
-for file in /path/to/backup/*; do
-    gog drive upload "$file" --name "$(basename $file)"
+# Buat folder
+gog drive mkdir "$FOLDER_NAME"
+
+# Upload semua PDF
+for file in ~/Documents/*.pdf; do
+    gog drive upload "$file" --name "$FOLDER_NAME/$(basename $file)"
 done
+
+echo "✅ Backup $DATE selesai!"
 ```
 
-## Architecture Flow
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    OpenClaw Agent                       │
-│                    (Radit/Raka/Rama/Rafi)              │
-└────────────────────┬────────────────────────────────────┘
-                     │
-                     ▼
-┌─────────────────────────────────────────────────────────┐
-│                    gog CLI Tool                         │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌──────────────┐ │
-│  │  Gmail  │ │  Drive  │ │  Sheets │ │   Calendar   │ │
-│  └────┬────┘ └────┬────┘ └────┬────┘ └──────┬───────┘ │
-└───────┼───────────┼───────────┼────────────┼──────────┘
-        │           │           │            │
-        └───────────┴───────────┴────────────┘
-                     │
-                     ▼
-┌─────────────────────────────────────────────────────────┐
-│              Google OAuth 2.0 Server                    │
-│              (Token Exchange)                           │
-└────────────────────┬────────────────────────────────────┘
-                     │
-        ┌────────────┼────────────┐
-        ▼            ▼            ▼
-  ┌─────────┐  ┌─────────┐  ┌─────────┐
-  │ Gmail   │  │ Drive   │  │ Sheets  │
-  │  API    │  │  API    │  │  API    │
-  └─────────┘  └─────────┘  └─────────┘
-```
-
-## Security Best Practices
-
-### 1. Secure Keyring Password
+### Script 3: Gold Price Tracker
 
 ```bash
-# Store in environment file
-echo 'export GOG_KEYRING_PASSWORD="your-secure-password"' >> ~/.bashrc
-source ~/.bashrc
+#!/bin/bash
+# gold-tracker.sh
+
+SHEET_ID="your-sheet-id"
+PRICE=$(curl -s "https://hargaemas.com" | grep -oE '3\.0[0-9]{2}\.[0-9]{3}' | head -1)
+TODAY=$(date +%d/%m/%Y)
+
+gog sheets append "$SHEET_ID" "Log!A1" "$TODAY,$PRICE"
+echo "✅ Harga emas tercatat: Rp $PRICE"
 ```
-
-### 2. Use Dedicated Service Account
-
-For production automation, use Google Service Account instead of personal OAuth:
-
-```bash
-# Download service account JSON
-gog auth service-account add service-account.json
-```
-
-### 3. Token Rotation
-
-```bash
-# Refresh token periodically
-gog auth remove your-email@gmail.com
-gog auth add your-email@gmail.com
-```
-
-## Troubleshooting
-
-### "401 Unauthorized" Error
-
-```bash
-# Re-authenticate
-gog auth remove your-email@gmail.com
-gog auth add your-email@gmail.com
-```
-
-### "Scope not authorized"
-
-Add missing scope in Google Cloud Console:
-1. APIs & Services → Credentials
-2. OAuth 2.0 Client IDs → Edit
-3. Add required scope
-4. Save and re-authenticate
-
-### "Keyring locked"
-
-```bash
-# Set keyring password
-export GOG_KEYRING_PASSWORD="your-password"
-
-# Or configure keyring backend
-gog auth keyring file
-```
-
-## Use Cases
-
-### 1. Email Automation
-- Auto-forward invoices to accounting
-- Daily email digest
-- Auto-respond to specific senders
-
-### 2. Document Management
-- Backup important files to Drive
-- Auto-generate reports in Docs
-- Archive old emails
-
-### 3. Data Tracking
-- Log data to Sheets
-- Generate charts from Sheets
-- Export Sheets to CSV
-
-### 4. Calendar Integration
-- Schedule meetings from CLI
-- Check availability
-- Create recurring reminders
-
-### 5. Workflow Automation
-- Email → Drive → Sheets pipeline
-- Calendar → Task creation
-- Document approval workflows
-
-## Advanced: Multi-Account Setup
-
-```bash
-# Add multiple accounts
-gog auth add personal@gmail.com
-gog auth add work@company.com
-
-# Switch accounts
-export GOG_ACCOUNT="work@company.com"
-gog gmail search "from:boss"
-
-export GOG_ACCOUNT="personal@gmail.com"
-gog drive ls
-```
-
-## Summary
-
-| Feature | Command | Status |
-|---------|---------|--------|
-| Gmail Read | `gog gmail search` | ✅ |
-| Gmail Send | `gog gmail send` | ✅ |
-| Drive List | `gog drive ls` | ✅ |
-| Drive Upload | `gog drive upload` | ✅ |
-| Docs Create | `gog docs create` | ✅ |
-| Docs Read | `gog docs get` | ✅ |
-| Sheets Read | `gog sheets get` | ✅ |
-| Sheets Write | `gog sheets update` | ✅ |
-| Calendar List | `gog calendar list` | ✅ |
-| Calendar Create | `gog calendar create` | ✅ |
-| Tasks | `gog tasks list` | ✅ |
-| Contacts | `gog contacts list` | ✅ |
-
-## Next Steps
-
-1. Install gog CLI
-2. Create Google Cloud project
-3. Authenticate your account
-4. Try quick start examples
-5. Build your first automation script
-
-## Resources
-
-- [gog CLI GitHub](https://github.com/rubiojr/gog)
-- [Google Cloud Console](https://console.cloud.google.com/)
-- [Google Workspace APIs](https://developers.google.com/workspace)
 
 ---
 
-**Tutorial Version:** 1.0  
-**Last Updated:** 2026-03-08  
-**Compatible With:** OpenClaw 2026.2+, gog v0.9.0+
+## 🏗️ Integrasi dengan OpenClaw
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              OPENCLAW + gog CLI FLOW                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   User: "Cek email hari ini"                               │
+│          ↓                                                  │
+│   OpenClaw (Radit)                                          │
+│          ↓                                                  │
+│   exec({"command": "gog gmail search 'newer_than:1d'"})     │
+│          ↓                                                  │
+│   gog CLI → Google API                                      │
+│          ↓                                                  │
+│   Format hasil → Kirim Telegram                             │
+│          ↓                                                  │
+│   User: 📧 3 email: Invoice, Meeting, Update                │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Contoh dalam HEARTBEAT.md
+
+```bash
+# Check email setiap pagi
+gog gmail search "is:unread" --json | jq '. | length' > /tmp/unread_count
+
+# Kalau > 5 email unread, kirim alert
+if [ $(cat /tmp/unread_count) -gt 5 ]; then
+    echo "📧 Kamu punya $(cat /tmp/unread_count) email belum dibaca!"
+fi
+```
+
+---
+
+## 🛠️ Troubleshooting
+
+### ❌ "401 Unauthorized"
+
+```bash
+# Token expired, re-login
+gog auth remove fanani@cvrfm.com
+gog auth add fanani@cvrfm.com
+```
+
+### ❌ "Command not found"
+
+```bash
+# Cek PATH
+echo $PATH
+
+# Kalau gog di /usr/local/bin tapi ga ketemu:
+export PATH=$PATH:/usr/local/bin
+```
+
+### ❌ "Permission denied"
+
+```bash
+# Fix permission
+sudo chmod +x /usr/local/bin/gog
+```
+
+---
+
+## 📚 Quick Reference Card
+
+| Service | Baca | Tulis | Cari |
+|---------|------|-------|------|
+| **Gmail** | `gmail list` | `gmail send` | `gmail search "query"` |
+| **Drive** | `drive ls` | `drive upload` | `drive ls --query "name"` |
+| **Sheets** | `sheets get` | `sheets update` | — |
+| **Docs** | `docs get` | `docs update` | — |
+| **Calendar** | `calendar list` | `calendar create` | — |
+
+---
+
+## ✅ Checklist Setup
+
+- [ ] Download & install gog CLI
+- [ ] Cek `gog version` jalan
+- [ ] Run `gog auth add email@anda.com`
+- [ ] Login di browser & izinkan akses
+- [ ] Test `gog gmail list --max=5`
+- [ ] Test `gog drive ls`
+- [ ] Buat automation script pertama
+
+---
+
+## 🔗 Resources
+
+- **GitHub:** https://github.com/steipete/gogcli
+- **Releases:** https://github.com/steipete/gogcli/releases
+- **Docs:** https://docs.gogcli.dev
+
+---
+
+**Version:** 2.0 (Updated 2026-03-11)  
+**gog CLI:** v0.12.0+  
+**Compatible:** Linux, macOS, Windows
