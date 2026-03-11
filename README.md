@@ -57,7 +57,10 @@ Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
 |----------|-----------|-------|
 | [📝 Auto-Post ke Website](./tutorials/auto-post-website.md) | Foto → AI content → Auto-post ke website | Intermediate |
 | [🎙️ Voice Memo to Action](./tutorials/voice-memo-to-action.md) | WhatsApp voice → Whisper → Tasks | Intermediate |
+| [📧 Smart Email Forward PDF](./tutorials/smart-email-forward-pdf.md) | Forward email + extract PDF data otomatis | Intermediate |
+| [🏷️ Gmail Auto-Label Triage](./tutorials/gmail-auto-label-triage.md) | Auto-classify emails dengan 7 label | Intermediate |
 | [📰 Multi-Agent System](./tutorials/openclaw-multi-agent-system.md) | Setup brothers (Radit, Raka, Rama, Rafi) | Advanced |
+| [🧠 Multi-Agent Shared Memory](./tutorials/multi-agent-shared-memory.md) | Multiple agents sharing knowledge via GitHub | Advanced |
 
 ### 📊 Data & Monitoring
 | Tutorial | Deskripsi | Level |
@@ -65,6 +68,8 @@ Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
 | [📊 Visual Data Alert](./tutorials/visual-data-alert.md) | Spreadsheet → Charts → Telegram | Intermediate |
 | [📧 Smart Email Triage](./tutorials/smart-email-triage.md) | AI classify inbox + auto-actions | Intermediate |
 | [🗂️ Smart File Butler](./tutorials/smart-file-butler.md) | Auto-organize Downloads dengan AI | Beginner |
+| [⚡ Redis Caching Pattern](./tutorials/redis-caching-pattern.md) | Speed up 20x dengan Redis cache | Beginner |
+| [🏥 Service Health Dashboard](./tutorials/service-health-dashboard.md) | Monitor services + auto-retry alerts | Intermediate |
 
 ### ☁️ Integrations
 | Tutorial | Deskripsi | Level |
