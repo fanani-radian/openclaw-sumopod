@@ -6,20 +6,22 @@ Repositori komunitas untuk belajar, berbagi, dan berkolaborasi tentang [OpenClaw
 
 ---
 
-## 🚨 CRITICAL ALERT: Jangan Update ke 2026.3.7+!
+## ✅ UPDATE: Kimi 2.5 Fixed di OpenClaw 2026.3.11!
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│  ⚠️  OPENCLAW 2026.3.7 & 2026.3.8 BREAK KIMI 2.5!       │
+│  ✅ GOOD NEWS: OpenClaw 2026.3.11 FIXES KIMI 2.5!       │
 │                                                          │
-│  ❌ Tool calling RUSAK — model cuma output text literal  │
-│  ❌ Infinite loop "Executing..." tanpa jalan             │
-│  ❌ Fake "success" padahal gak jalan                     │
+│  🎉 Tool calling BERFUNGSI kembali                      │
+│  🎉 Infinite loop issue RESOLVED                        │
+│  🎉 Kimi K2.5 bisa dipakai lagi                         │
 │                                                          │
-│  ✅ SOLUTION: Stay di 2026.3.2                           │
-│  🔧 FIX: pkill -f openclaw; npm i -g openclaw@2026.3.2  │
+│  ✅ UPDATE: npm i -g openclaw@latest                    │
+│  📖 Release: https://github.com/openclaw/openclaw/      │
+│              releases/tag/v2026.3.11                    │
 │                                                          │
-│  📖 Detail: [Tutorial lengkap](./tutorials/avoid-openclaw-2026-3-7-kimi-bug.md) │
+│  ⚠️  NOTE: Versi 2026.3.7 - 2026.3.10 masih buggy       │
+│       Skip langsung ke 2026.3.11 atau lebih baru        │
 └──────────────────────────────────────────────────────────┘
 ```
 

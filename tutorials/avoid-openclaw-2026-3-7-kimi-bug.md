@@ -1,23 +1,37 @@
-# ⚠️ JANGAN Update ke OpenClaw 2026.3.7+ — Kimi 2.5 Tool Calling BROKEN!
+# ⚠️ JANGAN Update ke OpenClaw 2026.3.7 - 2026.3.10 — Kimi 2.5 Tool Calling BROKEN!
 
-> **Status:** 🔴 CRITICAL BUG — Affects all Kimi K2.5 users  
-> **Affected Versions:** 2026.3.7, 2026.3.8  
+> **Status:** 🟢 **RESOLVED in 2026.3.11** — Update ke versi terbaru sekarang! ✅  
+> **Fixed Version:** 2026.3.11+ ✅  
+> **Affected Versions:** 2026.3.7, 2026.3.8, 2026.3.9, 2026.3.10  
 > **Last Known Good:** 2026.3.2 ✅  
+> **Release Notes:** [v2026.3.11](https://github.com/openclaw/openclaw/releases/tag/v2026.3.11)  
 > **Related Issues:** [#39907](https://github.com/openclaw/openclaw/issues/39907), [#41297](https://github.com/openclaw/openclaw/issues/41297)
 
 ---
 
-## 🎯 TL;DR — Quick Summary
+## 🎉 GOOD NEWS: Kimi 2.5 Fixed di 2026.3.11!
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  ❌ 2026.3.7+  → Tool calling KIMI 2.5 RUSAK           │
-│  ✅ 2026.3.2   → STAY — everything works perfectly     │
+│  ✅ UPDATE NOW: npm i -g openclaw@latest                │
 │                                                         │
-│  Command:                                               │
-│  pkill -f openclaw; npm install -g openclaw@2026.3.2   │
+│  🎉 Tool calling KIMI 2.5 berfungsi kembali            │
+│  🎉 Infinite loop issue sudah resolved                 │
+│  🎉 Kimi K2.5 bisa dipakai lagi seperti biasa          │
+│                                                         │
+│  📖 Release Notes: github.com/openclaw/openclaw/       │
+│                    releases/tag/v2026.3.11             │
 └─────────────────────────────────────────────────────────┘
 ```
+
+**Update command:**
+```bash
+pkill -f openclaw && npm install -g openclaw@latest && openclaw gateway restart
+```
+
+---
+
+## 📝 Catatan Historis (Bug di 2026.3.7 - 2026.3.10)
 
 ---
 
@@ -184,15 +198,36 @@ Kalau cuma text `exec({"command": "pwd"})` → ❌ Masih broken, coba ulang step
 
 ## ⏳ Kapan Bisa Update Lagi?
 
+### ✅ UPDATE NOW! — 2026.3.11+ Released
+
 ```
-🔴 NOW — 2026.3.7 / 2026.3.8  →  JANGAN UPDATE! Stay di 2026.3.2
-🟡 WAIT — Pantau issue #41297   →  Track progress fix
-🟢 SAFE — Fix released          →  Bisa update lagi (nanti diumumkan)
+🟢 SAFE — 2026.3.11+  →  UPDATE NOW! Kimi 2.5 fixed ✅
+🔴 AVOID — 2026.3.7 - 2026.3.10 →  Buggy versions
+✅ LEGACY — 2026.3.2   →  Still works if you prefer
 ```
 
-**Monitor progress:**
-- Issue: [#41297](https://github.com/openclaw/openclaw/issues/41297)
-- Issue: [#39907](https://github.com/openclaw/openclaw/issues/39907)
+**Command to update:**
+```bash
+pkill -f openclaw && npm install -g openclaw@latest && openclaw gateway restart
+```
+
+**Release Notes:** [v2026.3.11](https://github.com/openclaw/openclaw/releases/tag/v2026.3.11)
+
+---
+
+### 📜 Historical Timeline
+
+| Date | Version | Status | Notes |
+|------|---------|--------|-------|
+| Mar 11, 2026 | 2026.3.11 | ✅ FIXED | Kimi 2.5 tool calling restored |
+| Mar 10, 2026 | 2026.3.10 | ❌ BUGGY | Still broken |
+| Mar 8, 2026 | 2026.3.8 | ❌ BUGGY | Tool calling broken |
+| Mar 7, 2026 | 2026.3.7 | ❌ BUGGY | First buggy release |
+| Mar 5, 2026 | 2026.3.2 | ✅ SAFE | Last known good before bug |
+
+**Monitor progress (archived):**
+- Issue: [#41297](https://github.com/openclaw/openclaw/issues/41297) — ✅ CLOSED
+- Issue: [#39907](https://github.com/openclaw/openclaw/issues/39907) — ✅ CLOSED
 
 ---
 
@@ -300,16 +335,16 @@ Thanks to OpenClaw community yang report dan investigate issue ini — especiall
 
 ---
 
-> **Last Updated:** March 11, 2026  
+> **Last Updated:** March 12, 2026  
 > **Author:** OpenClaw Sumopod Community  
-> **Applies to:** OpenClaw 2026.3.7, 2026.3.8 + kimi-coding/k2p5
+> **Applies to:** OpenClaw 2026.3.7 - 2026.3.10 (BUG) / 2026.3.11+ (FIXED)
 
 ---
 
 ## 💬 Questions?
 
-Ada pertanyaan atau butuh bantuan downgrade? Join:
+Ada pertanyaan tentang update atau butuh bantuan? Join:
 - 🌏 OpenClaw Discord: https://discord.com/invite/clawd
 - 💬 Tanya di Telegram: @RaditClaw_bot
 
-**Stay safe, stay on 2026.3.2!** 🛡️
+**Update to 2026.3.11+ and happy coding!** 🚀
