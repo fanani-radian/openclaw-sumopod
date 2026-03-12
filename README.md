@@ -40,6 +40,7 @@ Repositori komunitas untuk belajar, berbagi, dan berkolaborasi tentang [OpenClaw
 | [❓ FAQ](./faq/README.md) | Pertanyaan yang sering ditanyakan |
 | [⚙️ Config](./docs/config/README.md) | Konfigurasi dan templates |
 | [🎥 Resources](./resources/README.md) | Video, link, dan referensi |
+| [💰 API Providers](./resources/api-providers.md) | Daftar provider AI API murah & free tier |
 
 ---
 
