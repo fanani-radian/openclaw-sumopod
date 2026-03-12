@@ -35,9 +35,9 @@ Repositori komunitas untuk belajar, berbagi, dan berkolaborasi tentang [OpenClaw
 | [🖥️ Windows Install](./docs/getting-started/windows-install.md) | Tutorial lengkap Windows + auto-start + management |
 | [🔄 Sync Memory ke GitHub](./docs/getting-started/github-sync.md) | Sinkronisasi memory antar device/PC/VPS |
 | [📖 Tutorials](#-tutorials) | Kumpulan tutorial praktis OpenClaw |
+| [💡 Use Cases](#-use-cases) | Contoh penggunaan real-world |
+| [🎯 Tips & Tricks](#-tips--tricks) | Trik optimize OpenClaw |
 | [❓ FAQ](./faq/README.md) | Pertanyaan yang sering ditanyakan |
-| [💡 Use Cases](./docs/use-cases/README.md) | Contoh penggunaan real-world |
-| [🎯 Tips & Tricks](./docs/tips-tricks/README.md) | Trik optimize OpenClaw |
 | [⚙️ Config](./docs/config/README.md) | Konfigurasi dan templates |
 | [🎥 Resources](./resources/README.md) | Video, link, dan referensi |
 
@@ -52,7 +52,7 @@ Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
 |----------|-----------|-------|
 | [☁️ Alibaba Cloud Coding Plan](./tutorials/openclaw-alibaba-coding-plan.md) | 8 model AI dengan 1 API key mulai $5/bulan | Beginner |
 | [🖥️ Windows Install](./docs/getting-started/windows-install.md) | Instalasi lengkap Windows + auto-start | Beginner |
-| [⚠️ Avoid 2026.3.7+ Bug](./tutorials/avoid-openclaw-2026-3-7-kimi-bug.md) | Jangan update! Kimi 2.5 tool calling broken | **CRITICAL** |
+| [⚠️ OpenClaw Version Guide](./tutorials/avoid-openclaw-2026-3-7-kimi-bug.md) | Update guide: Kimi 2.5 fixed in 2026.3.11 | **CRITICAL** |
 
 ### 🤖 AI Automation
 | Tutorial | Deskripsi | Level |
@@ -79,11 +79,34 @@ Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
 | [🔍 gog CLI Google Workspace](./tutorials/gog-cli-google-workspace.md) | Gmail, Drive, Docs, Sheets via CLI | Intermediate |
 | [⚡ n8n Integration](./tutorials/n8n-integration.md) | Workflow automation dengan n8n | Intermediate |
 | [🚀 Deployment Butler](./tutorials/deployment-butler.md) | GitHub webhook → Auto-deploy + rollback | Advanced |
+| [🧵 Repliz Threads Automation](./tutorials/repliz-threads-automation.md) | Auto-post ke Threads via Telegram | Intermediate |
 
 ### 🎨 Content Creation
 | Tutorial | Deskripsi | Level |
 |----------|-----------|-------|
 | [🎨 Excalidraw Diagram Generation](./tutorials/excalidraw-diagram-generation.md) | Generate diagram dari teks | Beginner |
+| [🎬 AI Video Generation Pipeline](./tutorials/ai-video-generation-pipeline.md) | Generate video AI → Upload ke Drive | Intermediate |
+
+---
+
+## 💡 Use Cases
+
+Contoh implementasi real-world dengan OpenClaw.
+
+| Use Case | Deskripsi | Link |
+|----------|-----------|------|
+| [🎬 AI Video Generation](./docs/use-cases/ai-video-generation.md) | Otomatisasi pembuatan video dengan AI | [Read](./docs/use-cases/ai-video-generation.md) |
+| [📰 News Aggregator](./docs/use-cases/news-aggregator.md) | Aggregasi berita otomatis dengan AI | [Read](./docs/use-cases/news-aggregator.md) |
+
+---
+
+## 🎯 Tips & Tricks
+
+Trik dan best practices untuk optimize OpenClaw.
+
+| Topic | Deskripsi | Link |
+|-------|-----------|------|
+| [🚀 Performance Optimization](./docs/tips-tricks/README.md) | Best practices untuk speed dan efisiensi | [Read](./docs/tips-tricks/README.md) |
 
 ---
 
