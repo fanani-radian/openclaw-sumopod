@@ -18,6 +18,41 @@ OpenClaw bisa orkestrasi AI video generation dari berbagai provider. Ada 2 workf
 
 ## 🏆 Best APIs (Low Cost + Great Results)
 
+### Video Generation Workflow (3 Tiers)
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e8f5e9', 'primaryTextColor': '#2e7d32', 'lineColor': '#616161'}}}%%
+flowchart TB
+    subgraph Tier1["🥇 Tier 1: FREE / Ultra Low Cost"]
+        T1A[🆓 Hedra] --> T1A1["Image→Video"]
+        T1B[🎭 Viggle] --> T1B1["Character Animation"]
+        T1C[🏠 SVD] --> T1C1["Self-Hosted"]
+    end
+    
+    subgraph Tier2["🥈 Tier 2: Best Value"]
+        T2A[🎬 Kling AI] --> T2A1["~$0.02/5s"]
+        T2B[✨ Luma] --> T2B1["~$0.05/5s"]
+        T2C[🎨 Runway] --> T2C1["~$0.10/5s"]
+    end
+    
+    subgraph Tier3["🥉 Tier 3: Video Editing"]
+        T3A[🛠️ FFmpeg] --> T3A1["FREE"]
+        T3B[🐍 MoviePy] --> T3B1["FREE"]
+        T3C[🎤 Whisper] --> T3C1["FREE"]
+    end
+    
+    User[👤 User Request] --> Choose{Select Tier}
+    Choose -->|Budget Focus| Tier1
+    Choose -->|Quality Focus| Tier2
+    Choose -->|Editing Only| Tier3
+    
+    style Tier1 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style Tier2 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style Tier3 fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style User fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style Choose fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+```
+
 ### Tier 1: FREE / Ultra Low Cost
 
 | API | Type | Cost | Pros | Cons |
@@ -43,6 +78,50 @@ OpenClaw bisa orkestrasi AI video generation dari berbagai provider. Ada 2 workf
 | **FFmpeg** | FREE | Convert, crop, merge, compress |
 | **MoviePy** | FREE | Python video editing |
 | **Whisper** | FREE | Auto subtitle generation |
+
+### API Selection Decision Tree
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e3f2fd', 'primaryTextColor': '#1565c0', 'lineColor': '#616161'}}}%%
+flowchart TD
+    Start[🎯 Start] --> Q1{💰 Budget = $0?}
+    
+    Q1 -->|Yes| Q2{🖼️ Have Image?}
+    Q1 -->|No| Q3{⏱️ Need 10s+?}
+    
+    Q2 -->|Yes| A1[🆓 Hedra]
+    Q2 -->|No| A2[🎭 Viggle]
+    
+    Q3 -->|Yes| A3[🎬 Runway]
+    Q3 -->|No| Q4{🌟 Quality Priority?}
+    
+    Q4 -->|Yes| A4[✨ Luma]
+    Q4 -->|No| A5[⚡ Kling AI]
+    
+    A1 --> Result1["5s max, watermark"]
+    A2 --> Result2["Meme/character"]
+    A3 --> Result3["Pro quality"]
+    A4 --> Result4["Best motion"]
+    A5 --> Result5["Cheapest good"]
+    
+    style Start fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style Q1 fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style Q2 fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style Q3 fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style Q4 fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style A1 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style A2 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style A3 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style A4 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style A5 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style Result1 fill:#fce4ec,stroke:#c2185b
+    style Result2 fill:#fce4ec,stroke:#c2185b
+    style Result3 fill:#fce4ec,stroke:#c2185b
+    style Result4 fill:#fce4ec,stroke:#c2185b
+    style Result5 fill:#fce4ec,stroke:#c2185b
+```
+
+*Choose your fighter based on budget and needs 🥷*
 
 ---
 
@@ -308,6 +387,65 @@ def image_to_video(image_path, prompt, output_path):
 ## ✂️ Workflow 3: Video Editing (FREE!)
 
 Edit video menggunakan FFmpeg - **GRATIS** dan **LOCAL**!
+
+### Video Editing Pipeline
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#fff3e0', 'primaryTextColor': '#e65100', 'lineColor': '#616161'}}}%%
+flowchart LR
+    subgraph Input["📥 Input"]
+        I1[🎬 Video File]
+        I2[🖼️ Image]
+        I3[🎵 Audio]
+    end
+    
+    subgraph Process["⚙️ FFmpeg Processing"]
+        P1[📐 Compress] 
+        P2[✂️ Trim/Crop]
+        P3[🔗 Merge]
+        P4[📝 Add Subtitles]
+        P5[🎨 GIF Convert]
+        P6[🔊 Extract Audio]
+    end
+    
+    subgraph Output["📤 Output"]
+        O1[📁 Final Video]
+        O2[🎞️ GIF]
+        O3[🎧 MP3]
+    end
+    
+    I1 --> P1
+    I1 --> P2
+    I1 --> P3
+    I1 --> P4
+    I1 --> P5
+    I1 --> P6
+    
+    P1 --> O1
+    P2 --> O1
+    P3 --> O1
+    P4 --> O1
+    P5 --> O2
+    P6 --> O3
+    
+    style Input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style Process fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style Output fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style I1 fill:#bbdefb,stroke:#1565c0
+    style I2 fill:#bbdefb,stroke:#1565c0
+    style I3 fill:#bbdefb,stroke:#1565c0
+    style P1 fill:#ffe0b2,stroke:#ef6c00
+    style P2 fill:#ffe0b2,stroke:#ef6c00
+    style P3 fill:#ffe0b2,stroke:#ef6c00
+    style P4 fill:#ffe0b2,stroke:#ef6c00
+    style P5 fill:#ffe0b2,stroke:#ef6c00
+    style P6 fill:#ffe0b2,stroke:#ef6c00
+    style O1 fill:#c8e6c9,stroke:#2e7d32
+    style O2 fill:#c8e6c9,stroke:#2e7d32
+    style O3 fill:#c8e6c9,stroke:#2e7d32
+```
+
+*One tool, infinite possibilities — all for FREE 💪*
 
 ### Skill: `video-edit`
 

@@ -19,6 +19,23 @@ A multi-category news system with:
 
 ## Architecture
 
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e3f2fd', 'primaryTextColor': '#1565c0', 'primaryBorderColor': '#1976d2', 'lineColor': '#424242', 'secondaryColor': '#fff3e0', 'tertiaryColor': '#e8f5e9'}}}%%
+flowchart LR
+    A[🌐 RSS/API Sources] --> B{🔍 Fetcher}
+    B --> C[(🗄️ Redis Dedup)]
+    C --> D[✨ Formatter]
+    D --> E[📱 Telegram]
+    
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style C fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style D fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style E fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+```
+
+**Data Flow:** Fetch → Deduplicate → Format → Deliver 🚀
+
 ```
 skills/my-news/
 ├── config/
@@ -159,6 +176,31 @@ if __name__ == "__main__":
     print(json.dumps(new_items, indent=2))
 ```
 
+### Redis Deduplication Flow
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e8f5e9', 'primaryTextColor': '#2e7d32', 'lineColor': '#424242'}}}%%
+flowchart TD
+    A[📰 News Item] --> B{🔍 Check Redis}
+    B -->|Hash URL| C[(💾 Redis Set)]
+    C --> D{Exists?}
+    D -->|Yes ❌| E[🚫 Skip Duplicate]
+    D -->|No ✅| F[➕ Add to Set]
+    F --> G[⏰ Set TTL]
+    G --> H[✅ Send to Telegram]
+    
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style C fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style D fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style E fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style F fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style G fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    style H fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+```
+
+*Redis stores MD5 hashes of URLs with TTL for auto-cleanup 🧹*
+
 ## Step 5: Witty Formatter
 
 Create `scripts/formatter.py`:
@@ -259,6 +301,41 @@ chmod +x scripts/*.sh scripts/*.py
 ```
 
 ## Step 8: Cron Setup
+
+### Category Scheduling Diagram
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#f3e5f5', 'primaryTextColor': '#6a1b9a', 'lineColor': '#424242'}}}%%
+gantt
+    title 📅 News Category Schedule
+    dateFormat HH:mm
+    axisFormat %H:%M
+    
+    section 💰 Finance
+    Every 2h          :fin1, 00:00, 2h
+    Every 2h          :fin2, 02:00, 2h
+    Every 2h          :fin3, 04:00, 2h
+    
+    section 🚀 Tech
+    Every 3h          :tech1, 00:00, 3h
+    Every 3h          :tech2, 03:00, 3h
+    Every 3h          :tech3, 06:00, 3h
+    
+    section ⚽ Sports
+    Every 8h          :sport1, 00:00, 8h
+    Every 8h          :sport2, 08:00, 8h
+    
+    style fin1 fill:#e8f5e9,stroke:#388e3c
+    style fin2 fill:#e8f5e9,stroke:#388e3c
+    style fin3 fill:#e8f5e9,stroke:#388e3c
+    style tech1 fill:#e3f2fd,stroke:#1976d2
+    style tech2 fill:#e3f2fd,stroke:#1976d2
+    style tech3 fill:#e3f2fd,stroke:#1976d2
+    style sport1 fill:#fff3e0,stroke:#f57c00
+    style sport2 fill:#fff3e0,stroke:#f57c00
+```
+
+*Different refresh rates based on category velocity ⚡*
 
 Add to your crontab:
 
