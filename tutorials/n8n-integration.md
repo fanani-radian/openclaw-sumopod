@@ -33,49 +33,56 @@ Connect OpenClaw to 400+ apps via n8n workflow automation. No coding required.
 
 ## Architecture: Who's Backend, Who's Frontend?
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      USER LAYER                             │
-│                                                             │
-│  💬 Telegram    🌐 Web UI    📱 Mobile                      │
-│       │            │            │                           │
-└───────┼────────────┼────────────┼───────────────────────────┘
-        │            │            │
-        └────────────┼────────────┘
-                     │
-                     ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  FRONTEND: OpenClaw                         │
-│                                                             │
-│  • Natural language interface                               │
-│  • Understand user intent                                   │
-│  • Route tasks to appropriate tools                         │
-│  • Personal assistant experience                            │
-└────────────────────────┬────────────────────────────────────┘
-                         │
-                         │ API Call / Webhook
-                         ▼
-┌─────────────────────────────────────────────────────────────┐
-│                 ORCHESTRATOR: n8n                           │
-│                                                             │
-│  • Visual workflow engine                                   │
-│  • Connect multiple services                                │
-│  • Data transformation                                      │
-│  • Error handling & retries                                 │
-│  • Conditional logic                                        │
-└────────────┬────────────────────────┬───────────────────────┘
-             │                        │
-             ▼                        ▼
-┌──────────────────────┐  ┌──────────────────────┐
-│   BACKEND SERVICES   │  │   BACKEND SERVICES   │
-│                      │  │                      │
-│  • Gmail API         │  │  • Slack API         │
-│  • Google Drive      │  │  • Discord API       │
-│  • Google Sheets     │  │  • Telegram Bot      │
-│  • Notion API        │  │  • Webhook receivers │
-│  • Airtable API      │  │  • Database APIs     │
-│                      │  │                      │
-└──────────────────────┘  └──────────────────────┘
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e3f2fd', 'primaryTextColor': '#1565c0'}}}%%
+flowchart TB
+    subgraph User["👤 User Layer"]
+        TG["💬 Telegram"]
+        WEB["🌐 Web UI"]
+        MOB["📱 Mobile"]
+    end
+    
+    subgraph Frontend["🎭 Frontend: OpenClaw"]
+        OC["🤖 OpenClaw Agent"]
+        NL["💬 Natural Language"]
+        INT["🎯 Intent Routing"]
+    end
+    
+    subgraph Orchestrator["⚙️ Orchestrator: n8n"]
+        N8N["🔄 n8n Workflow Engine"]
+        TRIG["⚡ Triggers"]
+        ACT["🔧 Actions"]
+        LOGIC["🧩 Logic/Conditions"]
+    end
+    
+    subgraph Backend["☁️ Backend Services"]
+        GM["📧 Gmail API"]
+        GD["☁️ Google Drive"]
+        SL["💬 Slack API"]
+        NT["📝 Notion API"]
+        AT["📊 Airtable"]
+    end
+    
+    TG --> OC
+    WEB --> OC
+    MOB --> OC
+    
+    OC -->|API/Webhook| N8N
+    
+    N8N --> TRIG
+    N8N --> ACT
+    N8N --> LOGIC
+    
+    ACT --> GM
+    ACT --> GD
+    ACT --> SL
+    ACT --> NT
+    ACT --> AT
+    
+    style User fill:#e3f2fd,stroke:#1976d2
+    style Frontend fill:#fff3e0,stroke:#f57c00
+    style Orchestrator fill:#c8e6c9,stroke:#388e3c
+    style Backend fill:#f3e5f5,stroke:#9c27b0
 ```
 
 **Summary:**
@@ -87,6 +94,38 @@ Connect OpenClaw to 400+ apps via n8n workflow automation. No coding required.
 | **Backend** | Service APIs | Gmail, Slack, Notion |
 
 ## What You Can Build
+
+### 🔄 Two-Way Communication Flow
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e8f5e9', 'primaryTextColor': '#2e7d32'}}}%%
+flowchart LR
+    subgraph Request["📤 Outgoing Request"]
+        U1["👤 User Request"]
+        OC1["🤖 OpenClaw"]
+        N8N1["🔄 n8n"]
+        API1["☁️ External API"]
+    end
+    
+    subgraph Response["📥 Incoming Response"]
+        API2["☁️ API Result"]
+        N8N2["🔄 n8n Process"]
+        OC2["🤖 OpenClaw Format"]
+        U2["👤 User Gets Answer"]
+    end
+    
+    U1 -->|"Send email"| OC1
+    OC1 -->|Webhook| N8N1
+    N8N1 -->|Call| API1
+    
+    API1 -->|Result| API2
+    API2 -->|Parse| N8N2
+    N8N2 -->|JSON| OC2
+    OC2 -->|💬 Message| U2
+    
+    style Request fill:#e3f2fd,stroke:#1976d2
+    style Response fill:#c8e6c9,stroke:#388e3c
+```
 
 ### Example 1: Email to Slack Notification
 
@@ -299,6 +338,38 @@ response = requests.post(n8n_webhook_url, json=data)
 ```
 
 ## Popular Use Cases
+
+### 📊 Use Case Pipeline Overview
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#fff3e0', 'primaryTextColor': '#e65100'}}}%%
+flowchart TB
+    subgraph Email["📧 Email Processing"]
+        E1["Gmail Trigger"] --> E2["AI Filter"]
+        E2 --> E3{Urgent?}
+        E3 -->|Yes| E4["Slack + OpenClaw"]
+        E3 -->|No| E5["Archive"]
+    end
+    
+    subgraph Form["📝 Form Automation"]
+        F1["Google Form"] --> F2["Validate"]
+        F2 --> F3["Save to Sheets"]
+        F3 --> F4["Send Email"]
+        F4 --> F5["OpenClam Summary"]
+    end
+    
+    subgraph Social["📱 Social Monitoring"]
+        S1["Twitter Mention"] --> S2["Analyze"]
+        S2 --> S3{Sentiment}
+        S3 -->|😊 Positive| S4["Thank You"]
+        S3 -->|😐 Neutral| S5["Ignore"]
+        S3 -->|😠 Negative| S6["Alert Team"]
+    end
+    
+    style Email fill:#ffcdd2,stroke:#d32f2f
+    style Form fill:#c8e6c9,stroke:#388e3c
+    style Social fill:#e1f5fe,stroke:#0288d1
+```
 
 ### 1. Email Processing Pipeline
 

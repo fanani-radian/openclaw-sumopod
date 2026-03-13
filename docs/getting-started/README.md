@@ -14,6 +14,31 @@
 npm install -g openclaw
 ```
 
+### 📊 Installation Flowchart
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e3f2fd', 'primaryTextColor': '#1565c0', 'primaryBorderColor': '#1976d2', 'lineColor': '#424242', 'secondaryColor': '#c8e6c9', 'tertiaryColor': '#fff3e0'}}}%%
+flowchart TD
+    A[🖥️ Check Prerequisites] --> B{✅ Node 18+?}
+    B -->|Yes| C[📦 Install OpenClaw]
+    B -->|No| D[⬆️ Upgrade Node.js]
+    D --> C
+    C --> E[📁 Clone Workspace]
+    E --> F[📥 Install Dependencies]
+    F --> G[⚙️ Configure .env]
+    G --> H[🚀 Start Gateway]
+    H --> I{✨ Running?}
+    I -->|Yes| J[🎉 Ready to Use!]
+    I -->|No| K[🔧 Troubleshoot]
+    K --> H
+    
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style C fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    style J fill:#c8e6c9,stroke:#388e3c,stroke-width:3px
+    style K fill:#ffcdd2,stroke:#d32f2f,stroke-width:2px
+```
+
 ### Setup Pertama
 
 1. **Clone workspace template:**
@@ -37,6 +62,47 @@ npm install -g openclaw
    ```bash
    openclaw gateway start
    ```
+
+---
+
+## 📂 Workspace Structure Diagram
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#f3e5f5', 'primaryTextColor': '#7b1fa2', 'primaryBorderColor': '#9c27b0'}}}%%
+flowchart TB
+    subgraph WS["📁 my-workspace/"]
+        direction TB
+        
+        subgraph Core["⚡ Core Files"]
+            AGENTS["👤 AGENTS.md<br/>Tentang agent"]
+            USER["👥 USER.md<br/>Profil user"]
+            SOUL["🎭 SOUL.md<br/>Personality"]
+            MEMORY["🧠 MEMORY.md<br/>Long-term memory"]
+        end
+        
+        subgraph Config["⚙️ Configuration"]
+            TOOLS["🛠️ TOOLS.md<br/>Available tools"]
+            HB["💓 HEARTBEAT.md<br/>Periodic tasks"]
+            ENV["🔐 .env<br/>Environment vars"]
+        end
+        
+        subgraph Dirs["📂 Directories"]
+            CFG["config/"]
+            SKILLS["skills/"]
+            MEM["memory/"]
+            SCRIPTS["scripts/"]
+        end
+    end
+    
+    AGENTS --> TOOLS
+    USER --> MEMORY
+    SOUL --> HB
+    
+    style Core fill:#e3f2fd,stroke:#1976d2
+    style Config fill:#fff3e0,stroke:#f57c00
+    style Dirs fill:#c8e6c9,stroke:#388e3c
+    style WS fill:#fafafa,stroke:#424242,stroke-width:3px
+```
 
 ---
 
@@ -85,6 +151,43 @@ Untuk tugas kompleks, spawn sub-agents:
 ```bash
 # Contoh dari dalam session
 sessions_spawn with runtime="subagent" untuk parallel execution
+```
+
+---
+
+## 🔄 Memory & Skills Flow
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e8f5e9', 'primaryTextColor': '#2e7d32', 'primaryBorderColor': '#4caf50'}}}%%
+flowchart LR
+    subgraph User["👤 User Interaction"]
+        Q["❓ Ask Question"]
+        A["✅ Get Answer"]
+    end
+    
+    subgraph Agent["🤖 OpenClaw Agent"]
+        M["🧠 Load MEMORY.md"]
+        S["📚 Check Skills"]
+        P["⚡ Process"]
+    end
+    
+    subgraph Storage["💾 Persistent Storage"]
+        MEM[("🗄️ MEMORY.md<br/>Long-term facts")]
+        DAILY[("📅 memory/YYYY-MM-DD.md<br/>Daily logs")]
+        SK[("🛠️ skills/<br/>Custom capabilities")]
+    end
+    
+    Q --> M
+    M --> MEM
+    M --> DAILY
+    S --> SK
+    M --> P
+    S --> P
+    P --> A
+    
+    style User fill:#e3f2fd,stroke:#1976d2
+    style Agent fill:#fff3e0,stroke:#f57c00
+    style Storage fill:#f3e5f5,stroke:#9c27b0
 ```
 
 ---

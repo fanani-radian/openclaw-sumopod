@@ -101,6 +101,33 @@ gog auth add fanani@cvrfm.com
 
 **Klik "Allow" di browser** → Done! ✅
 
+### 🔐 Authentication Flow Diagram
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e3f2fd', 'primaryTextColor': '#1565c0', 'primaryBorderColor': '#1976d2'}}}%%
+flowchart LR
+    A[💻 Terminal<br/>gog auth add] --> B{🔓 Auth Type}
+    
+    B -->|OAuth| C[🌐 Browser Opens]
+    B -->|Service Account| D[🔑 Key File]
+    
+    C --> E[📧 Google Login]
+    E --> F[✅ Grant Permission]
+    F --> G[🔖 Token Stored]
+    
+    D --> H[📂 JSON Key]
+    H --> G
+    
+    G --> I[🎉 Ready to Use!]
+    
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style C fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    style F fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    style G fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    style I fill:#c8e6c9,stroke:#388e3c,stroke-width:3px
+```
+
 ### Step 2: Cek Status
 
 ```bash
@@ -109,6 +136,40 @@ gog auth list
 
 # Output:
 # ✅ fanani@cvrfm.com (Gmail, Drive, Calendar)
+```
+
+---
+
+## 🌐 Google Services Workflow Overview
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e8f5e9', 'primaryTextColor': '#2e7d32'}}}%%
+flowchart TB
+    A[💻 gog CLI] --> B{🎯 Select Service}
+    
+    B -->|📧 Gmail| C[List/Search/Send]
+    B -->|☁️ Drive| D[Upload/Download/Organize]
+    B -->|📊 Sheets| E[Read/Update/Append]
+    B -->|📝 Docs| F[Get/Edit Content]
+    B -->|📅 Calendar| G[List/Create Events]
+    
+    C --> H[(Google APIs)]
+    D --> H
+    E --> H
+    F --> H
+    G --> H
+    
+    H --> I[✅ Result]
+    
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style C fill:#ffcdd2,stroke:#d32f2f,stroke-width:2px
+    style D fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    style E fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style F fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
+    style G fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    style H fill:#fafafa,stroke:#424242,stroke-width:2px
+    style I fill:#c8e6c9,stroke:#388e3c,stroke-width:3px
 ```
 
 ---
@@ -340,24 +401,39 @@ echo "✅ Harga emas tercatat: Rp $PRICE"
 
 ## 🏗️ Integrasi dengan OpenClaw
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              OPENCLAW + gog CLI FLOW                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   User: "Cek email hari ini"                               │
-│          ↓                                                  │
-│   OpenClaw (Radit)                                          │
-│          ↓                                                  │
-│   exec({"command": "gog gmail search 'newer_than:1d'"})     │
-│          ↓                                                  │
-│   gog CLI → Google API                                      │
-│          ↓                                                  │
-│   Format hasil → Kirim Telegram                             │
-│          ↓                                                  │
-│   User: 📧 3 email: Invoice, Meeting, Update                │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e3f2fd', 'primaryTextColor': '#1565c0'}}}%%
+flowchart TB
+    subgraph User["👤 User Layer"]
+        U["💬 'Cek email hari ini'"]
+    end
+    
+    subgraph OpenClaw["🤖 OpenClaw Agent"]
+        R["🔍 Parse Intent"]
+        E["⚡ Execute Command"]
+        F["📋 Format Result"]
+    end
+    
+    subgraph gog["🔧 gog CLI"]
+        G["gog gmail search"]
+    end
+    
+    subgraph Google["☁️ Google APIs"]
+        API["Gmail API"]
+    end
+    
+    U --> R
+    R --> E
+    E -->|exec()| G
+    G -->|HTTPS| API
+    API -->|JSON| G
+    G -->|Output| F
+    F -->|📧 3 email baru!| U
+    
+    style User fill:#e3f2fd,stroke:#1976d2
+    style OpenClaw fill:#fff3e0,stroke:#f57c00
+    style gog fill:#c8e6c9,stroke:#388e3c
+    style Google fill:#f3e5f5,stroke:#9c27b0
 ```
 
 ### Contoh dalam HEARTBEAT.md

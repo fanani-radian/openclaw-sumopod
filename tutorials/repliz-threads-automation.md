@@ -63,6 +63,31 @@ Authorize Repliz
 ✅ Status: Connected
 ```
 
+### 🔌 Setup Flow Diagram
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e3f2fd', 'primaryTextColor': '#1565c0'}}}%%
+flowchart TD
+    A[🚀 Start Setup] --> B[📝 Daftar Repliz]
+    B --> C[📱 Connect Threads]
+    C --> D[🔐 IG Login]
+    D --> E{✅ Authorized?}
+    E -->|Yes| F[📋 Get Account ID]
+    E -->|No| G[❌ Retry Auth]
+    G --> C
+    F --> H[🔑 Get API Keys]
+    H --> I[⚙️ Setup OpenClaw Skill]
+    I --> J[✅ Ready to Post!]
+    
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style E fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style F fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    style H fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    style J fill:#c8e6c9,stroke:#388e3c,stroke-width:3px
+    style G fill:#ffcdd2,stroke:#d32f2f,stroke-width:2px
+```
+
 **Simpan informasi ini:**
 - Buka https://repliz.com/user/integration
 - Klik Threads account → **Copy Account ID** (nanti dipakai di script)
@@ -270,6 +295,51 @@ chmod +x scripts/repliz-threads.sh
 
 ## 🔗 Step 4: Integrasi dengan OpenClaw
 
+### 📤 Complete Posting Workflow
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e8f5e9', 'primaryTextColor': '#2e7d32'}}}%%
+flowchart LR
+    subgraph Telegram["💬 Telegram"]
+        CMD["/postthread Tips productivity"]
+    end
+    
+    subgraph OpenClaw["🤖 OpenClaw"]
+        PARSE["🔍 Parse Command"]
+        EXEC["⚡ Execute Script"]
+    end
+    
+    subgraph Script["💻 Python Script"]
+        GEN["📝 Generate Content"]
+        POST["📤 API Call"]
+    end
+    
+    subgraph ReplizAPI["🌐 Repliz API"]
+        AUTH["🔑 Auth Check"]
+        SCHED["⏰ Schedule Post"]
+    end
+    
+    subgraph Threads["🧵 Threads"]
+        PUBLISH["📱 Publish"]
+    end
+    
+    CMD --> PARSE
+    PARSE --> EXEC
+    EXEC --> GEN
+    GEN -->|AI Content| POST
+    POST -->|HTTPS| AUTH
+    AUTH --> SCHED
+    SCHED -->|1 min| PUBLISH
+    PUBLISH -->|✅ Posted!| EXEC
+    EXEC -->|Success Message| CMD
+    
+    style Telegram fill:#e3f2fd,stroke:#1976d2
+    style OpenClaw fill:#fff3e0,stroke:#f57c00
+    style Script fill:#c8e6c9,stroke:#388e3c
+    style ReplizAPI fill:#f3e5f5,stroke:#9c27b0
+    style Threads fill:#fce4ec,stroke:#c2185b
+```
+
 ### 4.1 Update HEARTBEAT.md atau Commands
 
 Tambahkan command di `HEARTBEAT.md`:
@@ -297,6 +367,42 @@ python3 scripts/repliz-threads.py "Test automation"
 ---
 
 ## 🎨 Step 5: Customize Content (Optional)
+
+### 🔄 Content Generation Flow
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#fff3e0', 'primaryTextColor': '#e65100'}}}%%
+flowchart TD
+    A["💡 User Topic"] --> B{🎨 Select Style}
+    
+    B -->|📚 Educational| C["🧵 5 Things About..."]
+    B -->|📖 Story| D["Once upon a time..."]
+    B -->|💡 Tips| E["Quick Tips List"]
+    B -->|🤖 AI Gen| F["Call AI Model"]
+    
+    C --> G["✂️ Validate 500 chars"]
+    D --> G
+    E --> G
+    F --> G
+    
+    G --> H{📏 Under limit?}
+    H -->|Yes| I["📤 Post to Threads"]
+    H -->|No| J["✂️ Auto-truncate"]
+    J --> I
+    
+    I --> K["✅ Published!"]
+    
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style C fill:#c8e6c9,stroke:#388e3c
+    style D fill:#fce4ec,stroke:#c2185b
+    style E fill:#e1f5fe,stroke:#0288d1
+    style F fill:#f3e5f5,stroke:#9c27b0
+    style G fill:#fff9c4,stroke:#f9a825,stroke-width:2px
+    style H fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style I fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    style K fill:#c8e6c9,stroke:#388e3c,stroke-width:3px
+```
 
 ### 5.1 Ganti Template
 
