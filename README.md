@@ -9,13 +9,43 @@ Repositori komunitas untuk belajar, berbagi, dan berkolaborasi tentang [OpenClaw
 ## 🏗️ OpenClaw Architecture
 
 ```mermaid
-graph TB
-    A[OpenClaw Core] --> B[AI Models]
-    A --> C[Integrations]
-    A --> D[Skills Ecosystem]
-    B --> E[Claude/GPT/Gemini]
-    C --> F[Telegram/Discord/Slack]
-    D --> G[Custom Skills]
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e1f5fe', 'primaryTextColor': '#01579b', 'primaryBorderColor': '#0288d1', 'lineColor': '#0288d1', 'secondaryColor': '#fff3e0', 'tertiaryColor': '#e8f5e9'}}}%%
+flowchart TB
+    subgraph Core["🔷 OpenClaw Core"]
+        C1[Agent Runtime]
+        C2[Memory System]
+        C3[Skill Registry]
+    end
+    
+    subgraph Models["🤖 AI Models"]
+        M1[Claude/Sonnet]
+        M2[GPT-4]
+        M3[Gemini Pro]
+        M4[Kimi/DeepSeek]
+    end
+    
+    subgraph Channels["💬 Channels"]
+        CH1[Telegram]
+        CH2[Discord]
+        CH3[Slack]
+        CH4[Webchat]
+    end
+    
+    subgraph Skills["🛠️ Skills (200+)"]
+        S1[Web Search]
+        S2[File Operations]
+        S3[API Integrations]
+        S4[Code Execution]
+    end
+    
+    Core -->|Uses| Models
+    Core -->|Connects| Channels
+    Core -->|Executes| Skills
+    
+    style Core fill:#e3f2fd
+    style Models fill:#f3e5f5
+    style Channels fill:#e8f5e9
+    style Skills fill:#fff3e0
 ```
 
 *OpenClaw's modular architecture connects AI models, integrations, and a growing ecosystem of 200+ skills.*
@@ -46,18 +76,36 @@ graph TB
 ## 🚀 Getting Started Flowchart
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e1f5fe', 'primaryTextColor': '#01579b'}}}%%
 flowchart TD
-    A[1. Install] --> B[2. Configure]
-    B --> C{Platform?}
-    C --> D[Windows]
-    C --> E[Mac]
-    C --> F[Linux]
-    C --> G[Cloud]
-    D --> H[4. Setup Workspace]
-    E --> H
-    F --> H
-    G --> H
-    H --> I[5. First Skill!]
+    A[📥 1. Install OpenClaw] --> B[⚙️ 2. Configure]
+    B --> C{🖥️ Platform?}
+    
+    C -->|Windows| D1[🪟 Windows Setup]
+    C -->|Mac| D2[🍎 macOS Setup]
+    C -->|Linux| D3[🐧 Linux Setup]
+    C -->|Cloud| D4[☁️ Cloud Setup]
+    
+    D1 --> E[📁 3. Setup Workspace]
+    D2 --> E
+    D3 --> E
+    D4 --> E
+    
+    E --> F[📝 4. Configure Settings]
+    F --> G[🎯 5. Build First Skill!]
+    G --> H[🚀 Deploy & Run]
+    
+    style A fill:#e3f2fd
+    style B fill:#e3f2fd
+    style C fill:#fff3e0
+    style D1 fill:#e8f5e9
+    style D2 fill:#e8f5e9
+    style D3 fill:#e8f5e9
+    style D4 fill:#e8f5e9
+    style E fill:#e3f2fd
+    style F fill:#e3f2fd
+    style G fill:#fce4ec
+    style H fill:#c8e6c9
 ```
 
 *Follow these steps to get OpenClaw running on your platform of choice.*
@@ -205,12 +253,43 @@ flowchart TB
 ## 🔗 Integration Patterns
 
 ```mermaid
-graph TB
-    A[Webhook] --> B[Scheduled Job]
-    B --> C[Event Stream]
-    C --> D[API Gateway]
-    D --> E[Queue Worker]
-    E --> F[Pub/Sub]
+flowchart TB
+    subgraph Triggers["⚡ Triggers"]
+        T1[Webhook]
+        T2[Scheduled Cron]
+        T3[File Watch]
+        T4[Manual Trigger]
+    end
+    
+    subgraph Processing["🔧 Processing"]
+        P1[OpenClaw Agent]
+        P2[AI Model]
+        P3[Skill Execution]
+    end
+    
+    subgraph Outputs["📤 Outputs"]
+        O1[Telegram Alert]
+        O2[Email Send]
+        O3[Database Write]
+        O4[API Call]
+    end
+    
+    T1 -->|Event| P1
+    T2 -->|Timer| P1
+    T3 -->|Change| P1
+    T4 -->|Command| P1
+    
+    P1 -->|Process| P2
+    P2 -->|Execute| P3
+    
+    P3 -->|Notify| O1
+    P3 -->|Send| O2
+    P3 -->|Store| O3
+    P3 -->|Integrate| O4
+    
+    style Triggers fill:#e3f2fd
+    style Processing fill:#fff3e0
+    style Outputs fill:#e8f5e9
 ```
 
 *Common integration patterns for connecting OpenClaw with external systems and services.*
@@ -218,6 +297,31 @@ graph TB
 ---
 
 ## 🎯 Tips & Tricks
+
+```mermaid
+flowchart LR
+    subgraph Performance["🚀 Performance"]
+        P1[Redis Caching]
+        P2[Query Optimization]
+        P3[Batch Processing]
+    end
+    
+    subgraph Security["🔒 Security"]
+        S1[Env Encryption]
+        S2[Key Rotation]
+        S3[Access Control]
+    end
+    
+    subgraph Reliability["✅ Reliability"]
+        R1[Error Handling]
+        R2[Retry Logic]
+        R3[Monitoring]
+    end
+    
+    style Performance fill:#e3f2fd
+    style Security fill:#fff3e0
+    style Reliability fill:#e8f5e9
+```
 
 Trik dan best practices untuk optimize OpenClaw.
 
