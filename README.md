@@ -8,6 +8,13 @@ Repositori komunitas untuk belajar, berbagi, dan berkolaborasi tentang [OpenClaw
 
 ## 🏗️ OpenClaw Architecture
 
+![OpenClaw Architecture](docs/assets/diagrams/openclaw-architecture.png)
+
+<!-- SVG Source: docs/assets/diagrams/openclaw-architecture.svg -->
+
+<details>
+<summary>View SVG Source</summary>
+
 ```svg
 <svg width="100%" viewBox="0 0 680 440">
   <defs>
@@ -188,6 +195,7 @@ Repositori komunitas untuk belajar, berbagi, dan berkolaborasi tentang [OpenClaw
   <path d="M500 130 L500 145" fill="none" class="arr" stroke="var(--color-border-secondary)" marker-end="url(#arrow)"/>
 </svg>
 ```
+</details>
 
 ---
 
@@ -213,6 +221,13 @@ Repositori komunitas untuk belajar, berbagi, dan berkolaborasi tentang [OpenClaw
 ---
 
 ## 🚀 Getting Started Flowchart
+
+![Getting Started Flow](docs/assets/diagrams/getting-started-flow.png)
+
+<!-- SVG Source: docs/assets/diagrams/getting-started-flow.svg -->
+
+<details>
+<summary>View SVG Source</summary>
 
 ```svg
 <svg width="100%" viewBox="0 0 680 500">
@@ -308,6 +323,7 @@ Repositori komunitas untuk belajar, berbagi, dan berkolaborasi tentang [OpenClaw
   <path d="M400 405 L500 405" fill="none" class="arr" stroke="var(--color-border-secondary)" marker-end="url(#arrow2)"/>
 </svg>
 ```
+</details>
 
 ---
 
@@ -375,6 +391,13 @@ Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
 ---
 
 ## 💡 Use Cases
+
+![Use Cases](docs/assets/diagrams/use-cases.png)
+
+<!-- SVG Source: docs/assets/diagrams/use-cases.svg -->
+
+<details>
+<summary>View SVG Source</summary>
 
 ```svg
 <svg width="100%" viewBox="0 0 680 350">
@@ -506,6 +529,7 @@ Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
   </g>
 </svg>
 ```
+</details>
 
 | Use Case | Deskripsi | Link |
 |----------|-----------|------|
@@ -515,6 +539,13 @@ Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
 ---
 
 ## 🔗 Integration Patterns
+
+![Integration Patterns](docs/assets/diagrams/integration-patterns.png)
+
+<!-- SVG Source: docs/assets/diagrams/integration-patterns.svg -->
+
+<details>
+<summary>View SVG Source</summary>
 
 ```svg
 <svg width="100%" viewBox="0 0 680 300">
@@ -664,6 +695,7 @@ Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
   </g>
 </svg>
 ```
+</details>
 
 ---
 
