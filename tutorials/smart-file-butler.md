@@ -2,6 +2,123 @@
 
 Auto-organize your Downloads folder with AI-powered file management.
 
+---
+
+## 📁 File Processing Pipeline
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e1f5fe', 'primaryTextColor': '#01579b', 'fontSize': '14px'}}}%%
+flowchart TD
+    A[📥 File Downloaded] --> B{File Type?}
+    style A fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style B fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    B -->|PDF/DOCX| C[📄 Document Analyzer]
+    B -->|JPG/PNG| D[🖼️ Image Vision AI]
+    B -->|ZIP/TAR| E[📦 Archive Inspector]
+    B -->|Other| F[🔍 Extension Check]
+    style C fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style D fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    style E fill:#fff8e1,stroke:#f57f17,stroke-width:2px
+    style F fill:#eceff1,stroke:#455a64,stroke-width:2px
+    
+    C --> G[✏️ Generate<br/>Descriptive Name]
+    D --> G
+    E --> G
+    F --> G
+    style G fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
+    
+    G --> H{Duplicate?}
+    style H fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    
+    H -->|Yes| I[_1, _2, _3...]
+    H -->|No| J[📂 Move to<br/>Destination Folder]
+    style I fill:#ffccbc,stroke:#d84315,stroke-width:2px
+    style J fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    
+    I --> J
+    J --> K[🔔 Notify User]
+    K --> L[✅ Done!]
+    style K fill:#b3e5fc,stroke:#0288d1,stroke-width:2px
+    style L fill:#a5d6a7,stroke:#43a047,stroke-width:2px
+```
+
+## 🗂️ Folder Structure Diagram
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#f1f8e9', 'primaryTextColor': '#33691e'}}}%%
+graph TD
+    A[📂 Downloads] --> B[📄 Documents]
+    A --> C[🖼️ Images]
+    A --> D[📦 Archives]
+    A --> E[🎬 Media]
+    A --> F[💿 Software]
+    A --> G[📊 Data]
+    style A fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
+    
+    B --> B1[💼 Work]
+    B --> B2[🏠 Personal]
+    B --> B3[📋 Invoices]
+    B --> B4[📖 Manuals]
+    style B fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style B1 fill:#c8e6c9,stroke:#43a047
+    style B2 fill:#c8e6c9,stroke:#43a047
+    style B3 fill:#c8e6c9,stroke:#43a047
+    style B4 fill:#c8e6c9,stroke:#43a047
+    
+    C --> C1[📸 Screenshots]
+    C --> C2[🎞️ Photos]
+    C --> C3[🎨 Designs]
+    C --> C4[😂 Memes]
+    style C fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    style C1 fill:#e1bee7,stroke:#8e24aa
+    style C2 fill:#e1bee7,stroke:#8e24aa
+    style C3 fill:#e1bee7,stroke:#8e24aa
+    style C4 fill:#e1bee7,stroke:#8e24aa
+    
+    D --> D1[📂 Extracted]
+    D --> D2[💾 Keep]
+    style D fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    
+    E --> E1[🔊 Audio]
+    E --> E2[🎥 Video]
+    style E fill:#ffebee,stroke:#c62828,stroke-width:2px
+```
+
+## 🔄 File Butler Workflow
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e0f7fa', 'primaryTextColor': '#006064'}}}%%
+sequenceDiagram
+    participant User as User
+    participant FS as File System
+    participant FB as File Butler
+    participant AI as AI Analyzer
+    participant Notify as Notification
+
+    User->>FS: Download file
+    FS->>FB: inotify event
+    
+    FB->>FB: Skip if system file
+    FB->>AI: Analyze content
+    
+    alt Document
+        AI->>AI: Extract title/metadata
+    else Image
+        AI->>AI: Vision analysis
+    else Archive
+        AI->>AI: List contents
+    end
+    
+    AI-->>FB: Analysis result
+    FB->>FB: Generate filename
+    FB->>FB: Determine folder
+    FB->>FB: Check duplicates
+    FB->>FS: Move file
+    FB->>Notify: Send notification
+    Notify-->>User: Desktop popup
+```
+
 ## Overview
 
 Your Downloads folder is a mess? Files scattered everywhere with cryptic names like `download (17).pdf`?

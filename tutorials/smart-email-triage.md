@@ -2,6 +2,112 @@
 
 AI-powered inbox management that auto-sorts, prioritizes, and drafts responses.
 
+---
+
+## 📧 Email Classification Flow
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e3f2fd', 'primaryTextColor': '#0d47a1', 'fontSize': '14px'}}}%%
+flowchart TD
+    A[📨 New Email Arrives] --> B[🤖 AI Classifier]
+    style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style B fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    
+    B --> C{Category?}
+    style C fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    C -->|🔴 URGENT| D[⭐ Star Message]
+    C -->|📰 NEWSLETTER| E[📂 Archive + Label]
+    C -->|💬 FOLLOW-UP| F[📝 Add to Tasks]
+    C -->|📢 FYI| G[👁️ Mark as Read]
+    C -->|🗑️ SPAM| H[🚫 Delete/Mute]
+    
+    style D fill:#ffcdd2,stroke:#c62828,stroke-width:2px
+    style E fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style F fill:#fff8e1,stroke:#f57f17,stroke-width:2px
+    style G fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
+    style H fill:#cfd8dc,stroke:#455a64,stroke-width:2px
+    
+    D --> I[🔔 Send Alert]
+    E --> J[✅ Done]
+    F --> K[💡 Draft Reply]
+    G --> J
+    H --> J
+    
+    style I fill:#ffccbc,stroke:#d84315,stroke-width:2px
+    style J fill:#a5d6a7,stroke:#388e3c,stroke-width:2px
+    style K fill:#e1bee7,stroke:#8e24aa,stroke-width:2px
+    
+    K --> J
+    I --> J
+```
+
+## 🔄 Email Triage Sequence
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e8f5e9', 'primaryTextColor': '#1b5e20'}}}%%
+sequenceDiagram
+    participant Cron as Cron (30min)
+    participant Script as Triage Script
+    participant AI as AI Classifier
+    participant Gmail as Gmail API
+    participant TG as Telegram
+
+    Cron->>Script: Trigger processing
+    Script->>Gmail: Fetch unread emails
+    Gmail-->>Script: List of messages
+    
+    loop Each Email
+        Script->>AI: Classify email content
+        AI->>AI: Analyze sender, subject, body
+        AI-->>Script: Category + Action
+        
+        alt URGENT
+            Script->>Gmail: Add STARRED label
+            Script->>TG: Send urgent alert 🚨
+        else NEWSLETTER
+            Script->>Gmail: Archive + Add label
+        else FOLLOW-UP
+            Script->>Script: Add to task list
+            Script->>Gmail: Star message
+        else FYI
+            Script->>Gmail: Mark as read
+        end
+    end
+    
+    Script->>Script: Update stats
+```
+
+## 📊 Daily Digest Architecture
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#fff8e1', 'primaryTextColor': '#f57f17'}}}%%
+flowchart LR
+    A[⏰ 8:00 AM Daily] --> B[📧 Fetch Important<br/>Starred/Unread]
+    style A fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style B fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    
+    B --> C[📊 Aggregate Stats]
+    style C fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    
+    C --> D{Priority<br/>Emails?}
+    style D fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    D -->|Yes| E[⭐ List Top 5<br/>Important]
+    D -->|No| F[✓ No urgent items]
+    style E fill:#ffcdd2,stroke:#d32f2f,stroke-width:2px
+    style F fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    
+    E --> G[📝 Generate<br/>Digest Message]
+    F --> G
+    style G fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
+    
+    G --> H[📤 Send to Telegram]
+    H --> I[👤 User Receives<br/>Morning Briefing]
+    style H fill:#b3e5fc,stroke:#0288d1,stroke-width:2px
+    style I fill:#a5d6a7,stroke:#43a047,stroke-width:2px
+```
+
 ## Overview
 
 Inbox overflowing? This automation:

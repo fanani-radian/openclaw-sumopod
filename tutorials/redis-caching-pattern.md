@@ -4,6 +4,58 @@
 
 ---
 
+## 📊 Cache Flow Architecture
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e3f2fd', 'primaryTextColor': '#1565c0', 'fontSize': '14px'}}}%%
+flowchart TD
+    A[🚀 Incoming Request] --> B{🔍 Check Redis Cache}
+    style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style B fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    B -->|Cache HIT ✅| C[⚡ Return Cached Data<br/>~5ms]
+    B -->|Cache MISS ❌| D[🌐 Fetch from External API<br/>~800ms]
+    style C fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style D fill:#ffcdd2,stroke:#c62828,stroke-width:2px
+    
+    D --> E[💾 Store in Redis<br/>with TTL]
+    style E fill:#e1bee7,stroke:#6a1b9a,stroke-width:2px
+    
+    E --> F[📤 Return Fresh Data]
+    C --> G[✅ Client Response]
+    F --> G
+    style F fill:#b3e5fc,stroke:#0277bd,stroke-width:2px
+    style G fill:#a5d6a7,stroke:#388e3c,stroke-width:2px
+```
+
+## 🔄 Cache Lifecycle Sequence
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#f3e5f5', 'primaryTextColor': '#4a148c'}}}%%
+sequenceDiagram
+    participant C as Client
+    participant A as App Script
+    participant R as Redis Cache
+    participant API as External API
+
+    C->>A: Request Data
+    A->>R: GET cache:key
+    
+    alt Cache Exists
+        R-->>A: Return cached value
+        A-->>C: Response (50ms) ⚡
+    else Cache Expired/Missing
+        R-->>A: nil (miss)
+        A->>API: HTTP GET
+        API-->>A: JSON Response
+        A->>R: SETEX key TTL value
+        R-->>A: OK
+        A-->>C: Response (1s) 🐢
+    end
+```
+
+---
+
 ## 🎯 Before vs After
 
 ```

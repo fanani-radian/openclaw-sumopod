@@ -39,6 +39,83 @@
 
 ---
 
+## 🔄 Health Check Flow
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e8f5e9', 'primaryTextColor': '#1b5e20', 'fontSize': '14px'}}}%%
+flowchart TD
+    A[⏰ Cron Trigger<br/>Every Minute] --> B[📋 Load Service List]
+    style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style B fill:#fff8e1,stroke:#f57f17,stroke-width:2px
+    
+    B --> C{🔍 Check<br/>Service Health}
+    style C fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    C -->|Attempt 1| D{Response<br/>OK?}
+    D -->|NO| E[⏳ Wait 2s]
+    D -->|YES| H[🟢 Status: UP]
+    style D fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style H fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    
+    E -->|Attempt 2| F{Response<br/>OK?}
+    F -->|NO| G[⏳ Wait 2s]
+    F -->|YES| H
+    
+    G -->|Attempt 3| I{Response<br/>OK?}
+    I -->|NO| J[🔴 Status: DOWN]
+    I -->|YES| H
+    style J fill:#ffcdd2,stroke:#c62828,stroke-width:2px
+    
+    H --> K[💾 Save Result]
+    J --> L{Alert<br/>Cooldown?}
+    style K fill:#e1bee7,stroke:#6a1b9a,stroke-width:2px
+    style L fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    L -->|>5 min| M[🚨 Send Telegram Alert]
+    L -->|<5 min| N[📝 Log Only]
+    style M fill:#ffccbc,stroke:#d84315,stroke-width:2px
+    style N fill:#cfd8dc,stroke:#455a64,stroke-width:2px
+```
+
+## 📡 Alert Sequence Flow
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e3f2fd', 'primaryTextColor': '#0d47a1'}}}%%
+sequenceDiagram
+    participant Cron as Cron Job
+    participant Script as Health Script
+    participant_svc as Service API
+    participant Log as Log File
+    participant TG as Telegram Bot
+
+    Cron->>Script: Trigger check
+    
+    loop Each Service
+        Script->>Script: Check cache first
+        
+        alt Cache stale/missing
+            Script->>participant_svc: HTTP GET /health
+            participant_svc-->>Script: Response + Timing
+            
+            Script->>Script: Calculate status
+            Script->>Log: Save result JSON
+        end
+        
+        alt Status DOWN
+            Script->>Script: Check last alert time
+            
+            alt Alert cooldown passed
+                Script->>TG: Send alert message
+                TG-->>Script: Message sent ✅
+            end
+        else Status UP (recovered)
+            Script->>TG: Send recovery notice ✅
+        end
+    end
+    
+    Script->>Script: Print dashboard
+```
+
 ## 🏗️ Architecture
 
 ```
