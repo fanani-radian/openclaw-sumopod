@@ -204,9 +204,9 @@ flowchart TD
 flowchart TB
     subgraph Cloud["☁️ Cloud Infrastructure"]
         subgraph DNS["DNS Layer"]
-            D1[fanani.co]
-            D2[survey.fanani.co]
-            D3[gold.fanani.co]
+            D1[example.com]
+            D2[app1.example.com]
+            D3[app2.example.com]
         end
         
         subgraph CDN["SSL/HTTPS"]
@@ -214,37 +214,37 @@ flowchart TB
         end
     end
     
-    subgraph VPS["🖥️ VPS (Tencent Cloud)"]
+    subgraph VPS["🖥️ VPS (Your Server)"]
         subgraph Network["Network Layer"]
             FW[UFW Firewall
-            2222, 80, 443 ALLOW
+            SSH_PORT, 80, 443 ALLOW
             5432 DENY]
         end
         
         subgraph Proxy["Reverse Proxy"]
             NG[Nginx
             / → :5000
-            /survey → :5001
-            /gold → :5002]
+            /app1 → :5001
+            /app2 → :5002]
         end
         
         subgraph Runtime["Runtime"]
             PM2[PM2 Process Manager]
-            A1[Radian Portal
+            A1[Dashboard App
             Node.js :5000]
-            A2[Survey Generator
+            A2[Survey App
             Node.js :5001]
-            A3[RFM Gold
+            A3[Inventory App
             Node.js :5002]
         end
         
         subgraph Storage["Storage"]
             DB1[(PostgreSQL
-            rfm_gold_inventory)]
+            app1_database)]
             DB2[(PostgreSQL
-            radianportal)]
+            app2_database)]
             DB3[(SQLite
-            survey.db)]
+            app3.db)]
         end
         
         subgraph Security["Security"]

@@ -5,9 +5,9 @@
 ```mermaid
 flowchart TB
     subgraph Source["☁️ Source: Replit/Cloud"]
-        R1[App 1: Radian Portal]
-        R2[App 2: Survey Generator]
-        R3[App 3: RFM Gold Inventory]
+        R1[App 1: Dashboard]
+        R2[App 2: Survey Tool]
+        R3[App 3: Inventory System]
         DB1[(PostgreSQL<br/>Neon/Replit)]
     end
     
@@ -20,9 +20,9 @@ flowchart TB
     end
     
     subgraph Target["🖥️ Target: VPS"]
-        A1[Radian Portal<br/>Port 5000]
-        A2[Survey Generator<br/>Port 5001]
-        A3[RFM Gold<br/>Port 5002]
+        A1[Dashboard<br/>Port 5000]
+        A2[Survey Tool<br/>Port 5001]
+        A3[Inventory<br/>Port 5002]
         DB2[(PostgreSQL<br/>Local)]
     end
     
@@ -49,19 +49,19 @@ flowchart LR
     end
     
     subgraph Security["🔒 Security Layer"]
-        DNS[DNS<br/>fanani.co]
+        DNS[DNS<br/>example.com]
         CF[Cloudflare/Namecheap]
         SSL[SSL Certificate<br/>Let's Encrypt]
     end
     
-    subgraph VPS["🖥️ VPS (Tencent Cloud)"]
+    subgraph VPS["🖥️ VPS (Your Server)"]
         UFW[UFW Firewall]
         Nginx[Nginx Reverse Proxy]
         
         subgraph Apps["Node.js Apps (PM2)"]
-            A1[Port 5000<br/>Radian Portal]
-            A2[Port 5001<br/>Survey Generator]
-            A3[Port 5002<br/>RFM Gold]
+            A1[Port 5000<br/>Dashboard]
+            A2[Port 5001<br/>Survey Tool]
+            A3[Port 5002<br/>Inventory]
         end
         
         subgraph Database["Database Layer"]
@@ -231,7 +231,7 @@ server {
 ```mermaid
 flowchart TD
     A[Internet] -->|All Ports| F{UFW Firewall}
-    F -->|Port 2222| SSH[SSH Access ✅]
+    F -->|Your SSH Port| SSH[SSH Access ✅]
     F -->|Port 80| HTTP[HTTP ✅]
     F -->|Port 443| HTTPS[HTTPS ✅]
     F -->|Port 5432| DB[PostgreSQL ❌ BLOCKED]
@@ -245,7 +245,7 @@ sudo dnf install -y ufw
 # Configure rules
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-sudo ufw allow 2222/tcp comment 'SSH'
+sudo ufw allow <YOUR_SSH_PORT>/tcp comment 'SSH'
 sudo ufw allow 80/tcp comment 'HTTP'
 sudo ufw allow 443/tcp comment 'HTTPS'
 sudo ufw deny 5432/tcp comment 'Block PostgreSQL external'
