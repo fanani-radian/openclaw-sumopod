@@ -66,13 +66,32 @@ flowchart TD
 
 ## 📚 Navigasi Cepat
 
+```mermaid
+flowchart LR
+    A[Start Here] --> B[Getting Started]
+    A --> C[Use Cases]
+    A --> D[Tutorials]
+    A --> E[FAQ]
+    
+    B --> B1[Windows Install]
+    B --> B2[GitHub Sync]
+    
+    C --> C1[VPS Migration]
+    C --> C2[News Aggregator]
+    C --> C3[AI Video]
+    
+    D --> D1[Multi-Agent]
+    D --> D2[Automation]
+    D --> D3[Integrations]
+```
+
 | Section | Deskripsi |
 |---------|-----------|
 | [🚀 Getting Started](./docs/getting-started/README.md) | Panduan instalasi dan setup pertama |
 | [🖥️ Windows Install](./docs/getting-started/windows-install.md) | Tutorial lengkap Windows + auto-start + management |
 | [🔄 Sync Memory ke GitHub](./docs/getting-started/github-sync.md) | Sinkronisasi memory antar device/PC/VPS |
+| [💡 Use Cases](#-use-cases) | Contoh penggunaan real-world dengan diagram |
 | [📖 Tutorials](#-tutorials) | Kumpulan tutorial praktis OpenClaw |
-| [💡 Use Cases](#-use-cases) | Contoh penggunaan real-world |
 | [🎯 Tips & Tricks](#-tips--tricks) | Trik optimize OpenClaw |
 | [❓ FAQ](./faq/README.md) | Pertanyaan yang sering ditanyakan |
 | [⚙️ Config](./docs/config/README.md) | Konfigurasi dan templates |
@@ -111,12 +130,19 @@ Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
 | [⚡ Redis Caching Pattern](./tutorials/redis-caching-pattern.md) | Speed up 20x dengan Redis cache | Beginner |
 | [🏥 Service Health Dashboard](./tutorials/service-health-dashboard.md) | Monitor services + auto-retry alerts | Intermediate |
 
+### ☁️ Infrastructure & Migration
+| Tutorial | Deskripsi | Level |
+|----------|-----------|-------|
+| [🖥️ VPS Multi-App Migration](./docs/use-cases/vps-multi-app-migration.md) | Lengkap: Replit→VPS + Security + SSL | **NEW** |
+| [⚡ Redis Caching Pattern](./tutorials/redis-caching-pattern.md) | Speed up 20x dengan Redis cache | Beginner |
+| [🏥 Service Health Dashboard](./tutorials/service-health-dashboard.md) | Monitor services + auto-retry alerts | Intermediate |
+| [🚀 Deployment Butler](./tutorials/deployment-butler.md) | GitHub webhook → Auto-deploy + rollback | Advanced |
+
 ### ☁️ Integrations
 | Tutorial | Deskripsi | Level |
 |----------|-----------|-------|
 | [🔍 gog CLI Google Workspace](./tutorials/gog-cli-google-workspace.md) | Gmail, Drive, Docs, Sheets via CLI | Intermediate |
 | [⚡ n8n Integration](./tutorials/n8n-integration.md) | Workflow automation dengan n8n | Intermediate |
-| [🚀 Deployment Butler](./tutorials/deployment-butler.md) | GitHub webhook → Auto-deploy + rollback | Advanced |
 | [🧵 Repliz Threads Automation](./tutorials/repliz-threads-automation.md) | Auto-post ke Threads via Telegram | Intermediate |
 
 ### 🎨 Content Creation
@@ -130,21 +156,49 @@ Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
 ## 💡 Use Cases
 
 ```mermaid
-graph LR
-    A[Content Automation] --> B[Data Pipeline]
-    C[Customer Support] --> D[DevOps]
-    style A fill:#e1f5fe
-    style B fill:#e8f5e9
-    style C fill:#fff3e0
-    style D fill:#fce4ec
+flowchart TB
+    subgraph Automation["🤖 Automation"]
+        A1[News Aggregator]
+        A2[Email Triage]
+        A3[Content Pipeline]
+    end
+    
+    subgraph Migration["🚚 Migration"]
+        M1[VPS Multi-App]
+        M2[Database Transfer]
+        M3[Security Hardening]
+    end
+    
+    subgraph Media["🎬 Media"]
+        V1[AI Video Generation]
+        V2[Diagram Generation]
+    end
+    
+    subgraph DevOps["⚙️ DevOps"]
+        D1[Health Monitoring]
+        D2[Deployment Butler]
+        D3[Redis Caching]
+    end
+    
+    style Automation fill:#e3f2fd
+    style Migration fill:#fff3e0
+    style Media fill:#e8f5e9
+    style DevOps fill:#fce4ec
 ```
 
-*Four major use case categories powered by OpenClaw skills and integrations.*
+*Real-world use cases powered by OpenClaw skills and integrations.*
 
+### 🚚 Migration & Deployment
 | Use Case | Deskripsi | Link |
 |----------|-----------|------|
-| [🎬 AI Video Generation](./docs/use-cases/ai-video-generation.md) | Otomatisasi pembuatan video dengan AI | [Read](./docs/use-cases/ai-video-generation.md) |
+| [🖥️ VPS Multi-App Migration](./docs/use-cases/vps-multi-app-migration.md) | Migrate Replit/Cloud apps ke VPS dengan security produksi | [Read](./docs/use-cases/vps-multi-app-migration.md) |
+| [📊 VPS Migration Diagrams](./docs/use-cases/vps-migration-diagrams.md) | Visual guides: Mermaid diagrams untuk migration workflow | [Read](./docs/use-cases/vps-migration-diagrams.md) |
+
+### 🤖 Content & Automation
+| Use Case | Deskripsi | Link |
+|----------|-----------|------|
 | [📰 News Aggregator](./docs/use-cases/news-aggregator.md) | Aggregasi berita otomatis dengan AI | [Read](./docs/use-cases/news-aggregator.md) |
+| [🎬 AI Video Generation](./docs/use-cases/ai-video-generation.md) | Otomatisasi pembuatan video dengan AI | [Read](./docs/use-cases/ai-video-generation.md) |
 
 ---
 
