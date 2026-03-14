@@ -79,11 +79,6 @@ sequenceDiagram
     W-->>C: Return data
     C-->>A: Send page content
     A-->>U: Report with data
-    
-    style U fill:#0ea5e9
-    style A fill:#10b981
-    style C fill:#f59e0b
-    style W fill:#8b5cf6
 ```
 
 **Key Point:** Agent membaca data dari browser yang sudah login!
@@ -295,11 +290,6 @@ sequenceDiagram
     V-->>C: Traffic stats
     C-->>A: Send data
     A-->>U: Your site has 1,234 visitors today
-    
-    style U fill:#0ea5e9
-    style A fill:#10b981
-    style C fill:#f59e0b
-    style V fill:#8b5cf6
 ```
 
 **Command:**
