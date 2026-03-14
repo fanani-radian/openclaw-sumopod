@@ -190,6 +190,7 @@ Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
 | Tutorial | Deskripsi | Level |
 |----------|-----------|-------|
 | [🔍 gog CLI Google Workspace](./tutorials/gog-cli-google-workspace.md) | Gmail, Drive, Docs, Sheets via CLI | Intermediate |
+| [📁 Nextcloud Integration](./docs/use-cases/nextcloud-integration.md) | OpenClaw + Nextcloud: Files, Calendar, Tasks | Intermediate |
 | [⚡ n8n Integration](./tutorials/n8n-integration.md) | Workflow automation dengan n8n | Intermediate |
 | [🧵 Repliz Threads Automation](./tutorials/repliz-threads-automation.md) | Auto-post ke Threads via Telegram | Intermediate |
 
