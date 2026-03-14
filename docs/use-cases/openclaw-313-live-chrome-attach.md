@@ -2,6 +2,7 @@
 
 **Feature:** Connect OpenClaw to your real browser  
 **Version:** OpenClaw 2026.3.13+  
+**Chrome Version:** 146+ (required for remote debugging)  
 **Difficulty:** Beginner  
 **Time:** 10 minutes setup  
 **Updated:** March 2026
@@ -31,9 +32,9 @@ graph TB
     A[User Chat] --> B[OpenClaw Agent]
     B --> C{Browser Profile}
     
-    C -->|openclaw| D[Headless Browser]
-    C -->|user| E[Your Chrome]
-    C -->|chrome-relay| F[Chrome Extension]
+    C --> D[Headless Browser]
+    C --> E[Your Chrome]
+    C --> F[Chrome Extension]
     
     D --> G[Public Websites]
     E --> H[Logged-in Dashboards]
@@ -41,7 +42,6 @@ graph TB
     
     style A fill:#0ea5e9
     style B fill:#10b981
-    style C fill:#f59e0b
     style E fill:#0ea5e9
     style H fill:#10b981
 ```
@@ -73,10 +73,10 @@ sequenceDiagram
     participant C as Chrome/Comet
     participant W as Website
     
-    U->>A: "Cek Vercel dashboard"
+    U->>A: Cek Vercel dashboard
     A->>C: Connect via port 9222
     C->>W: Access with your cookies
-    W-->>C: Return data (authenticated)
+    W-->>C: Return data
     C-->>A: Send page content
     A-->>U: Report with data
     
@@ -94,15 +94,15 @@ sequenceDiagram
 
 ```mermaid
 flowchart TB
-    A[Requirements] --> B[Chrome/Chromium/Brave/Edge/Comet]
+    A[Requirements] --> B[Chrome 146+]
     A --> C[OpenClaw 2026.3.13+]
     A --> D[Same Machine]
-    A --> E[Remote Debugging Port 9222]
+    A --> E[Port 9222]
     
-    B --> F[Installed on PC]
-    C --> G[npm install -g openclaw]
-    D --> H[Agent dan browser di PC yang sama]
-    E --> I[Chrome flag required]
+    B --> F[Check chrome://version]
+    C --> G[npm install openclaw]
+    D --> H[Agent dan browser di PC sama]
+    E --> I[Remote debugging]
     
     style A fill:#0ea5e9
     style B fill:#10b981
@@ -111,11 +111,13 @@ flowchart TB
     style E fill:#10b981
 ```
 
-**Checklist:**
-- [ ] Browser installed (Chrome/Chromium/Brave/Edge/Comet)
-- [ ] OpenClaw 2026.3.13 or newer
-- [ ] Running on same machine (not VPS)
-- [ ] Remote debugging enabled
+### Check Chrome Version
+
+1. Buka Chrome
+2. Ketik di address bar: `chrome://version`
+3. Cek **Google Chrome:** harus **146.0.xxxx.xxx** atau lebih baru
+
+**Kalau versi lama:** Update Chrome dulu!
 
 ---
 
@@ -142,22 +144,22 @@ npm install -g openclaw@latest
 
 **Windows:**
 ```bash
-# For Chrome
+# Chrome 146+
 "C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222
 
-# For Comet
+# Comet
 "C:\Program Files\Comet\comet.exe" --remote-debugging-port=9222
 
-# For Brave
+# Brave
 "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe" --remote-debugging-port=9222
 
-# For Edge
+# Edge
 "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --remote-debugging-port=9222
 ```
 
 **macOS:**
 ```bash
-# Chrome
+# Chrome 146+
 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
 
 # Brave
@@ -166,7 +168,7 @@ npm install -g openclaw@latest
 
 **Linux:**
 ```bash
-# Chrome
+# Chrome 146+
 google-chrome --remote-debugging-port=9222
 
 # Chromium
@@ -282,17 +284,17 @@ openclaw browser --browser-profile user tabs
 
 ```mermaid
 sequenceDiagram
-    participant U as User (Telegram)
+    participant U as User
     participant A as OpenClaw
-    participant C as Chrome
+    participant C as Chrome 146+
     participant V as Vercel Dashboard
     
-    U->>A: "Check my Vercel traffic"
+    U->>A: Check my Vercel traffic
     A->>C: Find Vercel tab
     C->>V: Read analytics data
     V-->>C: Traffic stats
     C-->>A: Send data
-    A-->>U: "Your site has 1,234 visitors today"
+    A-->>U: Your site has 1,234 visitors today
     
     style U fill:#0ea5e9
     style A fill:#10b981
@@ -314,16 +316,12 @@ openclaw agent --message "Check Vercel dashboard for traffic data"
 ```mermaid
 flowchart LR
     A[OpenClaw] --> B[Gmail Tab]
-    B --> C{Unread?}
-    C -->|Yes| D[Count emails]
-    C -->|No| E[No new mail]
-    D --> F[Report to user]
-    E --> F
+    B --> C[Count unread]
+    C --> D[Report to user]
     
     style A fill:#0ea5e9
     style B fill:#f59e0b
     style D fill:#10b981
-    style F fill:#10b981
 ```
 
 **Command:**
@@ -337,10 +335,10 @@ openclaw agent --message "Check Gmail for unread emails and summarize"
 
 ```mermaid
 graph TB
-    A[OpenClaw Cron] -->|Every 5 min| B[Check TradingView]
-    B --> C{Price changed?}
-    C -->|Yes| D[Send alert]
-    C -->|No| E[Continue monitoring]
+    A[OpenClaw Cron] --> B[Check TradingView]
+    B --> C{Price changed}
+    C --> D[Send alert]
+    C --> E[Continue monitoring]
     D --> F[User Notification]
     
     style A fill:#0ea5e9
@@ -425,6 +423,23 @@ openclaw gateway restart
 # Verify profile
 openclaw browser profiles
 ```
+
+---
+
+### Problem: "Chrome version too old"
+
+**Cause:** Chrome version di bawah 146
+
+**Fix:**
+```bash
+# Check version
+chrome --version
+
+# Update Chrome ke versi terbaru
+# Buka Chrome → Settings → About Chrome
+```
+
+**Minimum required: Chrome 146+**
 
 ---
 
@@ -565,11 +580,11 @@ Connect from anywhere via Telegram/WhatsApp:
 
 ```mermaid
 graph LR
-    A[Telegram] -->|Message| B[OpenClaw Gateway]
-    B -->|Route| C[Agent]
-    C -->|Control| D[Chrome]
-    D -->|Data| C
-    C -->|Reply| A
+    A[Telegram] --> B[OpenClaw Gateway]
+    B --> C[Agent]
+    C --> D[Chrome 146+]
+    D --> C
+    C --> A
     
     style A fill:#0ea5e9
     style B fill:#10b981
@@ -590,7 +605,7 @@ graph LR
 1. **Always use HTTPS websites** when possible
 2. **Close sensitive tabs** when not needed
 3. **Review agent actions** before approving
-4. **Keep browser updated** for security
+4. **Keep browser updated** to Chrome 146+
 5. **Use separate Chrome profile** for automation
 
 ---
@@ -598,6 +613,7 @@ graph LR
 ## Summary
 
 ✅ **Live Chrome Attach** = Agent pakai browser kamu yang sudah login  
+✅ **Chrome Version** = 146+ required  
 ✅ **Setup** = Chrome flag + OpenClaw config  
 ✅ **Use case** = Dashboards, analytics, email, any logged-in site  
 ✅ **Security** = Local only, user approval required  
@@ -608,6 +624,9 @@ graph LR
 ## Quick Reference Card
 
 ```bash
+# Check Chrome version (must be 146+)
+chrome --version
+
 # Setup
 chrome --remote-debugging-port=9222
 
@@ -628,5 +647,6 @@ openclaw agent --message "Check my dashboard"
 ---
 
 **Tutorial by:** OpenClaw Community  
-**Tested on:** OpenClaw 2026.3.13, Chrome 134, Windows 11 / macOS / Linux  
-**Tags:** #openclaw #chrome #browser #automation #tutorial #313
+**Tested on:** OpenClaw 2026.3.13, Chrome 146+, Windows 11 / macOS / Linux  
+**Chrome Version Required:** 146.0.7680.80+  
+**Tags:** #openclaw #chrome #browser #automation #tutorial #313 #live-attach
