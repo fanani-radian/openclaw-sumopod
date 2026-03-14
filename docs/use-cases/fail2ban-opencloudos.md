@@ -9,13 +9,13 @@
 
 ## What is Fail2Ban?
 
-Fail2Ban adalah tool keamanan yang memonitor log (SSH, Apache, Nginx, dll) dan ban IP yang mencoba brute-force attack. Ini "firewall inteligent" yang:
+Fail2Ban adalah tool keamanan yang memonitor log (SSH, Apache, Nginx, dll) dan ban IP yang mencoba brute-force attack. Ini adalah "firewall inteligent" yang:
 
-- 🔍 Monitor log files secara real-time
-- 🚫 Ban IP otomatis setelah N kali percobaan gagal
-- ⏱️ Auto-unban setelah X waktu
-- 📊 Kirim notifikasi via email
-- 🛡️ Integrasi dengan firewalld
+- Monitor log files secara real-time
+- Ban IP otomatis setelah N kali percobaan gagal
+- Auto-unban setelah X waktu
+- Kirim notifikasi via email
+- Integrasi dengan firewalld
 
 **Problem:** OpenCloudOS tidak punya Fail2Ban di repository resmi (dnf/yum)  
 **Solution:** Install dari source GitHub + custom config
@@ -28,8 +28,8 @@ Fail2Ban adalah tool keamanan yang memonitor log (SSH, Apache, Nginx, dll) dan b
 # Check OS version
 cat /etc/os-release
 
-# Cek apakah sudah punya fail2ban
-which fail2ban-client  # Kalau output kosong = belum terinstall
+# Check if fail2ban is already installed
+which fail2ban-client
 ```
 
 **Required:**
@@ -44,22 +44,20 @@ which fail2ban-client  # Kalau output kosong = belum terinstall
 
 ```mermaid
 graph TB
-    subgraph "Fail2Ban Architecture"
-        A[Log Files] -->|Monitor| B[Fail2Ban Server]
-        B -->|Parse| C[Filter Rules]
-        C -->|Match| D[Actions]
-        D -->|Execute| E[Firewall Rules]
-        D -->|Optional| F[Email Notify]
-        D -->|Optional| G[IP Banned]
-        
-        style A fill:#e1f5fe
-        style B fill:#0ea5e9
-        style C fill:#10b981
-        style D fill:#f59e0b
-        style E fill:#ef4444
-        style F fill:#8b5cf6
-        style G fill:#ec4899
-    end
+    A[Log Files] --> B[Fail2Ban Server]
+    B --> C[Filter Rules]
+    C --> D[Actions]
+    D --> E[Firewall Rules]
+    D --> F[Email Notify]
+    D --> G[IP Banned]
+    
+    style A fill:#e1f5fe
+    style B fill:#0ea5e9
+    style C fill:#10b981
+    style D fill:#f59e0b
+    style E fill:#ef4444
+    style F fill:#8b5cf6
+    style G fill:#ec4899
 ```
 
 ---
@@ -73,24 +71,24 @@ flowchart LR
     C --> D[Install via Python]
     D --> E[Configure Socket]
     E --> F[Configure Jails]
-    F --> G[Create Systemd Service]
-    G --> H[Enable & Start]
+    F --> G[Systemd Service]
+    G --> H[Enable and Start]
     H --> I[Verify Status]
     I --> J{Working?}
-    J -->|Yes| K[✅ Done]
-    J -->|No| L[🔧 Troubleshoot]
+    J -->|Yes| K[Done]
+    J -->|No| L[Troubleshoot]
     
-    style A fill:#0ea5e9,color:#fff
-    style B fill:#10b981,color:#fff
-    style C fill:#06b6d4,color:#fff
-    style D fill:#f59e0b,color:#fff
-    style E fill:#ef4444,color:#fff
-    style F fill:#8b5cf6,color:#fff
-    style G fill:#ec4899,color:#fff
-    style H fill:#6366f1,color:#fff
-    style I fill:#0ea5e9,color:#fff
-    style K fill:#10b981,color:#fff
-    style L fill:#f97316,color:#fff
+    style A fill:#0ea5e9
+    style B fill:#10b981
+    style C fill:#06b6d4
+    style D fill:#f59e0b
+    style E fill:#ef4444
+    style F fill:#8b5cf6
+    style G fill:#ec4899
+    style H fill:#6366f1
+    style I fill:#0ea5e9
+    style K fill:#10b981
+    style L fill:#f97316
 ```
 
 ---
@@ -100,37 +98,29 @@ flowchart LR
 ### Step 1: Install Dependencies
 
 ```bash
-# Install required packages
 sudo dnf -y install git python3 python3-setuptools python3-systemd firewalld
-
-# Start and enable firewalld (kalau belum)
 sudo systemctl enable --now firewalld
 ```
 
 **Explanation:**
-- `git` → Clone dari GitHub
-- `python3` → Runtime Fail2Ban
-- `python3-setuptools` → Installer script
-- `python3-systemd` → Integration dengan systemd
-- `firewalld` → Backend firewall
+- `git` - Clone dari GitHub
+- `python3` - Runtime Fail2Ban
+- `python3-setuptools` - Installer script
+- `python3-systemd` - Systemd integration
+- `firewalld` - Firewall backend
 
 ---
 
-### Step 2: Clone & Install Fail2Ban from Source
+### Step 2: Clone and Install from Source
 
 ```bash
-# Remove old installation (kalau ada)
 sudo rm -rf /usr/local/src/fail2ban
-
-# Clone from GitHub (shallow clone = faster)
 sudo git clone --depth 1 https://github.com/fail2ban/fail2ban.git /usr/local/src/fail2ban
-
-# Install using Python setup
 cd /usr/local/src/fail2ban
 sudo python3 setup.py install
 ```
 
-**Diagram - Installation Process:**
+**Installation Process:**
 
 ```mermaid
 sequenceDiagram
@@ -146,7 +136,7 @@ sequenceDiagram
     P->>S: Copy files to /usr/local/bin
     P->>S: Create configs in /etc/fail2ban
     P->>S: Setup man pages
-    S-->>U: ✅ Installation complete
+    S-->>U: Installation complete
     
     style U fill:#0ea5e9
     style G fill:#181717
@@ -156,13 +146,10 @@ sequenceDiagram
 
 ---
 
-### Step 3: Configure Runtime & Socket
+### Step 3: Configure Runtime and Socket
 
 ```bash
-# Create runtime directory
 sudo mkdir -p /var/run/fail2ban
-
-# Create fail2ban.local config (socket & pid location)
 sudo tee /etc/fail2ban/fail2ban.local >/dev/null <<'EOF'
 [Definition]
 socket = /var/run/fail2ban/fail2ban.sock
@@ -172,92 +159,68 @@ logtarget = /var/log/fail2ban.log
 EOF
 ```
 
-**Why this is needed?**
-- OpenCloudOS using custom paths
-- Fail2Ban by default expects `/var/run/fail2ban` (tapi belum ada)
-- Config ini override default path
+**Why needed:** OpenCloudOS using custom paths, default paths belum ada.
 
 ---
 
 ### Step 4: Configure Jails (SSH Protection)
 
 ```bash
-# Create jail.local (enable & configure SSH protection)
 sudo tee /etc/fail2ban/jail.local >/dev/null <<'EOF'
 [DEFAULT]
-# Default ban action untuk firewalld
 banaction = firewallcmd-rich-rules
-
-# 5 percobaan dalam 10 menit = ban
 findtime = 10m
 bantime = 1h
 maxretry = 5
 
 [sshd]
-# Enable SSH jail
 enabled = true
-
-# Backend polling (compatible dengan OpenCloudOS)
 backend = polling
-
-# Monitor SSH log
 logpath = /var/log/secure
-
-# Port yang diproteksi
 port = ssh
-
-# Protocol
 protocol = tcp
-
-# Max ban (opsional - default unlimited)
-# maxentries = 100
 EOF
 ```
 
-**Jail Configuration Diagram:**
+**Jail Configuration:**
 
 ```mermaid
 graph LR
-    subgraph "Jail Configuration"
-        A[sshd Jail] -->|enabled| B[Monitor]
-        B -->|logpath| C[/var/log/secure]
-        B -->|port| D[22/SSH]
-        
-        E[Max Retry: 5] -->|Trigger| F[Ban Action]
-        G[Find Time: 10m] -->|Reset| F
-        H[Ban Time: 1h] -->|Duration| I[IP Banned]
-        
-        F -->|Backend| J[firewalld]
-        
-        style A fill:#0ea5e9,color:#fff
-        style C fill:#10b981,color:#fff
-        style D fill:#f59e0b,color:#fff
-        style E fill:#ef4444,color:#fff
-        style G fill:#6366f1,color:#fff
-        style H fill:#8b5cf6,color:#fff
-        style I fill:#ec4899,color:#fff
-        style J fill:#64748b,color:#fff
-    end
+    A[sshd Jail] --> B[Monitor]
+    B --> C[/var/log/secure]
+    B --> D[Port 22]
+    E[Max Retry: 5] --> F[Ban Action]
+    G[Find Time: 10m] --> F
+    H[Ban Time: 1h] --> I[IP Banned]
+    F --> J[firewalld]
+    
+    style A fill:#0ea5e9
+    style C fill:#10b981
+    style D fill:#f59e0b
+    style E fill:#ef4444
+    style G fill:#6366f1
+    style H fill:#8b5cf6
+    style I fill:#ec4899
+    style J fill:#64748b
 ```
 
-**Configuration Parameters Explained:**
+**Configuration Parameters:**
 
 | Parameter | Value | Meaning |
 |-----------|---------|---------|
-| `enabled = true` | - | Aktifkan jail SSH |
-| `backend = polling` | - | Mode monitoring (polling = compatible) |
-| `logpath = /var/log/secure` | - | Path SSH log file |
-| `port = ssh` | - | Port yang diproteksi (22) |
-| `maxretry = 5` | 5 | Maksimal percobaan gagal |
-| `findtime = 10m` | 10 menit | Window waktu untuk menghitung percobaan |
-| `bantime = 1h` | 1 jam | Durasi ban |
+| enabled = true | - | Aktifkan jail SSH |
+| backend = polling | - | Mode monitoring (polling = compatible) |
+| logpath = /var/log/secure | - | Path SSH log file |
+| port = ssh | - | Port yang diproteksi (22) |
+| maxretry = 5 | 5 | Maksimal percobaan gagal |
+| findtime = 10m | 10 menit | Window waktu untuk menghitung percobaan |
+| bantime = 1h | 1 jam | Durasi ban |
 
 ---
 
 ### Step 5: Create Systemd Service
 
 ```bash
-# Create systemd service file
 sudo tee /etc/systemd/system/fail2ban.service >/dev/null <<'EOF'
 [Unit]
 Description=Fail2Ban Service
@@ -268,7 +231,7 @@ Wants=firewalld.service
 Type=forking
 PIDFile=/var/run/fail2ban/fail2ban.pid
 ExecStart=/usr/local/bin/fail2ban-server -b -x -c /etc/fail2ban start
-ExecStop=//un/local/bin/fail2ban-client -s /var/run/fail2ban/fail2ban.sock stop
+ExecStop=/usr/local/bin/fail2ban-client -s /var/run/fail2ban/fail2ban.sock stop
 ExecReload=/usr/local/bin/fail2ban-client -s /var/run/fail2ban/fail2ban.sock reload
 Restart=on-failure
 RestartSec=2
@@ -278,19 +241,19 @@ WantedBy=multi-user.target
 EOF
 ```
 
-**Systemd Service Diagram:**
+**Systemd Service:**
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Stopped: Initial state
+    [*] --> Stopped
     Stopped --> Starting: systemctl start
-    Starting --> Running: Forking process
+    Starting --> Running
     Running --> Reloading: systemctl reload
     Reloading --> Running
     Running --> Stopping: systemctl stop
     Stopping --> Stopped
     
-    Running --> Failed: On error
+    Running --> Failed
     Failed --> Restarting: auto-restart
     Restarting --> Running
     
@@ -304,77 +267,54 @@ stateDiagram-v2
 ```
 
 **Key Points:**
-- `Type=forking` → Service berjalan di background
-- `Wants=firewalld.service` → Fail2Ban butuh firewalld
-- `Restart=on-failure` → Auto-restart kalau crash
-- `RestartSec=2` → Wait 2 detik sebelum restart
+- Type=forking - Service berjalan di background
+- Wants=firewalld.service - Fail2Ban butuh firewalld
+- Restart=on-failure - Auto-restart kalau crash
+- RestartSec=2 - Wait 2 detik sebelum restart
 
 ---
 
-### Step 6: Start & Verify
+### Step 6: Start and Verify
 
 ```bash
-# Reload systemd daemon
 sudo systemctl daemon-reload
-
-# Enable & start fail2ban
 sudo systemctl enable --now fail2ban
-
-# Check service status
-sudo systemctl status fail2ban --no-pager -l
+sudo systemctl status fail2ban
+sudo fail2ban-client ping
+sudo fail2ban-client status
+sudo fail2ban-client status sshd
 ```
 
 **Expected Output:**
 ```
 ● fail2ban.service - Fail2Ban Service
-     Loaded: loaded (/etc/systemd/system/fail2ban.service; enabled; preset: enabled)
-     Active: active (running) since Sat 2026-03-14 13:58:00 WITA; 10s ago
-    Process: 1979500 ExecStart=/usr/local/bin/fail2ban-server... (code=exited, status=0/SUCCESS)
-   Main PID: 1979505 (fail2ban-server)
-      Tasks: 3 (limit: 4782)
-     Memory: 12.5M
-        CPU: 0.5%
-     CGroup: /system.slice/fail2ban.service
-             ├─1979505 /usr/local/bin/fail2ban-server -b -x -c /etc/fail2ban start
-             └─1979508 /usr/local/bin/fail2ban-server -b -x -c /etc/fail2ban start
+     Loaded: loaded
+     Active: active (running)
 ```
 
-**Ping test:**
-```bash
-# Test fail2ban server response
-sudo /usr/local/bin/fail2ban-client -s /var/run/fail2ban/fail2ban.sock ping
-
-# Check overall status
-sudo /usr/local/bin/fail2ban-client -s /var/run/fail2ban/fail2ban.sock status
-
-# Check SSH jail status
-sudo /usr/local/bin/fail2ban-client -s /var/run/fail2ban/fail2ban.sock status sshd
-```
-
-**Verification Diagram:**
+**Verification:**
 
 ```mermaid
 flowchart TD
     A[Start Verification] --> B{Ping Server?}
     B -->|Yes| C{Status Check?}
-    B -->|No| Z[🔧 Troubleshoot]
-    C -->|OK| D[✅ Working]
+    B -->|No| Z[Troubleshoot]
+    C -->|OK| D[Working]
     C -->|Error| Z
     
     D --> E{Jail Status?}
     E -->|Active| F[SSH Protected]
-    E -->|Inactive| G[⚠️ Jail not enabled]
+    E -->|Inactive| G[Jail not enabled]
     
     F --> H{Banned IPs?}
-    H -->|No| I[🛡️ All good]
-    H -->|Yes| J[📋 Check ban list]
+    H -->|No| I[All good]
+    H -->|Yes| J[Check ban list]
     
     style A fill:#0ea5e9
     style D fill:#10b981
     style F fill:#10b981
     style I fill:#10b981
     style G fill:#f59e0b
-    style J fill:#f97316
     style Z fill:#ef4444
 ```
 
@@ -382,47 +322,25 @@ flowchart TD
 
 ## Testing Fail2Ban
 
-### Test 1: Simulate Attack (from another machine)
+### Test 1: Simulate Attack
 
 ```bash
-# Dari komputer lain, coba login 6x (harusnya ke-6 diblok)
+# Dari komputer lain, coba login 6x
 ssh root@YOUR_SERVER_IP
-
-# Setelah ke-6 gagal, coba lagi
-# Harusnya connection refused / timeout
 ```
 
 ### Test 2: Check Banned IP
 
 ```bash
-# Cek IP yang di-ban
-sudo /usr/local/bin/fail2ban-client -s /var/run/fail2ban/fail2ban.sock status sshd
-
-# Cek firewall rules (firewalld)
+sudo fail2ban-client status sshd
 sudo firewall-cmd --list-rich-rules | grep fail2ban
-```
-
-**Expected Output:**
-```
-Status for the jail: sshd
-|- Filter
-|  |- Currently failed: 6
-|  |- Total failed:     6
-|  `- File list:       /var/log/secure
-`- Actions
-   |- Currently banned: 1
-   |- Total banned:     1
-   `- Banned IP list:  192.168.1.100
 ```
 
 ### Test 3: Unban IP
 
 ```bash
-# Unban spesifik IP
-sudo /usr/local/bin/fail2ban-client -s /var/run/fail2ban/fail2ban.sock set sshd unbanip 192.168.1.100
-
-# Verifikasi
-sudo /usr/local/bin/fail2ban-client -s /var/run/fail2ban/fail2ban.sock status sshd
+sudo fail2ban-client set sshd unbanip 192.168.1.100
+sudo fail2ban-client status sshd
 ```
 
 ---
@@ -433,88 +351,59 @@ sudo /usr/local/bin/fail2ban-client -s /var/run/fail2ban/fail2ban.sock status ss
 
 | Command | Description |
 |----------|-------------|
-| `systemctl start fail2ban` | Start service |
-| `systemctl stop fail2ban` | Stop service |
-| `systemctl restart fail2ban` | Restart service |
-| `systemctl status fail2ban` | Check status |
-| `systemctl enable fail2ban` | Enable at boot |
-| `systemctl disable fail2ban` | Disable at boot |
+| systemctl start fail2ban | Start service |
+| systemctl stop fail2ban | Stop service |
+| systemctl restart fail2ban | Restart service |
+| systemctl status fail2ban | Check status |
+| systemctl enable fail2ban | Enable at boot |
 
 ### Fail2Ban Client Commands
 
 | Command | Description |
 |----------|-------------|
-| `fail2ban-client ping` | Test connection |
-| `fail2ban-client status` | Show all jails |
-| `fail2ban-client status sshd` | Show SSH jail status |
-| `fail2ban-client set sshd bantime 2h` | Change ban time |
-| `fail2ban-client set sshd maxretry 3` | Change max retry |
-| `fail2ban-client set sshd unbanip IP` | Unban IP |
-
-### Log Monitoring
-
-```bash
-# Real-time monitoring fail2ban log
-sudo tail -f /var/log/fail2ban.log
-
-# Cek ban history
-sudo grep "Ban " /var/log/fail2ban.log
-
-# Cek unban history
-sudo grep "Unban " /var/log/fail2ban.log
-```
+| fail2ban-client ping | Test connection |
+| fail2ban-client status | Show all jails |
+| fail2ban-client status sshd | Show SSH jail |
+| fail2ban-client set sshd bantime 2h | Change ban time |
+| fail2ban-client set sshd maxretry 3 | Change max retry |
 
 ---
 
 ## Advanced Configuration
 
-### Add More Jails (Nginx, Apache, etc.)
+### Add More Jails
 
 ```bash
-# Add to jail.local
 sudo tee -a /etc/fail2ban/jail.local >/dev/null <<'EOF'
 
 [nginx-http-auth]
 enabled = true
 port = http,https
 logpath = /var/log/nginx/error.log
-maxretry = 5
 
 [apache-badbots]
 enabled = true
 port = http,https
 logpath = /var/log/httpd/error_log
-maxretry = 3
 EOF
 
-# Restart fail2ban
 sudo systemctl restart fail2ban
 ```
 
 ### Email Notifications
 
 ```bash
-# Add to jail.local
 sudo tee -a /etc/fail2ban/jail.local >/dev/null <<'EOF'
 
 [DEFAULT]
-# Email configuration
 destemail = admin@example.com
-sendername = Fail2Ban@$(hostname)
-sender = fail2ban@example.com
-mta = sendmail
-action = %(action_)s
-              %(mta)s-whois[name=%(__name__)s, dest="%(destemail)s"]
-
-action_mwl = %(banaction)s
-              %(mta)s-whois[name=%(__name__)s, dest="%(destemail)s"]
-              %(mta)s-whois[name=%(__name__)s, dest="%(destemail)s"]
+sendername = Fail2Ban@hostname
+action = %(action_mwl)s
 
 [sshd]
 action = %(action_mwl)s
 EOF
 
-# Restart fail2ban
 sudo systemctl restart fail2ban
 ```
 
@@ -530,26 +419,23 @@ graph LR
     E --> G[Send Email]
     E --> H[Log Event]
     
-    style A fill:#ef4444,color:#fff
-    style C fill:#ef4444,color:#fff
-    style F fill:#10b981,color:#fff
-    style G fill:#8b5cf6,color:#fff
-    style H fill:#6366f1,color:#fff
-    style D fill:#10b981,color:#fff
+    style A fill:#ef4444
+    style C fill:#ef4444
+    style F fill:#10b981
+    style G fill:#8b5cf6
+    style H fill:#6366f1
+    style D fill:#10b981
 ```
 
-### Whitelist IP (Never Ban)
+### Whitelist IP
 
 ```bash
-# Add to jail.local
 sudo tee -a /etc/fail2ban/jail.local >/dev/null <<'EOF'
 
 [DEFAULT]
-# Whitelist (space-separated)
 ignoreip = 127.0.0.1/8 192.168.1.0/24 YOUR_TRUSTED_IP
 EOF
 
-# Restart fail2ban
 sudo systemctl restart fail2ban
 ```
 
@@ -559,55 +445,28 @@ sudo systemctl restart fail2ban
 
 ### Problem: Service Won't Start
 
-**Symptom:** `systemctl start fail2ban` fails  
-**Solution:**
 ```bash
-# Check error log
 sudo tail -50 /var/log/fail2ban.log
-
-# Common issues:
-# 1. Socket permission
 sudo chmod 755 /var/run/fail2ban
-
-# 2. Log file not found
 sudo touch /var/log/fail2ban.log
 sudo chmod 644 /var/log/fail2ban.log
-
-# 3. Config syntax error
-sudo /usr/local/bin/fail2ban-server -t
+sudo fail2ban-server -t
 ```
 
 ### Problem: Not Banning IPs
 
-**Symptom:** Attacks continue, no bans  
-**Solution:**
 ```bash
-# Check if jail is enabled
 sudo fail2ban-client status sshd
-
-# Check log path exists
 sudo ls -la /var/log/secure
-
-# Check backend
 sudo fail2ban-client get sshd backend
-
-# Test filter manually
-sudo fail2ban-regex /var/log/secure /etc/fail2ban/filter.d/sshd.conf
 ```
 
 ### Problem: Can't Unban IP
 
-**Symptom:** `unbanip` command fails  
-**Solution:**
 ```bash
-# Check IP is actually banned
 sudo fail2ban-client status sshd
-
-# Remove from firewalld directly
-sudo firewall-cmd --permanent --remove-rich-rule='rule family="ipv4" source address="IP" reject'
+sudo firewall-cmd --permanent --remove-rich-rule='source address="IP"'
 sudo firewall-cmd --reload
-
-# Restart fail2ban
 sudo systemctl restart fail2ban
 ```
 
@@ -632,16 +491,16 @@ flowchart TD
     L -->|No| M[Create Log File]
     L -->|Yes| N[Check Filter Regex]
     
-    style A fill:#ef4444,color:#fff
-    style H fill:#10b981,color:#fff
-    style C fill:#f59e0b,color:#fff
-    style D fill:#f59e0b,color:#fff
-    style E fill:#f59e0b,color:#fff
-    style G fill:#f59e0b,color:#fff
-    style J fill:#f59e0b,color:#fff
-    style K fill:#f59e0b,color:#fff
-    style M fill:#f59e0b,color:#fff
-    style N fill:#f59e0b,color:#fff
+    style A fill:#ef4444
+    style H fill:#10b981
+    style C fill:#f59e0b
+    style D fill:#f59e0b
+    style E fill:#f59e0b
+    style G fill:#f59e0b
+    style J fill:#f59e0b
+    style K fill:#f59e0b
+    style M fill:#f59e0b
+    style N fill:#f59e0b
 ```
 
 ---
@@ -650,67 +509,48 @@ flowchart TD
 
 ### 1. SSHGuard
 
-**Install:**
 ```bash
 sudo dnf -y install epel-release
 sudo dnf -y install sshguard
+sudo systemctl enable --now sshguard
 ```
 
-**Pros:**
-- Lebih ringan
-- Install dari repo (no source compile)
-- Konfigurasi lebih simple
-
-**Cons:**
-- Fitur kurang lengkap
-- Kurang komunitas support
+**Pros:** Lebih ringan, install dari repo  
+**Cons:** Fitur kurang lengkap
 
 ### 2. DenyHosts
 
-**Install:**
 ```bash
 sudo dnf -y install denyhosts
 sudo systemctl enable --now denyhosts
 ```
 
-**Pros:**
-- Sangat simple
-- Khusus SSH protection
-
-**Cons:**
-- Tidak support multiple jails
-- Tidak integrasi firewall langsung
+**Pros:** Sangat simple, khusus SSH  
+**Cons:** Tidak support multiple jails
 
 ### 3. Custom iptables Rules
 
 ```bash
-# Limit SSH connection rate
 sudo iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --set
 sudo iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 -j DROP
 ```
 
-**Pros:**
-- Native kernel module
-- Zero overhead
-
-**Cons:**
-- Tidak ada logging
-- Tidak ada unban otomatis
+**Pros:** Native kernel, zero overhead  
+**Cons:** Tidak ada logging atau auto-unban
 
 ---
 
 ## Comparison Table
 
-| Feature | Fail2Ban | SSHGuard | DenyHosts | Custom iptables |
-|----------|-----------|-----------|-------------|------------------|
-| Multiple Jails | ✅ | ❌ | ❌ | ❌ |
-| Email Alerts | ✅ | ❌ | ✅ | ❌ |
-| Firewall Integration | ✅ | ✅ | ❌ | ✅ (native) |
-| Auto-Unban | ✅ | ✅ | ✅ | ❌ |
-| Log Monitoring | ✅ | ✅ | ✅ | ❌ |
-| Custom Filters | ✅ | ❌ | ❌ | ❌ |
+| Feature | Fail2Ban | SSHGuard | DenyHosts | iptables |
+|----------|-----------|-----------|-------------|-----------|
+| Multiple Jails | Yes | No | No | No |
+| Email Alerts | Yes | No | Yes | No |
+| Firewall Integration | Yes | Yes | No | Yes |
+| Auto-Unban | Yes | Yes | Yes | No |
+| Log Monitoring | Yes | Yes | Yes | No |
+| Custom Filters | Yes | No | No | No |
 | Installation | Source | Repo | Repo | Native |
-| Complexity | Medium | Low | Low | High |
 
 ---
 
@@ -719,118 +559,26 @@ sudo iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update
 ### Daily Tasks
 
 ```bash
-# Check service status
 systemctl status fail2ban
-
-# Check ban count
-fail2ban-client status sshd | grep "Banned IP"
-
-# Review log for errors
+fail2ban-client status sshd | grep "Banned IP list"
 tail -100 /var/log/fail2ban.log | grep ERROR
 ```
 
 ### Weekly Tasks
 
 ```bash
-# Check ban list
 fail2ban-client status sshd
-
-# Review configuration
 cat /etc/fail2ban/jail.local
-
-# Check log file size
 du -sh /var/log/fail2ban.log
-
-# Rotate logs (kalau > 50MB)
-sudo mv /var/log/fail2ban.log /var/log/fail2ban.log.old
-sudo touch /var/log/fail2ban.log
-sudo chmod 644 /var/log/fail2ban.log
-sudo systemctl restart fail2ban
 ```
 
 ### Monthly Tasks
 
 ```bash
-# Update fail2ban source
 cd /usr/local/src/fail2ban
 sudo git pull
 sudo python3 setup.py install
 sudo systemctl restart fail2ban
-
-# Review and adjust ban times
-sudo tee /etc/fail2ban/jail.local >/dev/null <<'EOF'
-[DEFAULT]
-findtime = 10m
-bantime = 7d  # Increase for persistent attackers
-maxretry = 3  # Lower for stricter security
-EOF
-
-sudo systemctl restart fail2ban
-```
-
----
-
-## Security Best Practices
-
-### 1. Use Strong SSH Configuration
-
-```bash
-# Edit /etc/ssh/sshd_config
-sudo tee -a /etc/ssh/sshd_config >/dev/null <<'EOF'
-
-# Disable root login
-PermitRootLogin no
-
-# Use key-based auth only
-PasswordAuthentication no
-
-# Change default port
-Port 2222
-
-# Limit users
-AllowUsers admin
-EOF
-
-# Restart SSH
-sudo systemctl restart sshd
-```
-
-### 2. Monitor Fail2Ban Regularly
-
-```bash
-# Create monitoring script
-cat > ~/check-fail2ban.sh <<'EOF'
-#!/bin/bash
-BANNED=$(sudo fail2ban-client status sshd | grep "Banned IP list" | awk '{print $4}')
-if [ ! -z "$BANNED" ]; then
-    echo "⚠️ Fail2Ban Alert: $BANNED IP(s) banned!"
-    # Send alert via Telegram/email/Slack
-fi
-EOF
-
-chmod +x ~/check-fail2ban.sh
-
-# Add to crontab (every 10 minutes)
-(crontab -l 2>/dev/null; echo "*/10 * * * * ~/check-fail2ban.sh") | crontab -
-```
-
-### 3. Keep Fail2Ban Updated
-
-```bash
-# Create update script
-cat > ~/update-fail2ban.sh <<'EOF'
-#!/bin/bash
-cd /usr/local/src/fail2ban
-git fetch --tags
-TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-git checkout $TAG
-python3 setup.py install
-systemctl restart fail2ban
-EOF
-
-chmod +x ~/update-fail2ban.sh
-
-# Run monthly (via crontab)
 ```
 
 ---
@@ -843,16 +591,14 @@ Save as `install-fail2ban-opencloudos.sh`:
 #!/bin/bash
 set -e
 
-echo "🚀 Installing Fail2Ban on OpenCloudOS..."
+echo "Installing Fail2Ban on OpenCloudOS..."
 
-# ===== 1) Dependencies + source install =====
 sudo dnf -y install git python3 python3-setuptools python3-systemd firewalld
 sudo rm -rf /usr/local/src/fail2ban
 sudo git clone --depth 1 https://github.com/fail2ban/fail2ban.git /usr/local/src/fail2ban
 cd /usr/local/src/fail2ban
 sudo python3 setup.py install
 
-# ===== 2) Runtime/socket config =====
 sudo mkdir -p /var/run/fail2ban
 sudo tee /etc/fail2ban/fail2ban.local >/dev/null <<'EOF'
 [Definition]
@@ -862,7 +608,6 @@ loglevel = INFO
 logtarget = /var/log/fail2ban.log
 EOF
 
-# ===== 3) Jail config (working on OpenCloudOS) =====
 sudo tee /etc/fail2ban/jail.local >/dev/null <<'EOF'
 [DEFAULT]
 banaction = firewallcmd-rich-rules
@@ -877,7 +622,6 @@ logpath = /var/log/secure
 port = ssh
 EOF
 
-# ===== 4) Systemd service =====
 sudo tee /etc/systemd/system/fail2ban.service >/dev/null <<'EOF'
 [Unit]
 Description=Fail2Ban Service
@@ -897,28 +641,22 @@ RestartSec=2
 WantedBy=multi-user.target
 EOF
 
-# ===== 5) Start + verify =====
 sudo systemctl daemon-reload
 sudo systemctl enable --now fail2ban
 sudo systemctl status fail2ban --no-pager -l
-sudo /usr/local/bin/fail2ban-client -s /var/run/fail2ban/fail2ban.sock ping
-sudo /usr/local/bin/fail2ban-client -s /var/run/fail2ban/fail2ban.sock status
-sudo /usr/local/bin/fail2ban-client -s /var/run/fail2ban/fail2ban.sock status sshd
+sudo fail2ban-client -s /var/run/fail2ban/fail2ban.sock ping
+sudo fail2ban-client -s /var/run/fail2ban/fail2ban.sock status
+sudo fail2ban-client -s /var/run/fail2ban/fail2ban.sock status sshd
 
-echo "✅ Fail2Ban installed and running!"
-echo "📊 Check status: fail2ban-client status sshd"
-echo "📝 Check logs: tail -f /var/log/fail2ban.log"
+echo "Fail2Ban installed and running!"
+echo "Check status: fail2ban-client status sshd"
+echo "Check logs: tail -f /var/log/fail2ban.log"
 ```
 
 **Usage:**
 ```bash
-# Download script
 curl -O https://your-server/install-fail2ban-opencloudos.sh
-
-# Make executable
 chmod +x install-fail2ban-opencloudos.sh
-
-# Run
 ./install-fail2ban-opencloudos.sh
 ```
 
@@ -926,10 +664,10 @@ chmod +x install-fail2ban-opencloudos.sh
 
 ## Summary
 
-✅ **Fail2Ban installed and protecting SSH**  
-✅ **Automatic ban for brute-force attacks**  
-✅ **Integration with firewalld**  
-✅ **Configured for OpenCloudOS**  
+✅ Fail2Ban installed and protecting SSH  
+✅ Automatic ban for brute-force attacks  
+✅ Integration with firewalld  
+✅ Configured for OpenCloudOS  
 
 **Next Steps:**
 1. Monitor `/var/log/fail2ban.log` regularly
