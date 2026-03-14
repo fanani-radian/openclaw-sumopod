@@ -2,7 +2,8 @@
 
 Tutorial lengkap integrasi OpenClaw dengan Nextcloud untuk manajemen file, catatan, tugas, kalender, dan kontak.
 
-> Reference: [far-ux/openclaw-nextcloud-integration](https://github.com/far-ux/openclaw-nextcloud-integration)
+> **Credit:** @ZF ini bang Sy kontribusi — https://github.com/far-ux/openclaw-nextcloud-integration  
+> untuk yang butuh drive buat agent OpenClaw-nya, pengganti workspace Google.
 
 ---
 
