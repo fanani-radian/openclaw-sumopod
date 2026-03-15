@@ -1,176 +1,222 @@
 # Creating OpenClaw Skills
 
-> 📅 Generated: 2026-03-15 | Type: skill_creation | ID: skill-creation-1773546013
+📅 Dibuat: 2026-03-15 | Tipe: skill_creation | ID: skill-creation-1773548089
 
 ---
 
-## Metadata
+## 📋 Metadata
 
-- **Level**: intermediate
-- **Time Required**: 30-45 min
-- **Prerequisites**: Basic bash scripting, Understanding of OpenClaw architecture
-
----
-
-## Overview
-
-In this tutorial, you'll learn how to **Creating OpenClaw Skills**. This guide will walk you through the complete process from setup to implementation.
-
-### What You'll Build
-
-By the end of this tutorial, you will have:
-
-- ✅ Understanding of the core concepts
-- ✅ A working implementation
-- ✅ Best practices for production use
-- ✅ Troubleshooting skills
-
-**Context from today's work:**
-> Building custom skills for OpenClaw automation
+- **Level**: 🟡 Menengah
+- **Waktu**: 30-45 min
+- **Perlu tahu dulu**: Basic bash scripting, Understanding of OpenClaw architecture
 
 ---
 
-## Architecture
+## 🎯 Apa yang Bakal Kamu Buat?
 
-The following diagram illustrates the flow and components:
+Building custom skills for OpenClaw automation
+
+Setelah ikutin tutorial ini, kamu bakal bisa:
+- ✅ Paham konsep dasarnya
+- ✅ Punya implementasi yang jalan
+- ✅ Tau best practices-nya
+- ✅ Bisa troubleshoot kalau ada error
+
+---
+
+## 🏗️ Arsitektur / Alur
+
+### 1️⃣ Gambaran Besar
 
 ```mermaid
 flowchart TD
-    A["User Request"] --> B["Analyze Intent"]
-    B --> C["Create Skill Structure"]
-    C --> D["Write SKILL.md"]
-    D --> E["Implement Scripts"]
-    E --> F["Test & Validate"]
-    F --> G["Publish to GitHub"]
+    A(["🚀 Mulai"]) --> B["📋 Persiapan"]
+    B --> C["⚙️ Setup"]
+    C --> D["🔧 Implementasi"]
+    D --> E["✅ Testing"]
+    E --> F(["🎉 Selesai"])
     
-    style A fill:#e3f2fd,stroke:#1565c0
-    style G fill:#e8f5e9,stroke:#388e3c
+    style A fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
+    style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style C fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style D fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style E fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style F fill:#c8e6c9,stroke:#2e7d32,stroke-width:3px
+```
+
+### 2️⃣ Detail Alur
+
+```mermaid
+flowchart TD
+    Input["📥 Input"] --> Check{"✅ Valid?"}
+    Check -->|Ya| Process["⚙️ Proses"]
+    Check -->|Tidak| Fix["🔧 Fix Error"]
+    Fix --> Input
+    Process --> Output["📤 Output"]
+    Output --> Save["💾 Simpan"]
+    
+    style Input fill:#e3f2fd,stroke:#1565c0
+    style Check fill:#fff3e0,stroke:#f57c00
+    style Fix fill:#ffebee,stroke:#c62828
+    style Output fill:#e8f5e9,stroke:#388e3c
+    style Save fill:#c8e6c9,stroke:#2e7d32
+```
+
+### 3️⃣ Arsitektur Sistem
+
+```mermaid
+flowchart TB
+    subgraph Layer1["📱 User Layer"]
+        U1["User"]
+    end
+    
+    subgraph Layer2["⚙️ App Layer"]
+        A1["Main App"]
+        A2["Helper"]
+    end
+    
+    subgraph Layer3["🗄️ Data Layer"]
+        D1["Database"]
+        D2["Files"]
+    end
+    
+    U1 -->|Request| A1
+    A1 -->|Process| A2
+    A2 -->|Query| D1
+    A2 -->|Read/Write| D2
+    A1 -->|Response| U1
+    
+    style Layer1 fill:#e3f2fd,stroke:#1565c0
+    style Layer2 fill:#fff3e0,stroke:#f57c00
+    style Layer3 fill:#e8f5e9,stroke:#388e3c
 ```
 
 ---
 
-## Step-by-Step Instructions
+## 📝 Langkah-langkah
 
-### Step 1: Prerequisites
+### Step 1: Persiapan 📋
 
-Before starting, ensure you have:
+Sebelum mulai, pastikan:
+- [ ] Tools sudah keinstall
+- [ ] Punya akses ke resources yang perlu
+- [ ] Paham dasar dari: Basic bash scripting
 
-- [ ] Required tools installed
-- [ ] Access to necessary resources
-- [ ] Basic understanding of Basic bash scripting
+### Step 2: Setup ⚙️
 
-### Step 2: Setup
-
-Create the necessary directory structure:
+Buat struktur folder:
 
 ```bash
 mkdir -p my-project/{src,config,tests}
 cd my-project
 ```
 
-### Step 3: Implementation
+### Step 3: Implementasi 🔧
 
-Here's the core implementation:
+Ini kode utama:
 
 ```bash
 #!/bin/bash
-# example-skill.sh - A sample skill script
+# skill-ku.sh - Contoh skill OpenClaw
 
 set -e
 
-# Configuration
-WORKSPACE_DIR="/root/.openclaw/workspace-radit"
+# Konfigurasi
+WORKSPACE="/root/.openclaw/workspace"
 
-# Main function
+# Fungsi utama
 main() {
-    echo "Hello from skill!"
-    # Your logic here
+    echo "🚀 Mulai proses..."
+    
+    # Logic kamu disini
+    echo "✅ Proses selesai!"
 }
 
+# Jalankan
 main "$@"
 ```
 
-### Step 4: Configuration
+### Step 4: Konfigurasi ⚡
 
-Create a configuration file:
+Buat file config:
 
 ```bash
 cat > config/settings.json << 'CONFIG'
 {
-  "name": "my-project",
-  "version": "1.0.0",
-  "environment": "production"
+  "nama": "my-project",
+  "versi": "1.0.0",
+  "env": "production"
 }
 CONFIG
 ```
 
-### Step 5: Testing
+### Step 5: Testing ✅
 
-Run tests to verify everything works:
+Cara ngetes:
 
 ```bash
-# Test the implementation
-bash test.sh
-
-# Or run manually
+# Test manual
 bash script.sh --dry-run
+
+# Atau run test suite
+bash tests/test.sh
 ```
 
-### Step 6: Deployment
+### Step 6: Deploy 🚀
 
-Deploy to production:
+Jalankan di production:
 
 ```bash
-# Make executable
+# Bikin executable
 chmod +x script.sh
 
-# Run
+# Jalankan
 ./script.sh
 ```
 
 ---
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
-### Common Issues
+### Masalah Umum
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| Permission denied | File not executable | Run `chmod +x script.sh` |
-| Command not found | Missing dependency | Install required packages |
-| Connection failed | Network/API issue | Check connectivity and credentials |
+| Masalah | Penyebab | Solusi |
+|---------|----------|--------|
+| ❌ Permission denied | File belum executable | `chmod +x script.sh` |
+| ❌ Command not found | Dependency belum install | Install dulu package-nya |
+| ❌ Connection failed | Network/API error | Cek koneksi internet |
 
-### Debug Mode
+### Mode Debug
 
-Enable debug output:
+Lihat detail error:
 ```bash
 bash -x script.sh
 ```
 
-### Getting Help
+### Dapet Bantuan
 
-- Check logs: `tail -f /var/log/your-app.log`
-- Review documentation: `cat SKILL.md`
-- Open an issue on GitHub
-
----
-
-## Next Steps
-
-- [ ] Explore advanced features
-- [ ] Customize for your use case
-- [ ] Share your implementation
-- [ ] Contribute improvements
+- Cek log: `tail -f /var/log/app.log`
+- Baca docs: `cat SKILL.md`
+- Buka issue di GitHub
 
 ---
 
-## References
+## 🚀 Next Steps
 
-- [OpenClaw Documentation](https://github.com/openclaw/sumopod)
-- [Memory Reference: 2026-03-15](memory/2026-03-15.md)
+- [ ] Explore fitur lanjutan
+- [ ] Customize sesuai kebutuhan
+- [ ] Share hasilnya
+- [ ] Kontribusi improvement
 
 ---
 
-*Generated by Tutorial Generator Skill*  
-*Status: DRAFT - Pending Review*  
-*⚠️ Verify Mermaid diagram renders correctly on GitHub before finalizing*
+## 📚 Referensi
+
+- [OpenClaw Sumopod](https://github.com/fanani-radian/openclaw-sumopod)
+- [Memory: 2026-03-15](memory/2026-03-15.md)
+
+---
+
+*Dibuat otomatis oleh Tutorial Generator*  
+*Status: DRAFT - Perlu Review*  
+*⚠️ Cek dulu Mermaid diagram-nya render bener di GitHub*
