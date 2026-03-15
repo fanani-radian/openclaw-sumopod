@@ -200,6 +200,18 @@ Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
 | [🎨 Excalidraw Diagram Generation](./tutorials/excalidraw-diagram-generation.md) | Generate diagram dari teks | Beginner |
 | [🎬 AI Video Generation Pipeline](./tutorials/ai-video-generation-pipeline.md) | Generate video AI → Upload ke Drive | Intermediate |
 
+### 🤖 Auto-Generated (Daily)
+> Tutorial yang auto-generate dari aktivitas harian OpenClaw — update setiap hari jam 23:00 WITA
+
+| Tutorial | Deskripsi | Level | Date |
+|----------|-----------|-------|------|
+| [🛠️ Creating OpenClaw Skills](./docs/auto-generated/creating-openclaw-skills-2026-03-15.md) | Build custom skills untuk OpenClaw automation | 🟡 Intermediate | Mar 15 |
+| [⚙️ Building Automated Workflows](./docs/auto-generated/building-automated-workflows-with-openclaw-2026-03-15.md) | Create scripts dan scheduled automations | 🟢 Beginner | Mar 15 |
+| [🔌 Integrating External Services](./docs/auto-generated/integrating-external-services-with-openclaw-2026-03-15.md) | Connect OpenClaw dengan external APIs | 🔴 Advanced | Mar 15 |
+| [🚀 Deploying and Publishing](./docs/auto-generated/deploying-and-publishing-with-openclaw-2026-03-15.md) | Deploy dan publish ke production | 🟡 Intermediate | Mar 15 |
+
+📁 **[Lihat Semua Auto-Generated Tutorials →](./docs/auto-generated/)**
+
 ---
 
 ## 💡 Use Cases
