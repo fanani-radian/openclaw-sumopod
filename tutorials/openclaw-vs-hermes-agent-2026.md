@@ -1,6 +1,6 @@
 # OpenClaw vs Hermes Agent — Comprehensive Comparison Guide (2026)
 
-![OpenClaw](images/openclaw-logo.png) ![Hermes Agent](images/hermes-logo.png)
+![Hermes Agent](images/hermes-logo.png)
 
 > Two of the most powerful open-source AI agents in 2026. Which one should you pick?
 
