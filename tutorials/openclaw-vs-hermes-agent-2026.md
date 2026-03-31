@@ -1,6 +1,5 @@
 # OpenClaw vs Hermes Agent — Comprehensive Comparison Guide (2026)
 
-![Hermes Agent](images/hermes-logo.png)
 
 > Two of the most powerful open-source AI agents in 2026. Which one should you pick?
 
@@ -24,7 +23,6 @@
 
 ## What is OpenClaw?
 
-![OpenClaw](images/openclaw-logo.png)
 
 [OpenClaw](https://github.com/openclaw/openclaw) is the **most popular open-source AI agent** with **307k+ GitHub stars** (as of March 2026). Built by the OpenClaw community, it transforms any LLM into an autonomous digital assistant that runs on your server, connects to your messaging apps, and remembers everything.
 
@@ -56,7 +54,6 @@ openclaw gateway  # Connect messaging platforms
 
 ## What is Hermes Agent?
 
-![Hermes Agent](images/hermes-logo.png)
 
 [Hermes Agent](https://github.com/NousResearch/hermes-agent) is an open-source AI agent by **Nous Research** with **~6k GitHub stars**. It focuses on **self-improvement and autonomous skill creation** — the agent literally programs itself by turning learned approaches into reusable skills.
 
