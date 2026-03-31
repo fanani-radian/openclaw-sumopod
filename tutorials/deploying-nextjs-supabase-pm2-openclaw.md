@@ -204,5 +204,4 @@ bash -x script.sh
 ---
 
 *Dibuat otomatis oleh Tutorial Generator*  
-*Status: DRAFT - Perlu Review*  
-*⚠️ Cek dulu Mermaid diagram-nya render bener di GitHub*
+
