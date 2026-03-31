@@ -1,37 +1,14 @@
 # Voicenotes Integration with OpenClaw
 
-## Overview
+![Voicenotes](images/voicenotes-logo.png)
 
-[Voicenotes](https://voicenotes.com) is a voice-first note-taking app that also supports text notes. With the official OpenClaw integration, your AI agent can **create, search, and retrieve notes** directly through natural conversation — making it a powerful personal knowledge base that your agent can read and write to.
+[Voicenotes](https://voicenotes.com) is a voice-first note-taking app. With the official OpenClaw skill, your agent can **create, search, and retrieve notes** — making it a personal knowledge base your agent can read and write to.
 
-## Architecture
+## Quick Setup
 
-```mermaid
-flowchart LR
-    A[User] -->|Voice/Text| B[Voicenotes App]
-    B -->|API| C[Voicenotes API]
-    D[OpenClaw Agent] -->|HTTP via Skill| C
-    D -->|Create Notes| C
-    D -->|Semantic Search| C
-    D -->|Retrieve Transcripts| C
-    C -->|JSON Response| D
-    style A fill:#e3f2fd,stroke:#1565c0
-    style D fill:#e8f5e9,stroke:#2e7d32
-    style C fill:#fff3e0,stroke:#e65100
-```
+**1.** Create integration at [Voicenotes Settings](https://voicenotes.com/app?open-claw=true#settings) → copy API key
 
-## Setup
-
-### Step 1: Create Integration on Voicenotes
-
-1. Go to [Voicenotes Settings](https://voicenotes.com/app?open-claw=true#settings)
-2. Create a new OpenClaw integration
-3. Copy the API key
-
-### Step 2: Configure OpenClaw
-
-Add the API key to your OpenClaw config (`~/.openclaw/config.yaml`):
-
+**2.** Add to `~/.openclaw/config.yaml`:
 ```yaml
 skills:
   voicenotes:
@@ -39,139 +16,80 @@ skills:
       VOICENOTES_API_KEY: "your_key_here"
 ```
 
-### Step 3: Verify Connection
-
+**3.** Verify:
 ```bash
 curl -s "https://api.voicenotes.com/api/integrations/open-claw/search/semantic?query=test" \
   -H "Authorization: $VOICENOTES_API_KEY" | jq '.[0].title'
 ```
 
-If it returns a note title (or empty array), you're connected.
+## Architecture
 
-## API Reference
+```mermaid
+flowchart LR
+    A[User] -->|Voice/Text| B[Voicenotes App]
+    D[OpenClaw Agent] -->|API| C[Voicenotes API]
+    D -->|Create / Search / Retrieve| C
+    C -->|JSON| D
+```
 
-All endpoints require the `Authorization` header with your API key.
+## API Cheat Sheet
 
-### Semantic Search
+All endpoints need: `-H "Authorization: $VOICENOTES_API_KEY"`
 
-Search your notes by meaning, not just keywords:
-
+**Search notes semantically:**
 ```bash
 curl -G "https://api.voicenotes.com/api/integrations/open-claw/search/semantic" \
-  --data-urlencode "query=tekanan darah tinggi" \
+  --data-urlencode "query=tekanan darah" \
   -H "Authorization: $VOICENOTES_API_KEY"
 ```
 
-**Response types:**
-- `note` — Complete note matching the search
-- `note_split` — Chunk from a longer note (fetch full transcript with the UUID)
-- `import_split` — Chunk from an imported file (title = filename)
-
-### Create a Text Note
-
+**Create a text note:**
 ```bash
 curl -X POST "https://api.voicenotes.com/api/integrations/open-claw/recordings/new" \
   -H "Authorization: $VOICENOTES_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{
-    "recording_type": 3,
-    "transcript": "Your note content here with line breaks as <br> tags",
-    "device_info": "open-claw"
-  }'
+  -d '{"recording_type": 3, "transcript": "Note content here", "device_info": "open-claw"}'
 ```
 
-`recording_type` values:
-- `1` — Voice note
-- `2` — Voice meeting
-- `3` — Text note (what we use for programmatic entries)
-
-### Get Full Transcript
-
+**Get full transcript by UUID:**
 ```bash
 curl "https://api.voicenotes.com/api/integrations/open-claw/recordings/{uuid}" \
   -H "Authorization: $VOICENOTES_API_KEY"
 ```
 
-Use this when a search returns a `note_split` — fetch the full recording by UUID.
-
-### Filter by Tags and Date Range
-
+**Filter by tags and date:**
 ```bash
 curl -X POST "https://api.voicenotes.com/api/integrations/open-claw/recordings" \
   -H "Authorization: $VOICENOTES_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{
-    "tags": ["health", "blood-pressure"],
-    "date_range": ["2026-03-01T00:00:00.000000Z", "2026-04-01T00:00:00.000000Z"]
-  }'
+  -d '{"tags": ["health"], "date_range": ["2026-03-01T00:00:00Z", "2026-04-01T00:00:00Z"]}'
 ```
 
-## Real-World Use Cases
+`recording_type`: `1` = voice note, `2` = voice meeting, `3` = text note
 
-### Health Tracking
+## Use Cases
 
-When you send health data to your agent, it can log it to Voicenotes:
+**Health Tracking** — Log blood pressure, blood sugar, etc. Then search for trends later.
 
-```bash
-curl -X POST "https://api.voicenotes.com/api/integrations/open-claw/recordings/new" \
-  -H "Authorization: $VOICENOTES_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "recording_type": 3,
-    "transcript": "Tekanan Darah - Zainul Fanani<br>1 April 2026, 05:13 WITA<br><br>Pengukuran 1: SYS 136, DIA 103, Pulse 96<br>Pengukuran 2: SYS 129, DIA 103, Pulse 94<br><br>Catatan: Diastolik konsisten 103 mmHg (Hipertensi Tahap 2)",
-    "device_info": "open-claw"
-  }'
-```
+**Meeting Notes** — Search past meeting transcripts to find decisions or action items.
 
-Later, search for trends:
-```bash
-curl -G "https://api.voicenotes.com/api/integrations/open-claw/search/semantic" \
-  --data-urlencode "query=tekanan darah diastolik tinggi" \
-  -H "Authorization: $VOICENOTES_API_KEY"
-```
+**Quick Capture** — Tell your agent "save this to voicenotes" → instant text note, no app needed.
 
-### Meeting Notes Retrieval
-
-Your agent can search past meeting transcripts to answer questions:
-
-```bash
-curl -G "https://api.voicenotes.com/api/integrations/open-claw/search/semantic" \
-  --data-urlencode "query=decision about project timeline" \
-  -H "Authorization: $VOICENOTES_API_KEY"
-```
-
-### Quick Idea Capture
-
-Tell your agent "save this to voicenotes" and it creates a text note instantly — no need to open the app.
-
-## Routing Rules (OpenClaw Skill)
-
-In your agent's routing logic, detect Voicenotes intents:
+## Routing Rules
 
 | User Says | Action |
 |-----------|--------|
-| "voicenotes [query]" | Semantic search via API |
+| "voicenotes [query]" | Semantic search |
 | "catat di voicenotes" | Create text note |
 | "cari di voicenotes" | Search notes |
-| "save to voicenotes" | Create text note |
+| "catat/simpan" (no voicenotes) | Route to workspace files |
 
-Non-voicenotes "catat"/"simpan" commands route to workspace files instead.
+## Notes
 
-## Rate Limits & Notes
-
-- **Rate limit:** ~3 requests/second average
-- **Note IDs:** 8-character alphanumeric UUIDs
-- **Pagination:** Recordings endpoint returns paginated results (`meta.per_page`, `links.next`)
-- **HTML in transcripts:** Line breaks are `<br>`, bold is `<b>` — this is expected
-
-## Troubleshooting
-
-| Issue | Fix |
-|-------|-----|
-| `401 Unauthorized` | Check API key in config |
-| Empty search results | Try broader query terms |
-| `import_split` can't be fetched | These are from imported files — only search works |
-| Rate limited | Add delay between requests |
+- Rate limit: ~3 req/sec
+- Search returns `note`, `note_split`, or `import_split` types
+- `import_split` cannot be fetched by UUID (imported files only)
+- Line breaks in transcripts use `<br>` tags
 
 ## Links
 
