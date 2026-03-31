@@ -614,7 +614,7 @@ graph LR
     style D2 fill:#ffcdd2
     style R2 fill:#c8e6c9
     
-    D2 -.->|*"Berdasarkan tarif dev Rp 100-200K/jam"| 
+    D2 -.-> R2
     R2
 ```
 
