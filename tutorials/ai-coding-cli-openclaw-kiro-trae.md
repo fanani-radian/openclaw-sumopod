@@ -18,8 +18,8 @@ Tutorial ini membahas dua tool utama — **Kiro CLI** (dari AWS) dan **Trae Agen
 flowchart TB
     USER["👤 Developer\n(Telegram/Discord)"] -->| "Instruksi task coding" | OC["🤖 OpenClaw\n(Orchestrator)"]
 
-    OC -->| "Task routing" | KIRO["⚙️ Kiro CLI\n(AI Coder — AWS)"]
-    OC -->| "Task routing" | TRAE["🔧 Trae Agent\n(AI Coder — ByteDance)"]
+    OC -->| "Task routing" | KIRO["⚙️ Kiro CLI — AI Coder AWS"]
+    OC -->| "Task routing" | TRAE["🔧 Trae Agent — AI Coder ByteDance"]
 
     KIRO -->| "Baca, analisis, edit kode" | REPO["📁 Project Repository"]
     TRAE -->| "Baca, analisis, edit kode" | REPO
@@ -28,7 +28,7 @@ flowchart TB
     TRAE -->| "Return hasil + diff" | OC
     OC -->| "Laporan perubahan" | USER
 
-    subgraph "VPS / Server"
+    subgraph VPS_Server["VPS / Server"]
         OC
         KIRO
         TRAE
