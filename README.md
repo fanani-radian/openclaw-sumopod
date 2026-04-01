@@ -1,8 +1,17 @@
-# 🤖 OpenClaw Sumopod
+<p align="center">
+  <img src="https://img.shields.io/badge/Tutorials-35-blue?style=for-the-badge" alt="35 Tutorials">
+  <img src="https://img.shields.io/badge/Language-Bahasa_Indonesia-green?style=for-the-badge" alt="Indonesian">
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT">
+  <img src="https://img.shields.io/badge/OpenClaw-Community-orange?style=for-the-badge" alt="Community">
+</p>
 
-Repositori komunitas untuk belajar, berbagi, dan berkolaborasi tentang [OpenClaw](https://github.com/openclaw/openclaw) — AI agent framework yang powerful dan fleksibel.
+# 🤖 OpenClaw Sumopod — Tutorial Hub
 
-> **Sumopod Server**: Komunitas pengguna OpenClaw di Indonesia 🌏
+> Repositori komunitas Indonesia untuk belajar [OpenClaw](https://github.com/openclaw/openclaw) — AI agent framework yang powerful dan fleksible.
+
+<p align="center">
+  <b>Sumopod Server</b> — Komunitas pengguna OpenClaw di Indonesia 🌏
+</p>
 
 ---
 
@@ -52,322 +61,144 @@ flowchart TB
 
 ---
 
-## ✅ UPDATE: Kimi 2.5 Fixed di OpenClaw 2026.3.11!
+## 📚 Tutorials
 
-```
-┌──────────────────────────────────────────────────────────┐
-│  ✅ GOOD NEWS: OpenClaw 2026.3.11 FIXES KIMI 2.5!       │
-│                                                          │
-│  🎉 Tool calling BERFUNGSI kembali                      │
-│  🎉 Infinite loop issue RESOLVED                        │
-│  🎉 Kimi K2.5 bisa dipakai lagi                         │
-│                                                          │
-│  ✅ UPDATE: npm i -g openclaw@latest                    │
-│  📖 Release: https://github.com/openclaw/openclaw/      │
-│              releases/tag/v2026.3.11                    │
-│                                                          │
-│  ⚠️  NOTE: Versi 2026.3.7 - 2026.3.10 masih buggy       │
-│       Skip langsung ke 2026.3.11 atau lebih baru        │
-└──────────────────────────────────────────────────────────┘
-```
+Kumpulan 35 tutorial praktis untuk membangun automation dengan OpenClaw, dikelompokkan per kategori.
 
 ---
 
-## 🚀 Getting Started Flowchart
+### 1. 🚀 Getting Started
 
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e1f5fe', 'primaryTextColor': '#01579b'}}}%%
-flowchart TD
-    A[📥 1. Install OpenClaw] --> B[⚙️ 2. Configure]
-    B --> C{🖥️ Platform?}
-    
-    C -->|Windows| D1[🪟 Windows Setup]
-    C -->|Mac| D2[🍎 macOS Setup]
-    C -->|Linux| D3[🐧 Linux Setup]
-    C -->|Cloud| D4[☁️ Cloud Setup]
-    
-    D1 --> E[📁 3. Setup Workspace]
-    D2 --> E
-    D3 --> E
-    D4 --> E
-    
-    E --> F[📝 4. Configure Settings]
-    F --> G[🎯 5. Build First Skill!]
-    G --> H[🚀 Deploy & Run]
-    
-    style A fill:#e3f2fd
-    style B fill:#e3f2fd
-    style C fill:#fff3e0
-    style D1 fill:#e8f5e9
-    style D2 fill:#e8f5e9
-    style D3 fill:#e8f5e9
-    style D4 fill:#e8f5e9
-    style E fill:#e3f2fd
-    style F fill:#e3f2fd
-    style G fill:#fce4ec
-    style H fill:#c8e6c9
-```
+Panduan instalasi, setup awal, dan konfigurasi dasar.
 
-*Follow these steps to get OpenClaw running on your platform of choice.*
+- **[OpenClaw + Alibaba Cloud Coding Plan: 8 Model AI dengan 1 API Key (Mulai $5/bulan)](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-alibaba-coding-plan.md)** — Setup hemat akses 8 model AI frontier lewat satu API key
+- **[⚠️ JANGAN Update ke OpenClaw 2026.3.7 - 2026.3.10 — Kimi 2.5 Tool Calling BROKEN!](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/avoid-openclaw-2026-3-7-kimi-bug.md)** — Guide versi yang bermasalah dan solusi upgrade ke 2026.3.11
+- **[Upgrade OpenClaw ke 2026.3.31 + Fix Exec Approvals](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/upgrade-openclaw-2026-3-31.md)** — Panduan upgrade dan fix exec approval yang lebih ketat
 
 ---
 
-## 📚 Navigasi Cepat
+### 2. ⚡ Multi-Agent & Orchestration
 
-```mermaid
-flowchart LR
-    A[Start Here] --> B[Getting Started]
-    A --> C[Use Cases]
-    A --> D[Tutorials]
-    A --> E[FAQ]
-    
-    B --> B1[Windows Install]
-    B --> B2[GitHub Sync]
-    
-    C --> C1[VPS Migration]
-    C --> C2[News Aggregator]
-    C --> C3[AI Video]
-    
-    D --> D1[Multi-Agent]
-    D --> D2[Automation]
-    D --> D3[Integrations]
-```
+Bangun sistem multi-agent dengan spesialisasi dan shared memory.
 
-| Section | Deskripsi |
-|---------|-----------|
-| [🚀 Getting Started](./docs/getting-started/README.md) | Panduan instalasi dan setup pertama |
-| [🖥️ Windows Install](./docs/getting-started/windows-install.md) | Tutorial lengkap Windows + auto-start + management |
-| [🔄 Sync Memory ke GitHub](./docs/getting-started/github-sync.md) | Sinkronisasi memory antar device/PC/VPS |
-| [💡 Use Cases](#-use-cases) | Contoh penggunaan real-world dengan diagram |
-| [📖 Tutorials](#-tutorials) | Kumpulan tutorial praktis OpenClaw |
-| [🎯 Tips & Tricks](#-tips--tricks) | Trik optimize OpenClaw |
-| [❓ FAQ](./faq/README.md) | Pertanyaan yang sering ditanyakan |
-| [⚙️ Config](./docs/config/README.md) | Konfigurasi dan templates |
-| [🎥 Resources](./resources/README.md) | Video, link, dan referensi |
-| [💰 API Providers](./resources/api-providers.md) | Daftar provider AI API murah & free tier |
+- **[Multi-Agent System dengan OpenClaw](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-multi-agent-system.md)** — Setup multi-agent dengan spesialisasi, context, dan memory terpisah
+- **[🧠 Multi-Agent Shared Memory System](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/multi-agent-shared-memory.md)** — Multiple agent sharing knowledge lewat GitHub sync
 
 ---
 
-## 📖 Tutorials
+### 3. 📧 Email & Communication
 
-Kumpulan tutorial praktis untuk membangun automation dengan OpenClaw.
+Otomasi Gmail, triage email, dan komunikasi WhatsApp.
 
-### 🎓 Getting Started
-| Tutorial | Deskripsi | Level |
-|----------|-----------|-------|
-| [☁️ Alibaba Cloud Coding Plan](./tutorials/openclaw-alibaba-coding-plan.md) | 8 model AI dengan 1 API key mulai $5/bulan | Beginner |
-| [🖥️ Windows Install](./docs/getting-started/windows-install.md) | Instalasi lengkap Windows + auto-start | Beginner |
-| [⚠️ OpenClaw Version Guide](./tutorials/avoid-openclaw-2026-3-7-kimi-bug.md) | Update guide: Kimi 2.5 fixed in 2026.3.11 | **CRITICAL** |
-
-### 🤖 AI Automation
-| Tutorial | Deskripsi | Level |
-|----------|-----------|-------|
-| [📝 Auto-Post ke Website](./tutorials/auto-post-website.md) | Foto → AI content → Auto-post ke website | Intermediate |
-| [🎙️ Voice Memo to Action](./tutorials/voice-memo-to-action.md) | WhatsApp voice → Whisper → Tasks | Intermediate |
-| [📧 Smart Email Forward PDF](./tutorials/smart-email-forward-pdf.md) | Forward email + extract PDF data otomatis | Intermediate |
-| [🏷️ Gmail Auto-Label Triage](./tutorials/gmail-auto-label-triage.md) | Auto-classify emails dengan 7 label | Intermediate |
-| [📰 Multi-Agent System](./tutorials/openclaw-multi-agent-system.md) | Setup brothers (Radit, Raka, Rama, Rafi) | Advanced |
-| [🧠 Multi-Agent Shared Memory](./tutorials/multi-agent-shared-memory.md) | Multiple agents sharing knowledge via GitHub | Advanced |
-
-### 📊 Data & Monitoring
-| Tutorial | Deskripsi | Level |
-|----------|-----------|-------|
-| [📊 Visual Data Alert](./tutorials/visual-data-alert.md) | Spreadsheet → Charts → Telegram | Intermediate |
-| [📧 Smart Email Triage](./tutorials/smart-email-triage.md) | AI classify inbox + auto-actions | Intermediate |
-| [🗂️ Smart File Butler](./tutorials/smart-file-butler.md) | Auto-organize Downloads dengan AI | Beginner |
-| [⚡ Redis Caching Pattern](./tutorials/redis-caching-pattern.md) | Speed up 20x dengan Redis cache | Beginner |
-| [🏥 Service Health Dashboard](./tutorials/service-health-dashboard.md) | Monitor services + auto-retry alerts | Intermediate |
-
-### ☁️ Infrastructure & Migration
-| Tutorial | Deskripsi | Level |
-|----------|-----------|-------|
-| [🖥️ VPS Multi-App Migration](./docs/use-cases/vps-multi-app-migration.md) | Lengkap: Replit→VPS + Security + SSL | **NEW** |
-| [⚡ Redis Caching Pattern](./tutorials/redis-caching-pattern.md) | Speed up 20x dengan Redis cache | Beginner |
-| [🏥 Service Health Dashboard](./tutorials/service-health-dashboard.md) | Monitor services + auto-retry alerts | Intermediate |
-| [🚀 Deployment Butler](./tutorials/deployment-butler.md) | GitHub webhook → Auto-deploy + rollback | Advanced |
-
-### ☁️ Integrations
-| Tutorial | Deskripsi | Level |
-|----------|-----------|-------|
-| [🔍 gog CLI Google Workspace](./tutorials/gog-cli-google-workspace.md) | Gmail, Drive, Docs, Sheets via CLI | Intermediate |
-| [📁 Nextcloud Integration](./docs/use-cases/nextcloud-integration.md) | OpenClaw + Nextcloud: Files, Calendar, Tasks | Intermediate |
-| [⚡ n8n Integration](./tutorials/n8n-integration.md) | Workflow automation dengan n8n | Intermediate |
-| [🧵 Repliz Threads Automation](./tutorials/repliz-threads-automation.md) | Auto-post ke Threads via Telegram | Intermediate |
-
-### 🎨 Content Creation
-| Tutorial | Deskripsi | Level |
-|----------|-----------|-------|
-| [🎨 Excalidraw Diagram Generation](./tutorials/excalidraw-diagram-generation.md) | Generate diagram dari teks | Beginner |
-| [🎬 AI Video Generation Pipeline](./tutorials/ai-video-generation-pipeline.md) | Generate video AI → Upload ke Drive | Intermediate |
-
-### 🤖 Auto-Generated (Daily)
-> Tutorial yang auto-generate dari aktivitas harian OpenClaw — update setiap hari jam 23:00 WITA
-
-| Tutorial | Deskripsi | Level | Date |
-|----------|-----------|-------|------|
-| [🛠️ Creating OpenClaw Skills](./docs/auto-generated/creating-openclaw-skills-2026-03-15.md) | Build custom skills untuk OpenClaw automation | 🟡 Intermediate | Mar 15 |
-| [⚙️ Building Automated Workflows](./docs/auto-generated/building-automated-workflows-with-openclaw-2026-03-15.md) | Create scripts dan scheduled automations | 🟢 Beginner | Mar 15 |
-| [🔌 Integrating External Services](./docs/auto-generated/integrating-external-services-with-openclaw-2026-03-15.md) | Connect OpenClaw dengan external APIs | 🔴 Advanced | Mar 15 |
-| [🚀 Deploying and Publishing](./docs/auto-generated/deploying-and-publishing-with-openclaw-2026-03-15.md) | Deploy dan publish ke production | 🟡 Intermediate | Mar 15 |
-
-📁 **[Lihat Semua Auto-Generated Tutorials →](./docs/auto-generated/)**
+- **[📧 Gmail Auto-Label & Smart Triage Tutorial](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/gmail-auto-label-triage.md)** — Auto-classify email dengan 7 label berbasis AI
+- **[📧 Smart Email Forward with PDF Data Extraction](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/smart-email-forward-pdf.md)** — Forward email otomatis + extract data dari PDF lampiran
+- **[Smart Email Triage](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/smart-email-triage.md)** — AI-powered inbox management: auto-sort, prioritas, dan draft respons
+- **[Voice Memo to Action Items](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/voice-memo-to-action.md)** — Ubah voice message WhatsApp jadi task terorganisir
 
 ---
 
-## 💡 Use Cases
+### 4. 📊 Dashboard & Monitoring
 
-```mermaid
-flowchart TB
-    subgraph Automation["🤖 Automation"]
-        A1[News Aggregator]
-        A2[Email Triage]
-        A3[Content Pipeline]
-    end
-    
-    subgraph Migration["🚚 Migration"]
-        M1[VPS Multi-App]
-        M2[Database Transfer]
-        M3[Security Hardening]
-    end
-    
-    subgraph Media["🎬 Media"]
-        V1[AI Video Generation]
-        V2[Diagram Generation]
-    end
-    
-    subgraph DevOps["⚙️ DevOps"]
-        D1[Health Monitoring]
-        D2[Deployment Butler]
-        D3[Redis Caching]
-    end
-    
-    style Automation fill:#e3f2fd
-    style Migration fill:#fff3e0
-    style Media fill:#e8f5e9
-    style DevOps fill:#fce4ec
-```
+Bangun dashboard, monitoring, dan sistem notifikasi real-time.
 
-*Real-world use cases powered by OpenClaw skills and integrations.*
-
-### 🚚 Migration & Deployment
-| Use Case | Deskripsi | Link |
-|----------|-----------|------|
-| [🖥️ VPS Multi-App Migration](./docs/use-cases/vps-multi-app-migration.md) | Migrate Replit/Cloud apps ke VPS dengan security produksi | [Read](./docs/use-cases/vps-multi-app-migration.md) |
-| [📊 VPS Migration Diagrams](./docs/use-cases/vps-migration-diagrams.md) | Visual guides: Mermaid diagrams untuk migration workflow | [Read](./docs/use-cases/vps-migration-diagrams.md) |
-
-### 🤖 Content & Automation
-| Use Case | Deskripsi | Link |
-|----------|-----------|------|
-| [📰 News Aggregator](./docs/use-cases/news-aggregator.md) | Aggregasi berita otomatis dengan AI | [Read](./docs/use-cases/news-aggregator.md) |
-| [🎬 AI Video Generation](./docs/use-cases/ai-video-generation.md) | Otomatisasi pembuatan video dengan AI | [Read](./docs/use-cases/ai-video-generation.md) |
+- **[🚀 Membangun AI Agent Dashboard — Tutorial Lengkap (Bagian 1)](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/building-ai-agent-dashboard.md)** — Next.js 14 + Tailwind + shadcn/ui + Recharts dari nol
+- **[🏥 Service Health Dashboard with Auto-Retry](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/service-health-dashboard.md)** — Monitor layanan 24/7 + auto-retry + alert Telegram
+- **[Real-Time Notification System di Next.js dengan Auto-Health Checks](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/notification-system-nextjs-health-checks.md)** — Dashboard bell yang hidup dengan health check otomatis
+- **[Visual Data Alert](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/visual-data-alert.md)** — Transformasi data spreadsheet jadi chart yang dikirim ke Telegram
+- **[Konsolidasi Dashboard: Dari Flask ke Next.js](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/consolidate-vps-dashboard-nextjs.md)** — Pindahkan semua dashboard Flask ke satu codebase Next.js
 
 ---
 
-## 🔗 Integration Patterns
+### 5. 🔗 Integrations
 
-```mermaid
-flowchart TB
-    subgraph Triggers["⚡ Triggers"]
-        T1[Webhook]
-        T2[Scheduled Cron]
-        T3[File Watch]
-        T4[Manual Trigger]
-    end
-    
-    subgraph Processing["🔧 Processing"]
-        P1[OpenClaw Agent]
-        P2[AI Model]
-        P3[Skill Execution]
-    end
-    
-    subgraph Outputs["📤 Outputs"]
-        O1[Telegram Alert]
-        O2[Email Send]
-        O3[Database Write]
-        O4[API Call]
-    end
-    
-    T1 -->|Event| P1
-    T2 -->|Timer| P1
-    T3 -->|Change| P1
-    T4 -->|Command| P1
-    
-    P1 -->|Process| P2
-    P2 -->|Execute| P3
-    
-    P3 -->|Notify| O1
-    P3 -->|Send| O2
-    P3 -->|Store| O3
-    P3 -->|Integrate| O4
-    
-    style Triggers fill:#e3f2fd
-    style Processing fill:#fff3e0
-    style Outputs fill:#e8f5e9
-```
+Hubungkan OpenClaw dengan layanan eksternal dan workflow automation.
 
-*Common integration patterns for connecting OpenClaw with external systems and services.*
+- **[🔍 gog CLI — Google Workspace dari Terminal](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/gog-cli-google-workspace.md)** — Kontrol Gmail, Drive, Docs, Sheets, Calendar via command line
+- **[OpenClaw + n8n Integration Tutorial](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/n8n-integration.md)** — Hubungkan ke 400+ app lewat n8n workflow tanpa coding
+- **[Integrating External Services with OpenClaw](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/integrating-external-services-openclaw.md)** — Panduan umum integrasi API dan layanan eksternal
+- **[Voicenotes Integration with OpenClaw](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/voicenotes-integration-openclaw.md)** — Hubungkan Voicenotes untuk voice-based productivity
+- **[⚡ Redis Caching Pattern for Speed](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/redis-caching-pattern.md)** — Percepat automasi 20x (dari 1 detik ke 50ms) pakai Redis
 
 ---
 
-## 🎯 Tips & Tricks
+### 6. 🛠️ DevOps & Deployment
 
-```mermaid
-flowchart LR
-    subgraph Performance["🚀 Performance"]
-        P1[Redis Caching]
-        P2[Query Optimization]
-        P3[Batch Processing]
-    end
-    
-    subgraph Security["🔒 Security"]
-        S1[Env Encryption]
-        S2[Key Rotation]
-        S3[Access Control]
-    end
-    
-    subgraph Reliability["✅ Reliability"]
-        R1[Error Handling]
-        R2[Retry Logic]
-        R3[Monitoring]
-    end
-    
-    style Performance fill:#e3f2fd
-    style Security fill:#fff3e0
-    style Reliability fill:#e8f5e9
-```
+Pipeline deployment, process management, dan infrastruktur.
 
-Trik dan best practices untuk optimize OpenClaw.
-
-| Topic | Deskripsi | Link |
-|-------|-----------|------|
-| [🚀 Performance Optimization](./docs/tips-tricks/README.md) | Best practices untuk speed dan efisiensi | [Read](./docs/tips-tricks/README.md) |
+- **[Deployment Butler](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/deployment-butler.md)** — Pipeline otomatis: GitHub → VPS dengan zero-downtime dan instant rollback
+- **[Deploying and Publishing with OpenClaw](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/deploying-nextjs-supabase-pm2-openclaw.md)** — Panduan deployment Next.js + Supabase + PM2
+- **[Migrasi Data Absensi Karyawan ke Supabase + Cron Sync Harian](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/absensi-migration-supabase-cron.md)** — Migrasi dari API lama ke Supabase dengan auto-sync pagi
 
 ---
 
-## 🎬 YouTube Playlist
+### 7. 🎨 Content & Social Media
 
-- 📺 [OpenClaw Tutorial Series](#) - *Coming soon*
-- 📺 [Sumopod Community Showcase](#) - *Coming soon*
+Otomasi konten, social media posting, dan creative tools.
+
+- **[Auto-Post to Website from Images](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/auto-post-website.md)** — Transform foto jadi website post otomatis dengan AI
+- **[🧵 Auto-Post ke Threads dengan OpenClaw + Repliz](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/repliz-threads-automation.md)** — Posting otomatis ke Threads via perintah Telegram
+- **[🎬 Auto-Generate Video dengan AI dan Upload ke Cloud Storage](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/ai-video-generation-pipeline.md)** — Pipeline generate video AI lalu upload ke cloud
+- **[OpenClaw + Excalidraw Tutorial](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/excalidraw-diagram-generation.md)** — Generate diagram hand-drawn style untuk dokumentasi
 
 ---
 
-## 🤝 Cara Berkontribusi
+### 8. 🧩 Advanced Patterns
+
+Pattern lanjutan: error handling, file management, dan optimasi arsitektur.
+
+- **[Dashboard Widget Error Boundary Pattern untuk Next.js](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/dashboard-error-boundary-nextjs.md)** — Satu widget error, dashboard tetap aman dengan graceful fallback
+- **[File Manager dengan Google Docs-Style Search: Highlight, Navigate, Copy](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/file-manager-search-highlight-nextjs.md)** — Pencarian konten file dengan highlight aktif dan navigasi keyboard
+- **[Smart File Butler](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/smart-file-butler.md)** — Auto-organize folder Downloads dengan AI
+
+---
+
+### 9. 🐛 Troubleshooting
+
+Masalah umum, bug fixes, dan panduan troubleshooting.
+
+- **[Common Issues and Solutions (2026-04-01)](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/common-issues-and-solutions-2026-04-01md.md)** — Daftar masalah dan solusi terbaru
+- **[Common Issues and Solutions](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/common-issues-solutions-openclaw.md)** — Troubleshooting umum OpenClaw
+- **[OpenClaw vs Hermes Agent — Comprehensive Comparison Guide (2026)](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-vs-hermes-agent-2026.md)** — Perbandingan detail OpenClaw vs Hermes Agent
+
+---
+
+### 10. 💼 Business
+
+Layanan profesional dan jasa setup.
+
+- **[Jasa Install OpenClaw Profesional — Panduan Lengkap 2026](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/jasa-install-openclaw-profesional-2026.md)** — Setup production-ready OpenClaw dalam 2-5 hari kerja
+
+---
+
+## 🔧 Quick Start
+
+1. **Install OpenClaw**: `npm i -g openclaw`
+2. **Clone repo ini**: `git clone https://github.com/fanani-radian/openclaw-sumopod.git`
+3. **Buka tutorial** yang sesuai kebutuhan di folder `tutorials/`
+4. **Copy & adapt** konfigurasi dan kode ke environment kamu
+5. **Join komunitas** untuk tanya jawab dan kolaborasi
+
+> 💡 Setiap tutorial standalone — bisa diikuti urutan manapun sesuai kebutuhan.
+
+---
+
+## 🤝 Contributing
+
+Kita terima kontribusi dari siapa saja! Caranya:
 
 1. **Fork** repo ini
-2. **Clone** ke lokal: `git clone https://github.com/fanani-radian/openclaw-sumopod.git`
-3. Buat **branch baru**: `git checkout -b feature/nama-fitur`
-4. **Commit** perubahan: `git commit -m "Add: deskripsi singkat"`
-5. **Push** ke branch: `git push origin feature/nama-fitur`
-6. Buat **Pull Request**
+2. **Buat branch**: `git checkout -b tutorial/nama-tutorial`
+3. **Tulis tutorial** di `tutorials/` — format Markdown, bahasa Indonesia atau English
+4. **Commit**: `git commit -m "Add: nama tutorial"`
+5. **Push & PR**: `git push` lalu buat Pull Request
 
 ### Kontribusi yang Diterima
 
-- ✅ Tips & tricks baru
+- ✅ Tutorial baru (automation, integrasi, deployment, dll)
+- ✅ Perbaikan atau update tutorial yang sudah ada
+- ✅ Tips & tricks
 - ✅ Use cases dari pengalaman nyata
-- ✅ Konfigurasi yang bisa dishare
-- ✅ Jawaban untuk FAQ
-- ✅ Translation (Bahasa Indonesia / English)
-- ✅ Video tutorials
+- ✅ Translation Indonesia ↔ English
 
 ---
 
@@ -378,7 +209,7 @@ Trik dan best practices untuk optimize OpenClaw.
 
 ---
 
-## 📄 Lisensi
+## 📄 License
 
 Konten repo ini dilisensikan under [MIT License](./LICENSE).
 
