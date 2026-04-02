@@ -69,7 +69,7 @@ $ gog version
 
 ```bash
 # Tambahin akun Gmail/Workspace
-gog auth add fanani@cvrfm.com
+gog auth add main@yourdomain.com
 ```
 
 **Yang terjadi:**
@@ -135,7 +135,7 @@ flowchart LR
 gog auth list
 
 # Output:
-# ✅ fanani@cvrfm.com (Gmail, Drive, Calendar)
+# ✅ main@yourdomain.com (Gmail, Drive, Calendar)
 ```
 
 ---
@@ -350,7 +350,7 @@ gog calendar list --today --json | jq -r '.[].summary'
 #!/bin/bash
 # daily-email-summary.sh
 
-export GOG_ACCOUNT="fanani@cvrfm.com"
+export GOG_ACCOUNT="main@yourdomain.com"
 
 # Count unread
 UNREAD=$(gog gmail search "is:unread" --json | jq '. | length')
@@ -367,7 +367,7 @@ gog calendar list --today | head -5
 #!/bin/bash
 # backup-to-drive.sh
 
-export GOG_ACCOUNT="fanani@cvrfm.com"
+export GOG_ACCOUNT="main@yourdomain.com"
 
 DATE=$(date +%Y-%m-%d)
 FOLDER_NAME="Backup-$DATE"
@@ -456,8 +456,8 @@ fi
 
 ```bash
 # Token expired, re-login
-gog auth remove fanani@cvrfm.com
-gog auth add fanani@cvrfm.com
+gog auth remove main@yourdomain.com
+gog auth add main@yourdomain.com
 ```
 
 ### ❌ "Command not found"

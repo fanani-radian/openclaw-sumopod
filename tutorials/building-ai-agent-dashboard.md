@@ -1594,7 +1594,7 @@ const mockData: BriefingData = {
   calendar: {
     today: 4,
     events: [
-      { title: "Standup call — Radian Group", time: "09:00", type: "meeting" },
+      { title: "Standup call — Your Company", time: "09:00", type: "meeting" },
       { title: "Review proposal UST", time: "11:00", type: "task" },
       { title: "Lunch with vendor", time: "12:30", type: "personal" },
       { title: "Deploy dashboard v2", time: "15:00", type: "task" },
@@ -9263,7 +9263,7 @@ set -e
 
 DASHBOARD_URL="https://dashboard.example.com"
 HEALTH_ENDPOINT="$DASHBOARD_URL/api/health"
-ALERT_EMAIL="fanani@cvrfm.com"
+ALERT_EMAIL="main@yourdomain.com"
 LOG_FILE="/var/log/ai-dashboard-monitor.log"
 
 # Cek health endpoint
