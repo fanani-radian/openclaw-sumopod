@@ -1,6 +1,6 @@
 # Setup Custom Email dengan Domain di Namecheap + Google Workspace — Gratis
 
-> Tutorial lengkap setup email profesional pakai domain sendiri (contoh: `inquiry@fanani.co`) tanpa biaya bulanan, menggunakan Namecheap + Google Workspace.
+> Tutorial lengkap setup email profesional pakai domain sendiri (contoh: `inquiry@yourdomain.com`) tanpa biaya bulanan, menggunakan Namecheap + Google Workspace.
 
 **📅 Dibuat:** 3 April 2026  
 **🏷️ Tags:** email, google-workspace, namecheap, tutorial, dns  
@@ -14,17 +14,17 @@
 graph LR
     A[👤 Pengirim Email] -->|DNS lookup| B[Namecheap DNS]
     B -->|MX records| C[Google Workspace]
-    C -->|fanani@cvrfm.com| D[Inbox Utama]
-    C -->|inquiry@fanani.co| D
-    C -->|newsletters@fanani.co| D
-    C -->|dm@fanani.co| D
-    C -->|japri@fanani.co| D
+    C -->|main@yourdomain.com| D[Inbox Utama]
+    C -->|inquiry@yourdomain.com| D
+    C -->|newsletters@yourdomain.com| D
+    C -->|dm@yourdomain.com| D
+    C -->|japri@yourdomain.com| D
     
     E[OpenClaw AI] -.->|Research & Docs| F[Tutorial & Guide]
     E -.->|Automated| G[Documentation Pipeline]
 ```
 
-**Flow:** Semua email yang dikirim ke alias (`inquiry@`, `newsletters@`, `dm@`, `japri@`) → masuk ke inbox utama `fanani@cvrfm.com` lewat Google Workspace.
+**Flow:** Semua email yang dikirim ke alias (`inquiry@`, `newsletters@`, `dm@`, `japri@`) → masuk ke inbox utama `main@yourdomain.com` lewat Google Workspace.
 
 ---
 
@@ -32,7 +32,7 @@ graph LR
 
 Yang kamu butuhkan sebelum mulai:
 
-- [ ] **Domain** yang sudah aktif di Namecheap (contoh: `fanani.co`)
+- [ ] **Domain** yang sudah aktif di Namecheap (contoh: `yourdomain.com`)
 - [ ] **Akun Google Workspace** (Business Starter atau trial — gratis 14 hari)
 - [ ] **Akses Google Admin Console** (`admin.google.com`)
 - [ ] **Akses Namecheap Domain List** (`namecheap.com/domains`)
@@ -45,7 +45,7 @@ Yang kamu butuhkan sebelum mulai:
 
 1. Login ke [Google Admin Console](https://admin.google.com)
 2. Buka **Account** → **Domains** → **Add domain**
-3. Masukkan domain kamu (contoh: `fanani.co`)
+3. Masukkan domain kamu (contoh: `yourdomain.com`)
 4. Google akan generate **verification record** (TXT record)
 5. **Jangan tutup tab ini** — kamu butuh info TXT record-nya
 
@@ -118,21 +118,21 @@ Setelah MX record aktif, buat email alias yang nanti masuk ke inbox utama.
 ### Langkah:
 
 1. Buka [Google Admin → Directory → Users](https://admin.google.com/ac/users)
-2. Klik user utama (`fanani@cvrfm.com`)
+2. Klik user utama (`main@yourdomain.com`)
 3. Pilih **User** → **Aliases**
 4. Klik **Add Alias** untuk setiap alias:
 
 | Alias | Fungsi |
 |-------|--------|
-| `inquiry@fanani.co` | Email bisnis / pertanyaan |
-| `newsletters@fanani.co` | Subscribe newsletter |
-| `dm@fanani.co` | Direct message / social media |
-| `japri@fanani.co` | Japri (obrolan pribadi) 😅 |
+| `inquiry@yourdomain.com` | Email bisnis / pertanyaan |
+| `newsletters@yourdomain.com` | Subscribe newsletter |
+| `dm@yourdomain.com` | Direct message / social media |
+| `japri@yourdomain.com` | Japri (obrolan pribadi) 😅 |
 
 5. Save setelah setiap alias
 
 ### Cara Kerja:
-- Email ke `inquiry@fanani.co` → otomatis masuk ke inbox `fanani@cvrfm.com`
+- Email ke `inquiry@yourdomain.com` → otomatis masuk ke inbox `main@yourdomain.com`
 - Bisa pakai filter di Gmail untuk label otomatis per alias
 - Reply bisa dari alias tersebut
 
@@ -142,18 +142,18 @@ Setelah MX record aktif, buat email alias yang nanti masuk ke inbox utama.
 
 ### Quick Test:
 
-1. Kirim email dari akun lain ke `inquiry@fanani.co`
-2. Cek inbox `fanani@cvrfm.com` — seharusnya masuk
+1. Kirim email dari akun lain ke `inquiry@yourdomain.com`
+2. Cek inbox `main@yourdomain.com` — seharusnya masuk
 3. Reply email tersebut — cek apakah from address bener
 
 ### Gmail Filter (Optional):
 
 ```
 Settings → Filters → Create new filter
-To: inquiry@fanani.co → Apply label "📬 Inquiries"
-To: newsletters@fanani.co → Apply label "📰 Newsletters"
-To: dm@fanani.co → Apply label "💬 DM"
-To: japri@fanani.co → Apply label "🔒 Japri"
+To: inquiry@yourdomain.com → Apply label "📬 Inquiries"
+To: newsletters@yourdomain.com → Apply label "📰 Newsletters"
+To: dm@yourdomain.com → Apply label "💬 DM"
+To: japri@yourdomain.com → Apply label "🔒 Japri"
 ```
 
 ### Verification Tools:
