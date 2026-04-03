@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Tutorials-38-blue?style=for-the-badge" alt="38 Tutorials">
+  <img src="https://img.shields.io/badge/Tutorials-39-blue?style=for-the-badge" alt="38 Tutorials">
   <img src="https://img.shields.io/badge/Language-Bahasa_Indonesia-green?style=for-the-badge" alt="Indonesian">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT">
   <img src="https://img.shields.io/badge/OpenClaw-Community-orange?style=for-the-badge" alt="Community">
@@ -150,6 +150,7 @@ Panduan membangun website dan blog dengan framework modern.
 - **[📝 Build Blog Statis dengan Nuxt Content + Tailwind CSS](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/build-blog-nuxt-content-tailwind.md)** — Blog statis lengkap: markdown, syntax highlighting, copy code, RSS, share buttons, newsletter
 - **[🤖 AI Agent Dashboard dengan OpenClaw + Sumopod VPS](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/ai-agent-dashboard-openclaw-sumopod-vps.md)** — Tutorial lengkap bikin AI agent 24/7 dengan dashboard real-time, Telegram integration, n8n automation, dan AI model routing strategy
 
+- **[🛡️ OpenClaw Ops — Self-Healing Gateway + Security Hardening](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-ops-self-healing-openclaw.md)** — Auto-repair gateway abis update, watchdog 24/7, security scanning, exec approval two-layer fix
 ---
 
 ### 9. 🧩 Advanced Patterns
