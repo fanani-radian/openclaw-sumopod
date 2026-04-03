@@ -15,29 +15,30 @@ Self-healing operations for OpenClaw — auto-detect, auto-fix, auto-log.
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Sumopod VPS                             │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │              OpenClaw Gateway                        │   │
-│  │  • Auth (token mode)                               │   │
-│  │  • Exec approvals (2 layers)                       │   │
-│  │  • Cron jobs (3 active)                            │   │
-│  └─────────────────────────────────────────────────────┘   │
-│           ▲                    ▲                    ▲       │
-│           │                    │                    │       │
-│  ┌────────┴────────┐  ┌───────┴───────┐  ┌───────┴──────┐ │
-│  │   heal.sh       │  │  watchdog.sh  │  │ security-scan│ │
-│  │ (on-demand)     │  │ (5-min cron)  │  │  (daily)     │ │
-│  └─────────────────┘  └───────────────┘  └──────────────┘ │
-│           │                    │                    │       │
-│           ▼                    ▼                    ▼       │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │              Telegram Alert                          │   │
-│  │  • Fixed items report    • Service DOWN alert      │   │
-│  │  • Security warnings      • Weekly health digest    │   │
-│  └─────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph VPS["Sumopod VPS"]
+        subgraph Gateway["OpenClaw Gateway"]
+            G1[Auth: token mode]
+            G2[Exec approvals: 2 layers]
+            G3[Cron jobs: 3 active]
+        end
+        H[heal.sh<br/>on-demand]
+        W[watchdog.sh<br/>5-min cron]
+        S[security-scan.sh<br/>daily]
+    end
+    H --> G1 & G2 & G3
+    W --> G1 & G2 & G3
+    S --> G1 & G2 & G3
+    G1 & G2 & G3 --> T[Telegram Alert<br/>Fixed items<br/>DOWN alerts<br/>Security warnings
+]
+
+    style VPS fill:#e3f2fd,stroke:#1565c0
+    style Gateway fill:#f3e5f5,stroke:#6a1b9a
+    style H fill:#e8f5e9,stroke:#2e7d32
+    style W fill:#fff8e1,stroke:#f9a825
+    style S fill:#fce4ec,stroke:#c62828
+    style T fill:#e0f7fa,stroke:#00838f
 ```
 
 ## What Gets Repaired Automatically
