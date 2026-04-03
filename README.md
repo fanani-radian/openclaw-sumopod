@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Tutorials-37-blue?style=for-the-badge" alt="35 Tutorials">
+  <img src="https://img.shields.io/badge/Tutorials-38-blue?style=for-the-badge" alt="38 Tutorials">
   <img src="https://img.shields.io/badge/Language-Bahasa_Indonesia-green?style=for-the-badge" alt="Indonesian">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT">
   <img src="https://img.shields.io/badge/OpenClaw-Community-orange?style=for-the-badge" alt="Community">
@@ -148,6 +148,7 @@ Panduan membangun website dan blog dengan framework modern.
 
 - **[🌙 Dark Mode + Search dengan Library GitHub di Nuxt 3](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/dark-mode-search-nuxt-github-libraries.md)** — Tambahkan dark mode (Darkmode.js) dan fuzzy search (Fuse.js) via CDN ke blog Nuxt 3
 - **[📝 Build Blog Statis dengan Nuxt Content + Tailwind CSS](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/build-blog-nuxt-content-tailwind.md)** — Blog statis lengkap: markdown, syntax highlighting, copy code, RSS, share buttons, newsletter
+- **[🤖 AI Agent Dashboard dengan OpenClaw + Sumopod VPS](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/ai-agent-dashboard-openclaw-sumopod-vps.md)** — Tutorial lengkap bikin AI agent 24/7 dengan dashboard real-time, Telegram integration, n8n automation, dan AI model routing strategy
 
 ---
 
