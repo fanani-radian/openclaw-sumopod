@@ -764,10 +764,10 @@ flowchart TB
 
 Want to go deeper? Here are related tutorials:
 
-- [Morning Briefing Automation](/tutorials/morning-briefing-automation/) — Set up the perfect wake-up report
-- [Email Classification with AI](/tutorials/email-classification-ai/) — Automatically sort and prioritize emails
-- [n8n Google Workspace Integration](/tutorials/n8n-google-workspace/) — Full automation cookbook
-- [Self-Evolving AI Agents](/tutorials/self-evolving-agents/) — Make your agent improve itself
+- [Morning Briefing Automation](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/morning-briefing-automation.md) — Set up the perfect wake-up report
+- [Email Classification with AI](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/email-classification-ai.md) — Automatically sort and prioritize emails
+- [n8n Google Workspace Integration](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/n8n-google-workspace.md) — Full automation cookbook
+- [Self-Evolving AI Agents](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/self-evolving-agents.md) — Make your agent improve itself
 
 ---
 
