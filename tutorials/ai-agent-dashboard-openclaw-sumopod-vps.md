@@ -29,28 +29,24 @@ Before we touch a single command, let's look at how all the pieces connect.
 
 ```mermaid
 flowchart TB
-    subgraph Sumopod["🖥️ Sumopod VPS"]
-        subgraph Services["Services"]
-            OC[("🤖 OpenClaw Agent")]
-            N8N[("⚡ n8n Automation")]
-            DB[("🗄️ PostgreSQL DB")]
-        end
-        subgraph AI["AI Layer"]
-            GEM[("🧠 Gemini / Claude / Kimi")]
-            OLL[("🦙 Ollama Local Models")]
-        end
+    subgraph VPS["🖥️ Sumopod VPS"]
+        OC[🤖 OpenClaw Agent]
+        N8N[⚡ n8n Automation]
+        DB[🗄️ PostgreSQL DB]
+        GEM[🧠 AI Models<br/>Gemini / Claude / Kimi]
+        OLL[🦙 Ollama Local]
     end
 
     subgraph External["🌐 External Services"]
-        TG[("💬 Telegram")]
-        GWS[("📧 Google Workspace")]
-        DR[("📁 Google Drive")]
-        CAL[("📅 Google Calendar")]
-        SUP[("☁️ Supabase")]
+        TG[💬 Telegram]
+        GWS[📧 Google Workspace]
+        DR[📁 Google Drive]
+        CAL[📅 Google Calendar]
+        SUP[☁️ Supabase]
     end
 
     subgraph You["👤 You"]
-        PHONE[("📱 Phone / Laptop")]
+        PHONE[📱 Phone / Laptop]
     end
 
     PHONE <-->|Telegram Bot| TG
@@ -66,13 +62,9 @@ flowchart TB
     N8N <--> DR
     N8N <--> GWS
 
-    style Sumopod fill:#1a1a2e,stroke:#00d4ff,color:#fff
-    style OC fill:#16213e,stroke:#00d4ff,color:#fff
-    style N8N fill:#16213e,stroke:#ff6b35,color:#fff
-    style DB fill:#16213e,stroke:#ffd700,color:#fff
-    style TG fill:#0088cc,stroke:#fff,color:#fff
-    style GEM fill:#4a1942,stroke:#ff00ff,color:#fff
-    style SUP fill:#2d5016,stroke:#00ff88,color:#fff
+    style VPS fill:#1a1a2e,stroke:#00d4ff,color:#fff
+    style External fill:#0d3b2e,stroke:#00ff88,color:#fff
+    style You fill:#3b0d1a,stroke:#ff0055,color:#fff
 ```
 
 ### How Data Flows
