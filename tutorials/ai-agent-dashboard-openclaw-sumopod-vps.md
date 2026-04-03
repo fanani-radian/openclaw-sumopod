@@ -113,7 +113,7 @@ flowchart LR
     end
 
     subgraph Routing["🧭 Model Router"]
-        DEC[("Decision Engine"))]
+        DEC[("Decision Engine")]
     end
 
     subgraph Tiers["💎 Model Tiers"]
