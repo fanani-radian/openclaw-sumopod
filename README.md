@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Tutorials-59-blue?style=for-the-badge" alt="59 Tutorials">
+  <img src="https://img.shields.io/badge/Tutorials-60-blue?style=for-the-badge" alt="60 Tutorials">
   <img src="https://img.shields.io/badge/Language-Bahasa_Indonesia-green?style=for-the-badge" alt="Indonesian">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT">
   <img src="https://img.shields.io/badge/OpenClaw-Community-orange?style=for-the-badge" alt="Community">
@@ -181,6 +181,7 @@ Penerapan OpenClaw di industri: monitoring, otomasi, dan smart building.
 
 - **[📊 Monitoring Listrik Industri: Cara Hemat Jutaan dari Motor, HVAC & PLC](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/industrial-energy-monitoring.md)** — Panduan lengkap monitoring sistem listrik industri, dari CT sensor sampai dashboard real-time
 - **[🏨 OpenClaw sebagai Smart Hotel Assistant](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-smart-hotel.md)** — Implementasi AI concierge, BAS integration, dan guest experience automation di hotel
+- **[🤖 OpenClaw CS WhatsApp Gateway — Arsitektur, Invoice & Database Strict](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-cs-whatsapp-gateway.md)** — Bangun CS bot WhatsApp dengan OpenClaw + Gateway pattern + RAG + security strict
 - **[⚡ Panduan Lengkap LLM Provider untuk OpenClaw (Personal sampai 1M User)](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-llm-provider-guide.md)** — Pilihan provider, pricing, dan arsitektur dari personal sampai enterprise scale
 
 ---
