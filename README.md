@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Tutorials-39-blue?style=for-the-badge" alt="38 Tutorials">
+  <img src="https://img.shields.io/badge/Tutorials-40-blue?style=for-the-badge" alt="38 Tutorials">
   <img src="https://img.shields.io/badge/Language-Bahasa_Indonesia-green?style=for-the-badge" alt="Indonesian">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT">
   <img src="https://img.shields.io/badge/OpenClaw-Community-orange?style=for-the-badge" alt="Community">
@@ -83,6 +83,7 @@ Bangun sistem multi-agent dengan spesialisasi dan shared memory.
 
 - **[Multi-Agent System dengan OpenClaw](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-multi-agent-system.md)** — Setup multi-agent dengan spesialisasi, context, dan memory terpisah
 - **[🧠 Multi-Agent Shared Memory System](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/multi-agent-shared-memory.md)** — Multiple agent sharing knowledge lewat GitHub sync
+- **[🏗️ Membangun AI Agent Skill Ecosystem dari 15+ GitHub Repos](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-skill-ecosystem.md)** — Analisis 500K+ stars repos, 16 composite skills, SHARP framework, 324 total skills
 
 ---
 
