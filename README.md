@@ -129,6 +129,7 @@ Pipeline deployment, process management, dan infrastruktur.
 
 - **[Deployment Butler](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/deployment-butler.md)** — Pipeline otomatis: GitHub → VPS dengan zero-downtime dan instant rollback
 - **[Deploying and Publishing with OpenClaw](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/deploying-nextjs-supabase-pm2-openclaw.md)** — Panduan deployment Next.js + Supabase + PM2
+- **[Membangun Sistem Absensi Cerdas dengan OpenClaw + Android GPS — Studi Kasus UNO-ST](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/absensi-uno-st-openclaw-android-gps.md)** — Sistem clock-in Android GPS + OpenClaw automation dengan dashboard analitik dan sistem reward
 - **[Migrasi Data Absensi Karyawan ke Supabase + Cron Sync Harian](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/absensi-migration-supabase-cron.md)** — Migrasi dari API lama ke Supabase dengan auto-sync pagi
 
 ---
