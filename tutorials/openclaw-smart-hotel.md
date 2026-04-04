@@ -132,6 +132,37 @@ Track HP tamu yang konek ke WiFi hotel. Signal strength dari access point bisa t
 
 Gabungkan semua di atas. Door lock + PIR + WiFi presence = akurasi tinggi dengan false positive minimal.
 
+### 📡 WiFi CSI — Advanced Presence Detection
+
+Di diskusi komunitas, ada yang suggest **WiFi CSI (Channel State Information)** sebagai metode sensing occupancy. Ini teknologi yang menarik secara teknis, tapi gue punya pendapat kuat soal ini.
+
+**Apa itu WiFi CSI?**
+
+WiFi CSI memanfaatkan perubahan kecil pada sinyal WiFi (amplitudo dan fase) untuk mendeteksi posisi, pergerakan, dan aktivitas manusia — bahkan menembus dinding. Bedanya dengan RSSI yang cuma ukur kekuatan sinyal, CSI ngasih data detail level subcarrier. Jadi secara teori bisa jadi "sensor lingkungan ramah privasi".
+
+**Tapi gue WARNING berat soal ini:**
+
+> ⚠️ **Jangan pake WiFi buat sensing penghuni di kamar hotel.**
+
+Kenapa? Karena CSI itu TERLALU sensitif. Ini yang bakal terjadi:
+
+- 1 orang masuk kamar → terdeteksi ✅
+- 2 orang di kamar → terdeteksi ✅ (tapi ini PRIVACY INVASION)
+- Tamu gerak di dalam kamar → pattern movement terekam ✅ (lagi-lagi PRIVACY)
+- Tamu di toilet → tetap terdeteksi ✅ (INI SUDAH CREEPY)
+
+**Masalah besar:** Kalau tamu tahu WiFi mereka dipake buat track gerakan di dalam kamar, lawsuit datang. No question. Di banyak yurisdiksi, ini masuk kategori illegal surveillance.
+
+**Kapan CSI boleh dipake?**
+- ✅ Lobby area (public space)
+- ✅ Meeting room (bisa track occupancy buat scheduling)
+- ✅ Corridor (traffic flow optimization)
+- ❌ Kamar tamu (ABSOLUTELY NOT)
+- ❌ Kamar mandi (HELL NO)
+- ❌ Spa/gym locker room (NOPE)
+
+**Bottom line:** CSI itu teknologi keren buat smart building. Tapi di konteks hotel, batasi ke area public saja. Buat kamar, stick dengan door lock + PIR — itu sudah cukup dan respectful.
+
 ### Konek OpenClaw ke BAS
 
 Ini bagian yang seru. OpenClaw bisa konek ke BAS lewat beberapa protocol:
@@ -462,6 +493,81 @@ Kemarin kamu hemat 3.2 kWh listrik! 🎉
 
 Ketik "redeem [nomor]" untuk klaim reward!
 ```
+
+### Token Economy — Lebih dari Sekadar Poin
+
+Di diskusi, ada ide yang menarik: bukan cuma poin biasa, tapi **token system** yang punya nilai ekonomi. Dan ini bisa diimplementasikan tanpa blockchain (nggak perlu rug-pull 🤣).
+
+**Konsep Token Hotel:**
+
+Token itu pada dasarnya **loyalty currency yang di-issued oleh hotel**. Bukan crypto, bukan blockchain — cuma digital token yang dikelola hotel. Tapi dengan twist: nilainya bisa naik seiring demand.
+
+```mermaid
+flowchart LR
+    SAVE["🌿 Tamu Hemat Energi"] --> EARN["+Token"]
+    EARN --> WALLET["💰 Token Wallet"]
+    
+    WALLET --> R1["🍽️ Makan di F&B Hotel"]
+    WALLET --> R2["🛍️ Beli Souvenir"]
+    WALLET --> R3["🏨 Diskon Next Stay"]
+    WALLET --> R4["👕 Merchandise Hotel"]
+    WALLET --> R5["🧖 Spa & Wellness"]
+    WALLET --> R6["💳 Top-up Sendiri"]
+    
+    R1 -->|Revenue ke Hotel| REV["💰 Hotel Revenue"]
+    R3 -->|Repeat Booking| REV
+    R6 -->|Cash Flow| REV
+```
+
+**Mekanisme Token:**
+
+| Aspek | Detail |
+|-------|--------|
+| **Cara dapet** | Hemat energi, opt-in eco mode, review positif, referral |
+| **Cara pakai** | F&B, souvenir, merchandise, diskon kamar, spa |
+| **Nilai dasar** | 1 token = Rp 1,000 (dapat ditentukan hotel) |
+| **Appreciation** | Harga token bisa naik saat high season (demand tinggi) |
+| **Top-up** | Tamu bisa beli tambahan token (opsional) |
+| **Transfer** | Bisa dikirim ke tamu lain di hotel yang sama |
+| **Expiry** | Berlaku 1 tahun dari diterbitkan |
+
+**Kenapa ini lebih dari sekadar poin biasa?**
+
+Poin loyalty konvensional itu membosankan. "Kumpulkan 1000 poin, dapet free drink." Tamu nggak excited. Tapi kalau sistem-nya kayak game — ada token, ada wallet, bisa di-top-up, nilainya naik turun — itu beda. Tamu jadi aktif participate.
+
+Contoh conversational flow:
+
+```
+Tamu: Gue mau tuker token buat makan di restoran hotel
+
+AI Concierge: 💰 Token Wallet kamu:
+   Balance: 245 tokens
+   Value: Rp 245,000
+
+Restoran Hotel tersedia:
+1. Nasi Goreng Spesial — 35 tokens (Rp 35,000)
+2. Sate Ayam Madura — 45 tokens (Rp 45,000)
+3. Grilled Salmon — 120 tokens (Rp 120,000)
+4. Seafood Platter — 200 tokens (Rp 200,000)
+
+Pilih menu yang mau dituker?
+
+Tamu: Nomor 3 dong
+
+AI Concierge: ✅ 120 tokens dituker untuk Grilled Salmon
+Sisa balance: 125 tokens
+
+Pesanan udah dikirim ke kitchen. Estimasi 15-20 menit.
+Mau dine-in atau room service?
+
+Tamu: Room service
+
+AI Concierge: 🛎️ Done! Grilled Salmon menuju kamar 204.
+Bon pembayaran: 120 tokens (fully paid, no cash needed).
+Selamat menikmati! 🐟
+```
+
+**Revenue Impact:** Tamu yang punya token cenderung spending di hotel (bukan di luar). Token本质上 bikin captive economy di dalam hotel. F&B revenue naik, souvenir laku, repeat booking meningkat.
 
 ━━━━━━━━━━━━
 
