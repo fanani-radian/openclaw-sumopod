@@ -925,6 +925,413 @@ Berdasarkan diskusi dan analisis gue, ini rekomendasi use case OpenClaw untuk ho
 
 ━━━━━━━━━━━━
 
+## 🔌 Schneider BAS Integration — Deep Dive
+
+Gue personally familiar sama Schneider Electric BAS karena background gue di bidang engineering. Di diskusi tadi, gue mention kalau lagi plan konek Schneider software dengan OpenClaw — dan ini bukan hype, ini rencana yang udah gue riset.
+
+### Kenapa Schneider?
+
+Schneider itu pemain besar di BAS dunia. Di Indonesia, mayoritas hotel bintang 4-5 pake Schneider untuk HVAC, lighting control, dan energy management. Product line mereka yang relevan:
+
+| Product | Fungsi | Konek via |
+|---------|--------|----------|
+| **EcoStruxure Building Operation** | Central management platform | REST API / Web Services |
+| **SmartStruxure** | Cloud-based building management | MQTT / REST |
+| **Modicon PLC** | Field-level controller | Modbus TCP |
+| **KNX Actuators** | Lighting & shade control | KNX / IP |
+| **PowerLogic** | Energy metering & monitoring | Modbus TCP / REST |
+
+### Arsitektur Integrasi Schneider × OpenClaw
+
+```mermaid
+flowchart LR
+    subgraph Field["⚡ Field Level"]
+        PLC1["Modicon PLC<br/>Lantai 1-5"]
+        PLC2["Modicon PLC<br/>Lantai 6-10"]
+        KNX["KNX Actuators<br/>Per Room"]
+        PM["PowerLogic Meters<br/>Per Floor"]
+    end
+    
+    subgraph Server["🖥️ Building Server"]
+        EBO["EcoStruxure<br/>Building Op"]
+        API["REST API<br/>Gateway"]
+        MQTT["MQTT Broker"]
+    end
+    
+    subgraph Cloud["☁️ Cloud"]
+        OC["OpenClaw<br/>AI Engine"]
+        WA["WhatsApp<br/>Guest Channel"]
+        DASH["Energy Dashboard"]
+    end
+    
+    PLC1 -->|Modbus TCP| EBO
+    PLC2 -->|Modbus TCP| EBO
+    KNX -->|KNX/IP| EBO
+    PM -->|Modbus TCP| EBO
+    
+    EBO --> API
+    EBO --> MQTT
+    
+    API --> OC
+    MQTT --> OC
+    
+    OC --> WA
+    OC --> DASH
+    
+    OC -->|Control Commands| API
+    API -->|Write to PLC| EBO
+```
+
+### Contoh: Modbus TCP Communication dari OpenClaw
+
+OpenClaw skill bisa baca/tulis register Modbus langsung ke PLC. Ini contoh read temperature dari room sensor:
+
+```python
+# skills/bas-control/scripts/modbus_client.py
+from pymodbus.client import ModbusTcpClient
+import asyncio
+
+class SchneiderBASClient:
+    def __init__(self, host: str = "192.168.1.100", port: int = 502):
+        self.client = ModbusTcpClient(host, port)
+        
+    # Register mapping (sesuaikan dengan project)
+    REGISTERS = {
+        "room_temp": 1000,        # Holding register
+        "room_humidity": 1001,
+        "ac_mode": 1010,           # 0=off, 1=cool, 2=heat, 3=auto
+        "ac_setpoint": 1011,       # °C
+        "ac_fan_speed": 1012,      # 0-3
+        "light_level": 1020,       # 0-100%
+        "light_scene": 1021,       # 0=off, 1=welcome, 2=sleep
+        "occupancy": 1030,         # 0/1
+        "door_status": 1031,       # 0=closed, 1=open
+        "energy_kwh": 1040,        # Accumulated kWh
+        "power_watts": 1041,       # Real-time Watts
+    }
+    
+    async def get_room_status(self, room_number: int) -> dict:
+        """Read all sensor values for a specific room"""
+        base = (room_number - 1) * 50  # 50 registers per room
+        
+        self.client.connect()
+        result = self.client.read_holding_registers(
+            address=base, count=50, slave=1
+        )
+        self.client.close()
+        
+        if result.isError():
+            raise Exception(f"Modbus error: {result}")
+        
+        regs = result.registers
+        return {
+            "room": room_number,
+            "temperature": regs[0] / 10,       # 1 decimal
+            "humidity": regs[1] / 10,
+            "ac_mode": regs[10],
+            "ac_setpoint": regs[11] / 10,
+            "light_level": regs[20],
+            "occupancy": bool(regs[30]),
+            "door_open": bool(regs[31]),
+            "energy_kwh": regs[40] / 100,
+            "power_watts": regs[41],
+        }
+    
+    async def set_eco_mode(self, room_number: int):
+        """Switch room to eco mode — AC off, lights off"""
+        base = (room_number - 1) * 50
+        
+        self.client.connect()
+        # AC off
+        self.client.write_register(address=base + 10, value=0, slave=1)
+        # Lights off
+        self.client.write_register(address=base + 20, value=0, slave=1)
+        self.client.close()
+        
+        return {"status": "eco_mode", "room": room_number}
+    
+    async def set_comfort_mode(self, room_number: int, setpoint: float = 24.0):
+        """Switch room to comfort mode — AC on, welcome lights"""
+        base = (room_number - 1) * 50
+        
+        self.client.connect()
+        # AC cool mode
+        self.client.write_register(address=base + 10, value=1, slave=1)
+        # Setpoint 24°C
+        self.client.write_register(address=base + 11, value=int(setpoint * 10), slave=1)
+        # Welcome light scene
+        self.client.write_register(address=base + 21, value=1, slave=1)
+        self.client.close()
+        
+        return {"status": "comfort_mode", "room": room_number, "setpoint": setpoint}
+```
+
+### IoT Alternatif: MQTT-Based Smart Sensors
+
+Kalau hotel-nya belum punya BAS (misalnya hotel bintang 2-3), bisa mulai dari IoT sensors yang lebih murah:
+
+| Sensor | Harga/Unit | Fungsi |
+|--------|-----------|--------|
+| DHT22 + ESP32 | Rp 75rb | Temperature & humidity |
+| PIR HC-SR501 + ESP32 | Rp 50rb | Motion detection |
+| ACS712 + ESP32 | Rp 80rb | Current measurement |
+| Sonoff TH Elite | Rp 150rb | Smart thermostat with relay |
+| Shelly Plus 1PM | Rp 200rb | Smart switch with power metering |
+
+**Setup MQTT:"
+
+```yaml
+# skills/bas-control/scripts/mqtt_config.yaml
+broker: mqtt://192.168.1.200:1883
+
+rooms:
+  101:
+    temperature: hotel/room/101/temp
+    humidity: hotel/room/101/humidity
+    motion: hotel/room/101/motion
+    ac_power: hotel/room/101/ac/watts
+    light_power: hotel/room/101/light/watts
+    door: hotel/room/101/door
+    
+  102:
+    temperature: hotel/room/102/temp
+    # ... etc
+```
+
+**Point penting:** Mulai dari IoT sederhana ini, hotel bisa upgrade ke Schneider BAS secara bertahap. OpenClaw nggak peduli backend-nya apa — yang penting ada data dan ada kontrol. Migrasi tinggal ganti skill, nggak perlu rebuild sistem.
+
+━━━━━━━━━━━━
+
+## 📡 Monitoring & Analytics Dashboard
+
+Data tanpa visualisasi itu useless. Hotel management butuh dashboard yang ngasih insight real-time.
+
+### Metrik yang Perlu Dimonitor
+
+```mermaid
+flowchart TD
+    subgraph Realtime["⚡ Real-time Dashboard"]
+        E1["Total Energy<br/>kWh & Cost"]
+        E2["Per-Floor Energy<br/>Breakdown"]
+        E3["Per-Room Status<br/>Occupied/Vacant/Eco"]
+        E4["HVAC Load<br/""]
+        E5["Guest Activity<br/>Check-in/out"]
+        E6["AI Interactions<br/>Volume & Type"]
+    end
+    
+    subgraph Historical["📊 Historical Analytics"]
+        H1["Daily/Weekly/Monthly<br/>Energy Trend"]
+        H2["Occupancy vs Energy<br/>Correlation"]
+        H3["Green Rewards<br/>Participation Rate"]
+        H4["Guest Satisfaction<br/>Score Trend"]
+        H5["Popular AI Requests<br/>Top Categories"]
+        H6["Cost Savings<br/>vs Baseline"]
+    end
+    
+    subgraph Alerts["🔔 Smart Alerts"]
+        A1["Room Energy Spike<br/>> 150% Baseline"]
+        A2["HVAC Fault<br/>Sensor Offline"]
+        A3["Guest Complaint<br/>Urgent"]
+        A4["Check-out Today<br/>Prepare Welcome"]
+        A5["Eco Mode Failed<br/>Manual Override"]
+    end
+    
+    Realtime --> DASH["Hotel Management Dashboard"]
+    Historical --> DASH
+    Alerts --> DASH
+```
+
+### Contoh Dashboard Data Flow
+
+OpenClaw heartbeat bisa push data ke dashboard setiap interval:
+
+```python
+# skills/bas-control/scripts/dashboard-updater.py
+import requests
+import json
+from datetime import datetime
+
+class DashboardUpdater:
+    def __init__(self, dashboard_api: str):
+        self.api = dashboard_api
+        
+    async def push_realtime_data(self, bas_client, hotel_rooms: int):
+        """Collect and push real-time data to dashboard"""
+        snapshot = {
+            "timestamp": datetime.now().isoformat(),
+            "total_rooms": hotel_rooms,
+            "rooms": []
+        }
+        
+        total_power = 0
+        occupied = 0
+        eco_mode = 0
+        
+        for room in range(1, hotel_rooms + 1):
+            status = await bas_client.get_room_status(room)
+            total_power += status["power_watts"]
+            
+            if status["occupancy"]:
+                occupied += 1
+            if status["ac_mode"] == 0 and not status["occupancy"]:
+                eco_mode += 1
+                
+            snapshot["rooms"].append(status)
+        
+        snapshot["summary"] = {
+            "total_power_kw": round(total_power / 1000, 2),
+            "occupied_rooms": occupied,
+            "vacant_eco_rooms": eco_mode,
+            "occupancy_rate": round(occupied / hotel_rooms * 100, 1),
+            "estimated_daily_cost_rp": round(total_power / 1000 * 24 * 1500),
+        }
+        
+        # Push to Supabase / API
+        requests.post(f"{self.api}/energy-snapshot", json=snapshot)
+        
+        return snapshot["summary"]
+```
+
+### Laporan Harian untuk Management
+
+Setiap pagi, OpenClaw bisa generate laporan otomatis dan kirim ke group WhatsApp manajemen hotel:
+
+```
+📊 Hotel Energy Report — 4 April 2026
+
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░ 80% Performance Score
+
+⚡ Energy Summary:
+• Total: 4,521 kWh (vs baseline 6,280 kWh)
+• Hemat: 1,759 kWh (28%)
+• Estimasi hemat: Rp 2,638,500 💰
+
+🏨 Room Status:
+• Occupied: 142 / 200 (71%)
+• Eco mode: 38 kamar
+• Maintenance: 3 kamar
+• Vacant: 17 kamar
+
+🤖 AI Concierge Stats:
+• Total interactions: 847
+• Paling populer: Restaurant recommendations (234)
+• Rata-rata response time: 1.2 detik
+• Satisfaction rating: 4.7/5 ⭐
+
+🌿 Green Rewards:
+• Peserta aktif: 89 tamu (63%)
+• Total poin diberikan: 12,450
+• Estimasi penghematan tamu: 892 kWh
+
+⚠️ Alerts:
+• Room 305: AC fault — perlu teknisi
+• Room 712: Energy spike 180% — check tamu
+• 8 tamu check-out hari ini — prepare rooms
+```
+
+Laporan kayak gini ini biasanya butuh orang khusus bikin tiap hari. Dengan OpenClaw, **otomatis dan gratis**. Value-nya gede banget buat manajemen.
+
+━━━━━━━━━━━━
+
+## 🏢 Studi Kasus: Implementasi di Hotel Bintang 4
+
+Supaya lebih gamblang, gue gambar skenario implementasi nyata.
+
+### Profil Hotel
+
+- **Tipe:** Hotel bintang 4, kota tier 2 (misal Balikpapan, Makassar, Surabaya)
+- **Kamar:** 150 kamar
+- **Occupancy rata-rata:** 65-75%
+- **F&B Revenue:** 35% total revenue
+- **Problem:** Energy cost naik 15% YoY, guest complaint rating 3.2/5
+
+### Fase Implementasi
+
+**Bulan 1-2: Foundation**
+- Setup OpenClaw di VPS (1 hari)
+- Integration WhatsApp Business API (3 hari)
+- FAQ bot dari existing knowledge base (1 minggu)
+- WiFi login → welcome message automation (3 hari)
+- **Quick win:** Guest bisa tanya info hotel via WhatsApp 24/7
+
+**Bulan 3-4: BAS + Concierge**
+- Install IoT sensors di 50 kamar (pilot) — 2 minggu
+- BAS integration via MQTT — 2 minggu
+- Restaurant & attraction recommendation engine — 1 minggu
+- Room service request system — 1 minggu
+- **Hasil:** Energy turun 15% di 50 kamar pilot, guest satisfaction naik ke 4.0/5
+
+**Bulan 5-6: Scale + Green Rewards**
+- Rollout sensors ke semua 150 kamar — 3 minggu
+- Launch green rewards program — 2 minggu
+- Energy dashboard untuk management — 1 minggu
+- **Hasil:** Total energy turun 25%, 40% tamu ikut green rewards, F&B revenue naik 10% (karena recommendation engine)
+
+### ROI Projection
+
+```
+💰 ROI Analysis — Hotel Bintang 4, 150 Kamar
+
+Investasi:
+  • VPS OpenClaw (1 tahun):       Rp 12.000.000
+  • IoT Sensors (150 kamar):      Rp 22.500.000
+  • Development & Integration:    Rp 35.000.000
+  • WhatsApp Business API (1thn):  Rp 18.000.000
+  • Training & Change Management:  Rp 10.000.000
+  ─────────────────────────────────────────────
+  Total Investasi:                Rp 97.500.000
+
+Penghematan per Tahun:
+  • Energy savings (25%):         Rp 380.000.000
+  • Staff efficiency (2 FTE):      Rp 144.000.000
+  • F&B upsell (10%):             Rp 250.000.000
+  ─────────────────────────────────────────────
+  Total Benefit per Tahun:        Rp 774.000.000
+
+Payback Period: 1.5 bulan 🤯
+ROI Year 1: 693%
+```
+
+Angka-angka ini realistis berdasarkan benchmark industri. Energy savings 20-30% itu achievable dengan proper BAS integration. Dan F&B upsell dari AI recommendation itu bonus yang nggak expected banyak hotel.
+
+━━━━━━━━━━━━
+
+## 🚨 Pitfall & Lesson Learned
+
+Gue udah lihat banyak IoT/smart building project gagal. Ini common pitfalls yang harus dihindari:
+
+### 1. Over-Engineering
+
+**❌ Salah:** Langsung implementasi ML-based predictive HVAC, blockchain rewards, AR navigation.
+
+**✅ Benar:** Mulai dari FAQ bot, WiFi welcome, basic BAS control. Iterate from there.
+
+Hotel bukan tech company. Mereka butuh reliability, bukan cutting edge. Simple yang reliable beats complex yang buggy.
+
+### 2. Ignoring Existing Infrastructure
+
+Banyak vendor datang ke hotel dan minta replace semua system BAS yang udah ada. **Huge mistake.** Existing BAS (Schneider, Honeywell, Siemens) itu reliable dan udah terinvestasi. OpenClaw harus **integrate**, bukan replace.
+
+### 3. No Staff Buy-In
+
+Kalau staf resepsionis nggak percaya sama AI, mereka bakal override semua. Training dan change management itu critical. Pastikan staf:
+- Paham kenapa system ini dibuat
+- Tahu cara escalate ke human
+- Merasa empowered, bukan threatened
+
+### 4. Privacy Overreach
+
+Jangan track tamu lebih dari yang perlu. Energy tracking per room? OK. Track tamu ke mana aja di hotel? NOPE. Pastikan ada consent dan transparency.
+
+### 5. Single Point of Failure
+
+OpenClaw down → semua tamu nggak bisa chat? That's unacceptable. Pastikan ada:
+- Fallback: Basic FAQ tanpa AI
+- Redundancy: Multi-VPS atau failover
+- Manual override: Tamu bisa tetap call resepsionis
+
+━━━━━━━━━━━━
+
 ## 🧠 Kesimpulan
 
 Smart hotel bukan konsep baru. Tapi implementasinya sering terhambat oleh:
