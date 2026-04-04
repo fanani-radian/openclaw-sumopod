@@ -8,21 +8,21 @@ image: /images/posts/absensi-uno-st-openclaw-android-gps.jpg
 
 ## 📝 Introduction
 
-PT UNO Solusi Teknik — perusahaan engineering di Balikpapan — punya masalah klasik: absensi karyawan yang ribet. Karyawan harus isi buku manual, kadang lupa, kadangbolos jam 8 pagi terus bilang "sudah masuk." HRD capek ng追, manager bingung.
+PT UNO Solusi Teknik — perusahaan engineering di Balikpapan — punya masalah klasik: absensi karyawan yang ribet. Karyawan harus isi buku manual, kadang lupa, kadangbolos jam 8 pagi terus bilang "sudah masuk." HRD capek nge-chase, manager bingung.
 
-Solusi awal mereka sudah cukup baik: aplikasi Android dengan GPS proximity ke lokasi workshop. Tapi setelah data masuk ke API, semuanya静止 — nggak ada yang proses, nggak ada notifikasi, nggak ada analitik.
+Solusi awal mereka sudah cukup baik: aplikasi Android dengan GPS proximity ke lokasi workshop. Tapi setelah data masuk ke API, semuanyamati suri — nggak ada yang proses, nggak ada notifikasi, nggak ada analitik.
 
 Di sinilah OpenClaw masuk.
 
-OpenClaw jadi otak automate yang menarik data dari API absensi setiap pagi, push ke Google Sheets, kirim report ke Telegram, dan — yang paling penting — bikin semuanya jadi actionable.迟到 (telat) dapat notifikasi, manager dapat dashboard mingguan, karyawan dapat reward kalau rajin.
+OpenClaw jadi otak automate yang menarik data dari API absensi setiap pagi, push ke Google Sheets, kirim report ke Telegram, dan — yang paling penting — bikin semuanya jadi actionable.Telat dapat notifikasi, manager dapat dashboard mingguan, karyawan dapat reward kalau rajin.
 
-Ini study case real yang akan kita bahas lengkap langkah per langkah. Untuk tutorial OpenClaw lainnya, cek repo [Sumopod](https://github.com/fanani-radian/openclaw-sumopod) kami di GitHub — там собраны lebih dari 60 tutorial praktis dalam Bahasa Indonesia.
+Ini study case real yang akan kita bahas lengkap langkah per langkah. Untuk tutorial OpenClaw lainnya, cek repo [Sumopod](https://github.com/fanani-radian/openclaw-sumopod) kami di GitHub — yang udah mengumpulkan lebih dari 60 tutorial praktis dalam Bahasa Indonesia.
 
 ---
 
 ## 🏗️ Arsitektur Sistem
 
-Sebelum masuk ke detail, kita lihat dulu全景 besar sistem ini:
+Sebelum masuk ke detail, kita lihat dulugambaran besar sistem ini:
 
 ```mermaid
 flowchart TB
@@ -76,7 +76,7 @@ flowchart TB
 | **Android App** | Karyawan udah familiar smartphone, nggak perlu hardware tambahan |
 | **GPS Proximity** | Pastikan karyawan benar-benar di lokasi workshop, bukan di rumah nyantai |
 | **API Layer** | Decoupling — app dan backend bisa evolve terpisah |
-| **OpenClaw** | Brain yang orchestrate tudo — cron, script, notifikasi, database |
+| **OpenClaw** | Brain yang orchestrate semuanya — cron, script, notifikasi, database |
 | **Google Sheets** | Nggak perlu bikin database baru, HRD bisa akses langsung |
 | **Telegram** | Notifikasi real-time, karyawan & manager langsung dapat info |
 
@@ -164,7 +164,7 @@ GET /apisiapaabsen?tanggal=2026-04-04
 
 ### Step 1: Android App — Konsep GPS Proximity
 
-Bagian ini nggak akan kita kode dari nol karena UNO-ST udah punya app-nya. Tapi penting untuk paham konsepnya:
+Bagian ini nggak akan kita koding dari nol karena UNO-ST udah punya app-nya sendiri. Tapi penting buat paham konsepnya:
 
 ```
 📍 Geofencing Logic:
@@ -180,23 +180,23 @@ else:
     ⚠️ TOLAK dengan alasan
 ```
 
-**Key Features Android App:**
+**Fitur penting di Android App:**
 - Background GPS tracking (battery efficient)
 - Offline queue — kalau sinyal mati, simpen lokal dulu
-- Photo capture saat clock-in (buktivisual)
-- Accelerometer untuk deteksi kendaraan (biar nggak clock-in sambil ди jalan)
+- Photo capture saat clock-in (bukti visual)
+- Accelerometer untuk deteksi kendaraan (biar nggak clock-in sambil di jalan)
 
-Untuk setup GPS proximity di Android, bisa pakai library seperti:
+Untuk setup GPS proximity di Android, bisa pakai library kayak:
 - `geofenceApi` (Google Play Services)
 - `LocationManager` dengan `ProximityAlert`
 
-> 💡 **Tips dari Sumopod:** Kalau mau bangun Android app sendiri, gunakan Flutter — sekali kode, jalan di Android & iOS. Konsep GPS proximity sama persis.
+> 💡 **Tips dari Sumopod:** Kalau mau bikin Android app sendiri, pakai Flutter — sekali tulis kode, jalan di Android & iOS. Konsep GPS proximity-nya sama persis.
 
 ---
 
 ### Step 2: Integrasi API — Python Script
 
-Ini jantung OpenClaw automation. Script Python yang grab data dari API dan proses jadi sesuatu yang useful.
+Ini jantung dari automasi OpenClaw. Script Python yang nge-grab data dari API dan ngolahnya jadi sesuatu yang useful.
 
 ```python
 #!/usr/bin/env python3
@@ -268,7 +268,7 @@ if __name__ == "__main__":
     print(report)
 ```
 
-**Test manual:**
+**Cara tes manual:**
 ```bash
 python3 uno-attendance.py 2026-04-04
 ```
@@ -290,7 +290,7 @@ Output:
 
 ### Step 3: Database dengan Supabase (Opsional tapi Recommended)
 
-Kalau data cuma di Google Sheets, query & analitik terbatas. Untuk sistem yang lebih mature, pakai Supabase:
+Kalau datanya cuma numpuk di Google Sheets, query dan analitiknya terbatas. Buat sistem yang lebih mature, pakai Supabase:
 
 ```sql
 -- Buat tabel attendance
@@ -315,10 +315,10 @@ CREATE INDEX idx_attendance_employee ON attendance(employee_id);
 CREATE INDEX idx_attendance_late ON attendance(is_late) WHERE is_late = TRUE;
 ```
 
-**Kenapa JSONB untuk raw_data?**
-Simpan response asli dari API. Kalau mapping-nya salah di kemudian hari, kamu masih punya data mentahnya — bisa re-process tanpa minta karyawan clock-in ulang.
+**Kenapa JSONB buat raw_data?**
+Buat nyimpen response asli dari API. Kalau mapping-nya ternyata salah di kemudian hari, kamu masih punya data mentahnya — bisa di-proses ulang tanpa minta karyawan clock-in lagi.
 
-**Analitik Queries yang Powerful:**
+**Query Analitik yang Powerful:**
 
 ```sql
 -- Karyawan paling sering telat (30 hari terakhir)
@@ -350,13 +350,13 @@ GROUP BY employee_name
 ORDER BY on_time_pct DESC;
 ```
 
-> 📊 Konsep ini dibahas lebih detail di serie skills OpenClaw untuk data analitik di [Sumopod repository](https://github.com/fanani-radian/openclaw-sumopod) — там есть contoh-contoh query dan dashboard setup.
+> 📊 Konsep ini dibahas lebih detail di serie skills OpenClaw untuk data analitik di [Sumopod repository](https://github.com/fanani-radian/openclaw-sumopod) — di sana ada contoh-contoh query dan dashboard setup.
 
 ---
 
 ### Step 4: OpenClaw Automation — Cron + Script
 
-Di sinilah keajaiban terjadi. Setup cron job di OpenClaw supaya script jalan otomatis setiap weekday pagi:
+Di sinilah keajaiban terjadi. Setup cron job di OpenClaw biar script jalan otomatis tiap weekday pagi:
 
 ```mermaid
 flowchart LR
@@ -426,11 +426,11 @@ def push_to_sheets(records, sheet_id):
 
 ### Step 5: Dashboard & Visualisasi
 
-Data udah masuk Sheets atau Supabase — sekarang bikin jadi actionable.
+Data udah masuk Sheets atau Supabase — sekarang bikin jadi actionable dan visual.
 
-**Dashboard Metrics yang Penting:**
+**Metrik Dashboard yang Penting:**
 
-| Metric | Rumus | Interpretasi |
+| Metrik | Rumus | Interpretasi |
 |--------|-------|--------------|
 | **Attendance Rate** | (Hadir tepat waktu / Total hari kerja) × 100% | <80% = masalah serius |
 | **Late Count** | Jumlah karyawan telat per periode | Trend naik = perlu intervention |
@@ -474,7 +474,7 @@ Data udah masuk Sheets atau Supabase — sekarang bikin jadi actionable.
 
 ### Step 6: Sistem Reward & Reminder
 
-Bagian favorit karyawan — dan yang bikin absensi jadi positive experience, bukan repressive measure.
+Bagian favorit karyawan — dan yang bikin absensi jadi pengalaman yang positif, bukan alat pengawasan yang menyebalkan.
 
 **🎁 Reward System:**
 
@@ -524,7 +524,7 @@ def send_reminder(employee_id, reminder_type):
     telegram.send_message(employee_id, messages[reminder_type])
 ```
 
-**Reward Tiers:**
+**Level Reward:**
 
 | Points | Reward |
 |--------|--------|
@@ -538,7 +538,7 @@ def send_reminder(employee_id, reminder_type):
 
 ## 📊 Hasil & Metrics
 
-Setelah sistem ini jalan, inilah dampak nyatanya:
+Setelah sistem ini jalan beberapa bulan, ini dampak nyatanya:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -548,7 +548,7 @@ Setelah sistem ini jalan, inilah dampak nyatanya:
 ⏱️  EFFISIENSI
 ━━━━━━━━━━━━━━
 Sebelum : HRD keliling workshop cek satu-satu
-Sekarang: 自动, 0 intervention manual
+Sekarang: Otomatis, tanpa intervensi manual
 
 💰  BIAYA
 ━━━━━━━━━
@@ -612,7 +612,7 @@ if result.returncode != 0:
 
 ## 🎯 Kesimpulan
 
-Sistem absensi berbasis Android GPS yang dikelola OpenClaw — ini bukan sekadar "digitalisasi clock-in." Ini tentang mengubah absensi dari reactive paperwork menjadi proactive management tool.
+Sistem absensi berbasis Android GPS yang dikelola OpenClaw — ini bukan sekadar "digitalisasi clock-in." Ini soal mengubah absensi dari reaktif (nge-chase manual) jadi proactive management tool.
 
 **Yang kamu dapat:**
 - ✅ Data akurat real-time
@@ -620,11 +620,11 @@ Sistem absensi berbasis Android GPS yang dikelola OpenClaw — ini bukan sekadar
 - ✅ Dashboard analitik untuk manager
 - ✅ Sistem reward yang memotivasi
 - ✅ Setup cost jauh lebih murah dari fingerprint hardware
-- ✅ Maintenance minimal — OpenClaw handle tudo
+- ✅ Maintenance minimal — OpenClaw handle semuanya
 
 Karyawan jadi lebih sadar jam berapa mereka masuk. Manager jadi lebih cepat tau kalau ada masalah. HRD bisa fokus ke hal yang lebih penting.
 
-Untuk automation patterns lainnya dengan OpenClaw, explore tutorial-tutorial di [Sumopod repository](https://github.com/fanani-radian/openclaw-sumopod) kami — там ada lebih dari 60 tutorial mencakup multi-agent, cron automation, API integration, dashboard building, dan banyak lagi. Kalau ada pertanyaan atau mau diskusiuse case spesifik, langsung aja hubungi via Telegram.
+Untuk automation patterns lainnya dengan OpenClaw, explore tutorial-tutorial di [Sumopod repository](https://github.com/fanani-radian/openclaw-sumopod) kami — ada lebih dari 60 tutorial mencakup multi-agent, cron automation, API integration, dashboard building, dan banyak lagi. Kalau ada pertanyaan atau mau diskusi use case spesifik, langsung aja hubungi via Telegram.
 
 ---
 
