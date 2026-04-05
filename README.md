@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Tutorials-60-blue?style=for-the-badge" alt="60 Tutorials">
+  <img src="https://img.shields.io/badge/Tutorials-61-blue?style=for-the-badge" alt="60 Tutorials">
   <img src="https://img.shields.io/badge/Language-Bahasa_Indonesia-green?style=for-the-badge" alt="Indonesian">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT">
   <img src="https://img.shields.io/badge/OpenClaw-Community-orange?style=for-the-badge" alt="Community">
@@ -123,7 +123,15 @@ Hubungkan OpenClaw dengan layanan eksternal dan workflow automation.
 
 ---
 
-### 6. 🛠️ DevOps & Deployment
+### 6. 🛡️ Networking & Security
+
+VPN, firewall, keamanan jaringan, dan akses internet.
+
+- **[🔐 Tailscale VPN Exit Node di VPS — Bypass Blokiran & Secure Internet](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/tailscale-vpn-exit-node.md)** — Setup Tailscale sebagai exit node di VPS, bypass internet restriction, dan optimasi kecepatan koneksi
+
+---
+
+### 7. 🛠️ DevOps & Deployment
 
 Pipeline deployment, process management, dan infrastruktur.
 
@@ -134,7 +142,7 @@ Pipeline deployment, process management, dan infrastruktur.
 
 ---
 
-### 7. 🎨 Content & Social Media
+### 8. 🎨 Content & Social Media
 
 Otomasi konten, social media posting, dan creative tools.
 
@@ -145,7 +153,7 @@ Otomasi konten, social media posting, dan creative tools.
 
 ---
 
-### 8. 🌐 Web Development & Blogging
+### 9. 🌐 Web Development & Blogging
 
 Panduan membangun website dan blog dengan framework modern.
 
@@ -156,7 +164,7 @@ Panduan membangun website dan blog dengan framework modern.
 - **[🛡️ OpenClaw Ops — Self-Healing Gateway + Security Hardening](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-ops-self-healing-openclaw.md)** — Auto-repair gateway abis update, watchdog 24/7, security scanning, exec approval two-layer fix
 ---
 
-### 9. 🧩 Advanced Patterns
+### 10. 🧩 Advanced Patterns
 
 Pattern lanjutan: error handling, file management, dan optimasi arsitektur.
 
@@ -166,7 +174,7 @@ Pattern lanjutan: error handling, file management, dan optimasi arsitektur.
 
 ---
 
-### 10. 🐛 Troubleshooting
+### 11. 🐛 Troubleshooting
 
 Masalah umum, bug fixes, dan panduan troubleshooting.
 
@@ -176,7 +184,7 @@ Masalah umum, bug fixes, dan panduan troubleshooting.
 
 ---
 
-### 11. 🏭 Industrial & IoT
+### 12. 🏭 Industrial & IoT
 
 Penerapan OpenClaw di industri: monitoring, otomasi, dan smart building.
 
@@ -187,7 +195,7 @@ Penerapan OpenClaw di industri: monitoring, otomasi, dan smart building.
 
 ---
 
-### 12. 💼 Business
+### 13. 💼 Business
 
 Layanan profesional dan jasa setup.
 
