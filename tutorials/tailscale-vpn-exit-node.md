@@ -375,6 +375,25 @@ Some sites block datacenter IPs. Options:
 - Use a residential IP VPS (expensive)
 - Accept that some sites will not work through the exit node
 
+### Tailscale login/api blocked (403 Forbidden)
+
+This is a less common but critical issue. Some VPS providers have IP ranges blocked by Tailscale itself — usually providers with large blocks that get flagged for abuse/spam.
+
+**Check if your VPS is affected:**
+```bash
+curl -sI https://login.tailscale.com | head -1
+curl -sI https://api.tailscale.com | head -1
+```
+If either returns `403 Forbidden`, your VPS IP is blocked.
+
+**Solutions:**
+1. **Try a different region** — same provider, different datacenter (e.g., Singapore → Tokyo)
+2. **Switch provider** — if all regions are blocked
+3. **Use Tailscale auth keys** — if only login is blocked but API works, generate an auth key from another device at [Settings > Keys](https://login.tailscale.com/admin/settings/keys), then on the VPS: `tailscale up --authkey=tskey-auth-xxxxx`
+4. **Use WireGuard directly** — if Tailscale is completely blocked, skip it and install WireGuard manually. More setup work but no dependency on Tailscale servers
+
+Note: This varies by provider and even by region. Our SumoPod VPS (used in this tutorial) had no issues, but DigitalOcean Singapore has been reported as blocked.
+
 ## Getting a VPS
 
 Need a VPS? We use [SumoPod](https://sumopod.com) - affordable, fast, and reliable.
