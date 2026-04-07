@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Tutorials-61-blue?style=for-the-badge" alt="60 Tutorials">
+  <img src="https://img.shields.io/badge/Tutorials-62-blue?style=for-the-badge" alt="60 Tutorials">
   <img src="https://img.shields.io/badge/Language-Bahasa_Indonesia-green?style=for-the-badge" alt="Indonesian">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT">
   <img src="https://img.shields.io/badge/OpenClaw-Community-orange?style=for-the-badge" alt="Community">
@@ -124,6 +124,11 @@ Hubungkan OpenClaw dengan layanan eksternal dan workflow automation.
 ---
 
 ### 6. 🛡️ Networking & Security
+
+VPN, firewall, keamanan jaringan, dan akses internet.
+
+- **[🔐 Self-Hosted Bookmark Manager dengan Custom Branding via Nginx](https://github.com/fanani-radian/openclaw-sumopod/blob/main/docs/tutorials/self-hosted-bookmark-manager.md)** — Setup Karakeep bookmark manager self-hosted dengan Docker, Nginx reverse proxy, dan custom branding via sub_filter tanpa edit source code
+
 
 VPN, firewall, keamanan jaringan, dan akses internet.
 
