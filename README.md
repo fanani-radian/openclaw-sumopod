@@ -173,6 +173,7 @@ Panduan membangun website dan blog dengan framework modern.
 
 Pattern lanjutan: error handling, file management, dan optimasi arsitektur.
 
+- **[File Search Knowledge Base — Karpathy Style](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/file-search-knowledge-base-karpathy-style.md)** — AI baca dokumen legal, jawab pertanyaan langsung dari 26 file PDF dengan hybrid RAG + regex extraction (100ms untuk nama orang, 3s untuk opinion)
 - **[Dashboard Widget Error Boundary Pattern untuk Next.js](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/dashboard-error-boundary-nextjs.md)** — Satu widget error, dashboard tetap aman dengan graceful fallback
 - **[File Manager dengan Google Docs-Style Search: Highlight, Navigate, Copy](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/file-manager-search-highlight-nextjs.md)** — Pencarian konten file dengan highlight aktif dan navigasi keyboard
 - **[Smart File Butler](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/smart-file-butler.md)** — Auto-organize folder Downloads dengan AI
