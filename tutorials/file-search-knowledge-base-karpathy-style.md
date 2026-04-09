@@ -1,116 +1,104 @@
-# File Search Knowledge Base — Karpathy Style
+# Building a File Search Knowledge Base — Karpathy Style
 
-![AI Legal Assistant — File Search KB](https://raw.githubusercontent.com/fanani-radian/openclaw-sumopod/main/images/tutorials/karpathy-file-search-kb.jpg)
+![File Search KB](https://raw.githubusercontent.com/fanani-radian/openclaw-sumopod/main/images/tutorials/karpathy-file-search-kb.jpg)
 
-> AI yang bisa baca dokumen legal perusahaanmu, jawab pertanyaan kayak ngobrol sama asisten hukum. Semua offline, semua lokal, scalable.
+> Build an AI assistant that reads your company's legal documents and answers questions like a human legal assistant. Fully offline, local-first, and scalable.
 
-## Overview
+---
 
-Apa yang kamu butuhkan kalau CEO bertanya "Siapa direktur PT UNO Solusi Teknik?" — dan kamu harus jawab dalam 2 detik dari 26 dokumen legal yang tersebar di Google Drive?
+**Tags:** `openclaw` `knowledge-base` `rag` `legal-documents` `ai-assistant` `regex` `llm` `karpathy`
 
-Solusinya: **File Search Knowledge Base** — pola yang dikembangin Andrej Karpathy (OpenAI cofounder). Idenya simpel: simpan dokumen di lokal, loading cepat, cari yang paling relevan, kasih ke LLM.
+## Summary
+
+When someone asks "Who are the directors of Acme Corp?" — you need to answer in 2 seconds across 26 legal documents scattered across cloud storage.
+
+The solution: a **File Search Knowledge Base** inspired by Andrej Karpathy's approach. The idea is simple: cache documents locally for fast loading, find the most relevant ones, and pass them to an LLM. Use regex for structured data (names, tax IDs) for sub-100ms responses, and fall back to RAG + LLM only when reasoning is needed.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
     subgraph Sources
-        A[Google Drive<br/>Dokumen Legal] 
-        B[Local Cache<br/>26 PDF Files]
+        A[Cloud Storage<br/>Legal Documents]
+        B[Local Cache<br/>PDF + Text Files]
         C[Wiki KB<br/>Accumulated Knowledge]
     end
-    
+
     subgraph Processing
-        D[Query → Regex Extract<br/>Nama, NPWP, Alamat]
+        D[Query - Regex Extract<br/>Names, Tax IDs, Addresses]
         E[RAG Scoring<br/>Metadata + Full Text]
-        F[LLM Answer<br/>Gemini 2.0 Flash]
+        F[LLM Answer<br/>GPT-4 / Gemini]
     end
-    
+
     subgraph Output
-        G[Jawaban + Sumber<br/>Link Drive]
+        G[Answer + Sources<br/>Document Links]
     end
-    
-    A -->|Sync via gog CLI<br/>pdftotext| B
+
+    A -->|Sync via CLI<br/>pdftotext| B
     B --> D
     B --> E
     C --> E
-    D -->|Direct Answer<br/>for names/NPWP| G
+    D -->|Direct Answer<br/>for names/IDs| G
     E -->|Complex queries<br/>need reasoning| F
     F --> G
 ```
 
-**Kenapa 2 path?**
+**Why two paths?**
 
 | Query Type | Method | Speed |
 |---|---|---|
-| Nama orang, NPWP, NIB | Regex langsung | ~100ms |
-| Alamat, legal opinion, ringkasan | RAG + LLM | ~3-5s |
+| Person names, tax IDs, registration numbers | Regex directly | ~100ms |
+| Addresses, legal opinions, summaries | RAG + LLM | ~3-5s |
 
 ## Step 1 — Folder Structure
 
 ```
 /data/legal-kb/
-├── index.json              # Metadata semua dokumen
+├── index.json              # Metadata for all documents
 ├── cache/                  # PDF + text extraction
-│   ├── RFM_-_Akta_Pendirian.txt
-│   ├── UST_-_Akta_Pendirian.txt
+│   ├── ACME_-_Articles_of_Incorporation.txt
+│   ├── BETA_-_Articles_of_Incorporation.txt
 │   └── ...
 └── wiki/                   # Auto-saved Q&A
-    ├── siapa_direktur_rfm.md
-    └── npwp_semua_perusahaan.md
+    ├── directors_acme.md
+    └── tax_ids_all_companies.md
 ```
 
-`index.json` menyimpan metadata dokumen:
+`index.json` stores document metadata:
 
 ```json
 [
   {
-    "companyCode": "RFM",
-    "namaDokumen": "Akta Pendirian CV Radian Fokus Mandiri",
-    "jenisDokumen": "Akta",
-    "linkDrive": "https://drive.google.com/file/d/...",
-    "localTxt": "RFM_-_Akta_Pendirian.txt",
-    "perusahaan": "CV Radian Fokus Mandiri"
+    "companyCode": "ACME",
+    "documentName": "Articles of Incorporation - Acme Corp",
+    "documentType": "Articles",
+    "sourceLink": "https://drive.google.com/file/d/EXAMPLE",
+    "localTxt": "ACME_-_Articles_of_Incorporation.txt",
+    "company": "Acme Corp"
   }
 ]
 ```
 
 ## Step 2 — Download & Extract Text
 
-Pakai `gog` CLI untuk download dari Google Drive, `pdftotext` buat extract text:
+Use your preferred CLI tool to download from cloud storage, then `pdftotext` for text extraction:
 
 ```bash
-# Download dari Google Drive
-gog drive download FILE_ID --output /tmp/akta.pdf
+# Download from cloud storage
+cloud-cli download FILE_ID --output /tmp/document.pdf
 
-# Extract text dari PDF
-pdftotext -layout /tmp/akta.pdf /tmp/akta.txt
-
-# Baca text
-cat /tmp/akta.txt
-```
-
-Hasilnya kayak gini (udah di-clean dari OCR noise):
-
-```
-AKTA PENDIRIAN
-CV RADIAN FOKUS MANDIRI
-Nomor: 04
-
-Nyonya HERLINA KAHMAL, berikutnya disebut sebagai Pihak Pertama,
-Nyonya HERDIYAN KAHMAL, berikutnya disebut sebagai Pihak Kedua,
-...
+# Extract text from PDF
+pdftotext -layout /tmp/document.pdf /tmp/document.txt
 ```
 
 ## Step 3 — Regex Extraction (The Karpathy Trick)
 
-Ini kunci nya. Untuk data terstruktur (nama, nomor), kita nggak perlu LLM — regex udah cukup dan 10x lebih cepat.
+For structured data (names, numbers), regex is sufficient and 10x faster than LLM.
 
 ```typescript
-// Noise words yang bukan nama orang
 const NOISE_WORDS = new Set([
-  'JENDERAL', 'DIREKTUR', 'ADMINISTRASI', 'HUKUM', 'UMUM',
-  'KOMISARIS', 'NOTARIS', 'PAJAK', 'INDONESIA'
+  'GENERAL', 'DIRECTOR', 'ADMINISTRATION', 'LEGAL', 'PUBLIC',
+  'COMMISSIONER', 'NOTARY', 'TAX', 'CORPORATION'
 ]);
 
 function isRealName(name: string): boolean {
@@ -119,167 +107,144 @@ function isRealName(name: string): boolean {
   return noiseCount === 0;
 }
 
-// Extract nama dari text
 function extractNames(text: string): string[] {
   const names = new Set<string>();
-  
-  // Pattern 1: Nyonya/Tuan HERLINA KAHMAL
-  const p1 = /(?:Nyonya|Nona|Tuan)\s+([A-Z][A-Za-z.\s]{2,35}?)(?:,|\n|Warga)/g;
+
+  // Pattern 1: Ms./Mr. Jane Smith followed by comma/newline
+  const p1 = /(?:Ms\.|Mr\.|Mrs\.)\s+([A-Z][A-Za-z.\s]{2,35}?)(?:,|\n)/g;
   let m;
   while ((m = p1.exec(text)) !== null) {
     const clean = m[1].trim();
     if (clean.length > 2 && isRealName(clean)) names.add(clean);
   }
-  
-  // Pattern 2: MARTHA JUNITA PASARIBU DIREKTUR
-  const p2 = /([A-Z][A-Z.\s]{5,35}?)\s+DIREKTUR/g;
+
+  // Pattern 2: JANE SMITH DIRECTOR
+  const p2 = /([A-Z][A-Z.\s]{5,35}?)\s+DIRECTOR/g;
   while ((m = p2.exec(text)) !== null) {
     const clean = m[1].trim();
     if (clean.length > 5 && isRealName(clean)) names.add(clean);
   }
-  
+
   return [...names];
 }
 ```
 
-**Kenapa nggak pakai LLM aja?**
-- OCR di PDF menghasilkan text yang garbled: `H\x00E\x01R\x00L\x00I\x00N\x00A`
-- Regex lebih robust terhadap noise
-- Response time: **100ms** vs **3-5 detik**
+**Why not just use LLM for everything?**
+- OCR from PDFs produces garbled text with null bytes
+- Regex is more robust against noise
+- Response time: **100ms** vs **3-5 seconds**
 
 ## Step 4 — RAG Scoring (Full Text)
 
-Untuk query kompleks, scoring dokumen dari 2 faktor:
+For complex queries, score documents based on metadata and full text content:
 
 ```typescript
 function scoreRelevance(query: string, entry: KBEntry, fullText: string): number {
   const q = query.toLowerCase();
-  
-  // 1. Metadata match (filename, company code, doc type)
-  const meta = [entry.namaDokumen, entry.companyCode, entry.jenisDokumen].join(' ').toLowerCase();
+  const meta = [entry.documentName, entry.companyCode, entry.documentType].join(' ').toLowerCase();
   let score = 0;
   for (const word of q.split(/\s+/).filter(w => w.length > 1)) {
     if (meta.includes(word)) score += 5;      // Metadata match: +5
     if (fullText.includes(word)) score += 3;  // Full text match: +3
   }
-  
-  // 2. Bonus kalau query mention company code
-  const queryCompany = q.split(/\s+/).find(w => ['rfm','ust','rfs','reforel'].includes(w));
+
+  // Bonus if query mentions a company code
+  const queryCompany = q.split(/\s+/).find(w =>
+    ['acme', 'beta', 'gamma', 'delta'].includes(w)
+  );
   if (queryCompany?.toUpperCase() === entry.companyCode) score += 20;
-  
+
   return score;
 }
 ```
 
-Pakai **full text**, bukan cuma metadata. Karena alamat, nomor telepon, NPWP sering muncul di dalam dokumen, bukan di filename.
+Use **full text**, not just metadata. Addresses, phone numbers, and tax IDs often appear inside the document body.
 
 ## Step 5 — Hybrid Answer Assembly
 
 ```typescript
 async function answerQuery(query: string, index: KBEntry[]) {
-  
-  // 1. Coba regex direct answer dulu (untuk nama/NPWP/NIB)
+  // 1. Try regex direct answer first
   const directAnswer = tryDirectAnswer(query, index);
   if (directAnswer) return { answer: directAnswer, sources: [] };
-  
-  // 2. Scoring + rank dokumen
+
+  // 2. Score and rank documents
   const scored = index.map(e => ({
     entry: e,
     score: scoreRelevance(query, e, readCachedText(e.localTxt))
   })).filter(d => d.score > 0)
      .sort((a, b) => b.score - a.score);
-  
-  // 3. Baca top 5 dokumen
-  const context = scored.slice(0, 5).map(s => readCachedText(s.entry.localTxt)).join('\n---\n');
-  
-  // 4. Kirim ke Gemini
-  const answer = await callGemini(query, context);
-  return { answer, sources: scored.slice(0, 3).map(s => s.entry.linkDrive) };
+
+  // 3. Read top 5 documents as context
+  const context = scored.slice(0, 5)
+    .map(s => readCachedText(s.entry.localTxt))
+    .join('\n---\n');
+
+  // 4. Send to LLM
+  const answer = await callLLM(query, context);
+  return {
+    answer,
+    sources: scored.slice(0, 3).map(s => s.entry.sourceLink)
+  };
 }
 ```
 
-## Step 6 — Sync dari Google Drive
+## Step 6 — Sync from Cloud Storage
 
 ```bash
 #!/bin/bash
-# sync-kb.sh — sync semua dokumen dari Google Drive
+# sync-kb.sh — sync all documents from cloud storage
 
-GOG_ACCOUNT="fanani@cvrfm.com"
-export GOG_KEYRING_PASSWORD="..."
-
-# Ambil daftar file dari Google Sheets (metadata)
-FILE_LIST=$(curl -s "https://sheets.googleapis.com/.../values/A:Z" | jq -r '.rows[]')
+FILE_LIST=$(cat config/document-registry.json | jq -c '.[]')
 
 for row in $FILE_LIST; do
   FILE_ID=$(echo $row | jq -r '.fileId')
   COMPANY=$(echo $row | jq -r '.company')
   DOC_NAME=$(echo $row | jq -r '.docName')
-  
-  # Download + extract
-  gog drive download $FILE_ID --output "/tmp/${COMPANY}_${DOC_NAME}.pdf"
+
+  cloud-cli download "$FILE_ID" --output "/tmp/${COMPANY}_${DOC_NAME}.pdf"
   pdftotext -layout "/tmp/${COMPANY}_${DOC_NAME}.pdf" \
     "/data/legal-kb/cache/${COMPANY}_${DOC_NAME}.txt"
-  
+
   echo "Synced: $COMPANY - $DOC_NAME"
 done
 ```
 
-Jadwalkan dengan cron:
-
 ```bash
-# Every Sunday at 3 AM
-0 3 * * 0 /root/scripts/sync-kb.sh >> /var/log/sync-kb.log 2>&1
+# Cron: Every Sunday at 3 AM
+0 3 * * 0 /path/to/sync-kb.sh >> /var/log/sync-kb.log 2>&1
 ```
 
 ## Results
 
 ```
-Query: "Siapa direktur RFM?"
-Answer: RFM - CV Radian Fokus Mandiri: HERLINA KAHMAL, HERDIYAN KAHMAL
+Query: "Who are the directors of Acme Corp?"
+Answer: Acme Corp directors: Jane Smith, John Doe
 Speed: ~150ms (regex only)
 
-Query: "Alamat kantor UST?"
-Answer: Gedung Graha.Paramita Lt. 8, Jl. Jend. Sudirman No. 28, Jakarta Selatan
+Query: "What is the registered address of Beta Inc?"
+Answer: 123 Business Park, Suite 8, Jl. Main Street No. 28, Jakarta
 Speed: ~3s (RAG + LLM)
 ```
 
 ## Why This Works
 
-1. **Offline-first**: Semua dokumen di lokal, nggak tergantung dari internet
-2. **Fast**: Regex untuk data terstruktur, LLM cuma untuk yang butuh reasoning
-3. **Scalable**: Tambah dokumen = edit `index.json`, nggak perlu ubah code
-4. **Accumulating**: Wiki auto-saves jawaban bagus, knowledge base grown over time
+1. **Offline-first**: All documents cached locally, no internet dependency at query time
+2. **Fast**: Regex for structured data, LLM only for queries that need reasoning
+3. **Scalable**: Add documents by editing `index.json`, no code changes needed
+4. **Accumulating**: Wiki auto-saves good answers, knowledge base grows over time
 
-## Files
+## Project Files
 
 | File | Purpose |
 |------|---------|
-| `sync-kb.py` | Download dari Drive, extract text, update index |
-| `route.ts` | API route — regex + RAG + Gemini answer |
-| `index.json` | Metadata semua dokumen |
-| `cache/*.txt` | Text extraction dari PDF |
-| `wiki/*.md` | Auto-saved Q&A |
+| `sync-kb.py` | Download from cloud, extract text, update index |
+| `route.ts` | API route — regex + RAG + LLM answer |
+| `index.json` | Document metadata registry |
+| `cache/*.txt` | Text extraction from PDF |
+| `wiki/*.md` | Auto-saved Q&A knowledge |
 
-## Setup di VPS Kamu
-
-```bash
-# 1. Clone repo
-cd /var/www/radit-dashboard
-mkdir -p data/legal-kb/cache data/legal-kb/wiki
-
-# 2. Buat index.json (sesuaikan dengan dokumen kamu)
-# Lihat contoh di atas
-
-# 3. Jalankan sync
-python3 sync-kb.py
-
-# 4. Test
-curl -X POST http://localhost:3002/api/legal-docs-chat \
-  -H "Content-Type: application/json" \
-  -d '{"messages":[{"role":"user","content":"Siapa direktur?"}]}'
-```
-
-## Diagram Alur Lengkap
+## Complete Flow Diagram
 
 ```mermaid
 sequenceDiagram
@@ -289,17 +254,17 @@ sequenceDiagram
     participant Cache as Local Cache<br/>(*.txt files)
     participant Regex as Regex Extractor
     participant RAG as RAG Scorer
-    participant LLM as Gemini 2.0 Flash
-    
-    User->>API: "Siapa direktur RFM?"
-    
+    participant LLM as LLM (GPT-4 / Gemini)
+
+    User->>API: "Who are the directors of Acme?"
+
     API->>KB: Load index.json
     API->>Regex: Extract names from all docs
-    
-    alt Query: Nama/NPWP/NIB
-        Regex-->>API: HERDIYAN KAHMAL, HERLINA KAHMAL
+
+    alt Query: Names / Tax IDs
+        Regex-->>API: Jane Smith, John Doe
         API-->>User: Direct answer (100ms)
-    else Query: Alamat/Opinion
+    else Query: Address / Opinion
         API->>Cache: Read top 5 scored docs
         API->>RAG: Score by relevance
         RAG-->>API: Ranked docs
@@ -311,4 +276,4 @@ sequenceDiagram
 
 ---
 
-*Tutorial ini dibuat otomatis dari development session Radit — 8 April 2026*
+*Inspired by Andrej Karpathy's file-search pattern. Built with OpenClaw — April 2026*
