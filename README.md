@@ -15,6 +15,12 @@
 
 ---
 
+## Recently Added
+
+- 💼 **[Case Study: fanani.co SEO Audit Done](use_case/auto/case-study-fananico-seo-audit-done.md)** — *372 words, diagram*
+- 💼 **[How We Important Lessons Learned](use_case/auto/how-we-important-lessons-learned.md)** — *362 words, diagram*
+
+
 ## 🏗️ OpenClaw Architecture
 
 ```mermaid
