@@ -13,6 +13,8 @@
   <b>Sumopod Server</b> — Komunitas pengguna OpenClaw di Indonesia 🌏
 </p>
 
+[![Star History Chart](https://api.star-history.com/svg?repos=fanani-radian/openclaw-sumopod&type=Timeline)](https://star-history.com/#fanani-radian/openclaw-sumopod&Timeline)
+
 ---
 
 ## Recently Added
