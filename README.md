@@ -135,6 +135,8 @@ Hubungkan OpenClaw dengan layanan eksternal dan workflow automation.
 
 VPN, firewall, keamanan jaringan, dan akses internet.
 
+- **[🔒 WordPress Security Scanner — Auto-Deteksi & Bersihkan Malware](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/wordpress-security-scanner-skill.md)** — Scanner otomatis untuk WordPress: deteksi backdoor, redirect, SEO spam injection, dan cleanup otomatis
+
 - **[🔐 Self-Hosted Bookmark Manager dengan Custom Branding via Nginx](https://github.com/fanani-radian/openclaw-sumopod/blob/main/docs/tutorials/self-hosted-bookmark-manager.md)** — Setup Karakeep bookmark manager self-hosted dengan Docker, Nginx reverse proxy, dan custom branding via sub_filter tanpa edit source code
 
 
