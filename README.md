@@ -19,6 +19,7 @@
 
 ## Recently Added
 
+- 🧹 **[OpenClaw Session Maintenance Guide](tutorials/openclaw-session-maintenance.md)** — *8 maintenance methods, verified against official docs*
 - 📱 **[WhatsApp Customer Care Bot for Indonesian SMEs](tutorials/whatsapp-customer-care-umkm.md)** — *2500+ words, Mermaid diagrams, auto-reply setup*
 - 💼 **[Case Study: fanani.co SEO Audit Done](use_case/auto/case-study-fananico-seo-audit-done.md)** — *372 words, diagram*
 - 💼 **[How We Important Lessons Learned](use_case/auto/how-we-important-lessons-learned.md)** — *362 words, diagram*
