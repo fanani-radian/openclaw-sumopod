@@ -23,6 +23,7 @@
 - 🤖 **[OpenClaw Browser Control Automation](tutorials/openclaw-browser-automation.md)** — *Let your AI assistant control a browser, take screenshots, fill forms, and scrape data*
 - ⏰ **[OpenClaw Cron Job Automation](tutorials/openclaw-cron-job-automation.md)** — *Schedule tasks, reports, and alerts that run while you sleep*
 - 🔀 **[OpenClaw Multi-Account Routing](tutorials/openclaw-multi-account-routing.md)** — *Run multiple AI personas on multiple subscription accounts without paying for more*
+- 🔧 **[OpenClaw Troubleshooting Guide](tutorials/openclaw-troubleshooting-guide.md)** — *Fix gateway crashes, channel failures, model errors, memory issues, and more*
 - 🚀 **[OpenClaw Channel Integration Guide](tutorials/openclaw-channel-integration-guide.md)** — *Connect Telegram, WhatsApp, and Discord in one guide*
 - 🚀 **[OpenClaw Gateway Setup From Scratch](tutorials/openclaw-gateway-setup-from-scratch.md)** — *Install, configure, deploy to VPS, connect Telegram in 10 minutes*
 - 🛡️ **[OpenClaw Security Hardening Checklist](tutorials/openclaw-security-hardening.md)** — *15-step checklist, VPS hardening, verified against official docs*
