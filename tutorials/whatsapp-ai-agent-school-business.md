@@ -122,7 +122,7 @@ Before you begin, ensure you have:
 - **Google Cloud credentials** (for Sheets integration)
 - A database with your student/business data
 
-For the VPS, we recommend using the OpenClaw-optimized setup on our partner platform. Get started with this affiliate link: [DigitalOcean VPS](https://m.do.co/c/your-affiliate-link) with $200 credit.
+For the VPS, we recommend using the OpenClaw-optimized setup on our partner platform. Get started with this affiliate link: [blog.fanani.co/sumopod VPS](https://m.do.co/c/your-affiliate-link) with $200 credit.
 
 ---
 
