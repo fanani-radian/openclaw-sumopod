@@ -19,6 +19,7 @@
 
 ## Recently Added
 
+- 🚀 **[WhatsApp AI Agent for School & Business](tutorials/whatsapp-ai-agent-school-business.md)** — *Automate parent notifications, attendance alerts, hotel concierge, retail stock, and quotation generation*
 - 🚀 **[Token-Efficient AI Agents: Context Tiering & Lean Loading](tutorials/token-efficient-ai-agent-context-tiering.md)** — *Cut 65% token costs, real benchmark data, 4-tier retrieval model*
 - 🚀 **[OpenClaw MCP Server Setup](tutorials/openclaw-mcp-server-setup.md)** — *Connect Google Workspace, Notion, GitHub, Slack, and 100+ tools*
 - 🤖 **[OpenClaw Browser Control Automation](tutorials/openclaw-browser-automation.md)** — *Let your AI assistant control a browser, take screenshots, fill forms, and scrape data*
