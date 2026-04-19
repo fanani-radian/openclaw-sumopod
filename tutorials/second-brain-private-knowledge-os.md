@@ -366,8 +366,8 @@ flowchart LR
     PIPE --> RETR[Retrieved Docs]
     PIPE --> ANS[Generated Answer]
 
-    RETR --> R@K[Recall @ K]
-    RETR --> P@K[Precision @ K]
+    RETR --> RAK[Recall @ K]
+    RETR --> PAK[Precision @ K]
     RETR --> MRR[MRR]
     ANS --> FAITH[Faithfulness]
 ```
