@@ -19,6 +19,7 @@
 
 ## Recently Added
 
+- 🧠 **[Second Brain — Private Knowledge OS](tutorials/second-brain-private-knowledge-os.md)** — *10-layer RAG pipeline with hybrid retrieval, cross-encoder reranking, security guardrails, and evaluation harness*
 - 🚀 **[WhatsApp AI Agent for School & Business](tutorials/whatsapp-ai-agent-school-business.md)** — *Automate parent notifications, attendance alerts, hotel concierge, retail stock, and quotation generation*
 - 🚀 **[Token-Efficient AI Agents: Context Tiering & Lean Loading](tutorials/token-efficient-ai-agent-context-tiering.md)** — *Cut 65% token costs, real benchmark data, 4-tier retrieval model*
 - 🚀 **[OpenClaw MCP Server Setup](tutorials/openclaw-mcp-server-setup.md)** — *Connect Google Workspace, Notion, GitHub, Slack, and 100+ tools*
