@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Tutorials-63-blue?style=for-the-badge" alt="63 Tutorials">
+  <img src="https://img.shields.io/badge/Tutorials-64-blue?style=for-the-badge" alt="64 Tutorials">
   <img src="https://img.shields.io/badge/Language-Bahasa_Indonesia-green?style=for-the-badge" alt="Indonesian">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT">
   <img src="https://img.shields.io/badge/OpenClaw-Community-orange?style=for-the-badge" alt="Community">
@@ -19,6 +19,7 @@
 
 ## Recently Added
 
+- 📧 **[Gmail AI Draft Workflow That Writes in Your Real Voice](tutorials/gmail-ai-draft-real-voice.md)** — *Filter inbox noise, read full thread context, match real sent-mail tone, create in-thread drafts, and alert Telegram after every draft*
 - 🚀 **[QwenPaw on Sumopod + Growth Circle Custom Provider](tutorials/qwenpaw-sumopod-growth-circle.md)** — *Deploy QwenPaw from Sumopod Services, add Growth Circle as an OpenAI-compatible provider, wire free models, and connect Telegram fast*
 - 🧠 **[Second Brain — Private Knowledge OS](tutorials/second-brain-private-knowledge-os.md)** — *10-layer RAG pipeline with hybrid retrieval, cross-encoder reranking, security guardrails, and evaluation harness*
 - 🚀 **[WhatsApp AI Agent for School & Business](tutorials/whatsapp-ai-agent-school-business.md)** — *Automate parent notifications, attendance alerts, hotel concierge, retail stock, and quotation generation*
@@ -115,6 +116,7 @@ Bangun sistem multi-agent dengan spesialisasi dan shared memory.
 
 Otomasi Gmail, triage email, dan komunikasi WhatsApp.
 
+- **[📧 Gmail AI Draft Workflow That Writes in Your Real Voice](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/gmail-ai-draft-real-voice.md)** — Filter inbox noise, read thread context, match real sent-mail tone, create safe drafts, and send Telegram review alerts
 - **[📧 Gmail Auto-Label & Smart Triage Tutorial](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/gmail-auto-label-triage.md)** — Auto-classify email dengan 7 label berbasis AI
 - **[📧 Smart Email Forward with PDF Data Extraction](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/smart-email-forward-pdf.md)** — Forward email otomatis + extract data dari PDF lampiran
 - **[Smart Email Triage](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/smart-email-triage.md)** — AI-powered inbox management: auto-sort, prioritas, dan draft respons
