@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Tutorials-62-blue?style=for-the-badge" alt="60 Tutorials">
+  <img src="https://img.shields.io/badge/Tutorials-63-blue?style=for-the-badge" alt="63 Tutorials">
   <img src="https://img.shields.io/badge/Language-Bahasa_Indonesia-green?style=for-the-badge" alt="Indonesian">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT">
   <img src="https://img.shields.io/badge/OpenClaw-Community-orange?style=for-the-badge" alt="Community">
@@ -19,6 +19,7 @@
 
 ## Recently Added
 
+- 🚀 **[QwenPaw on Sumopod + Growth Circle Custom Provider](tutorials/qwenpaw-sumopod-growth-circle.md)** — *Deploy QwenPaw from Sumopod Services, add Growth Circle as an OpenAI-compatible provider, wire free models, and connect Telegram fast*
 - 🧠 **[Second Brain — Private Knowledge OS](tutorials/second-brain-private-knowledge-os.md)** — *10-layer RAG pipeline with hybrid retrieval, cross-encoder reranking, security guardrails, and evaluation harness*
 - 🚀 **[WhatsApp AI Agent for School & Business](tutorials/whatsapp-ai-agent-school-business.md)** — *Automate parent notifications, attendance alerts, hotel concierge, retail stock, and quotation generation*
 - 🚀 **[Token-Efficient AI Agents: Context Tiering & Lean Loading](tutorials/token-efficient-ai-agent-context-tiering.md)** — *Cut 65% token costs, real benchmark data, 4-tier retrieval model*
@@ -92,6 +93,7 @@ Kumpulan 37 tutorial praktis untuk membangun automation dengan OpenClaw, dikelom
 
 Panduan instalasi, setup awal, dan konfigurasi dasar.
 
+- **[QwenPaw on Sumopod + Growth Circle Custom Provider](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/qwenpaw-sumopod-growth-circle.md)** — Deploy QwenPaw tanpa setup VPS dari nol, tambah custom provider Growth Circle, dan sambungkan Telegram
 - **[OpenClaw + Alibaba Cloud Coding Plan: 8 Model AI dengan 1 API Key (Mulai $5/bulan)](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-alibaba-coding-plan.md)** — Setup hemat akses 8 model AI frontier lewat satu API key
 - **[⚠️ JANGAN Update ke OpenClaw 2026.3.7 - 2026.3.10 — Kimi 2.5 Tool Calling BROKEN!](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/avoid-openclaw-2026-3-7-kimi-bug.md)** — Guide versi yang bermasalah dan solusi upgrade ke 2026.3.11
 - **[Upgrade OpenClaw ke 2026.3.31 + Fix Exec Approvals](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/upgrade-openclaw-2026-3-31.md)** — Panduan upgrade dan fix exec approval yang lebih ketat
