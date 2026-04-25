@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Tutorials-64-blue?style=for-the-badge" alt="64 Tutorials">
+  <img src="https://img.shields.io/badge/Tutorials-65-blue?style=for-the-badge" alt="65 Tutorials">
   <img src="https://img.shields.io/badge/Language-Bahasa_Indonesia-green?style=for-the-badge" alt="Indonesian">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT">
   <img src="https://img.shields.io/badge/OpenClaw-Community-orange?style=for-the-badge" alt="Community">
@@ -19,6 +19,7 @@
 
 ## Recently Added
 
+- ☁️ **[How to Use `google/skills` as a Practical Skill Library for OpenClaw](tutorials/google-skills-openclaw-management.md)** — *Review the Google skill repo, adapt only the relevant parts, and turn upstream procedures into clean OpenClaw-native tutorials and skills*
 - 📧 **[Gmail AI Draft Workflow That Writes in Your Real Voice](tutorials/gmail-ai-draft-real-voice.md)** — *Filter inbox noise, read full thread context, match real sent-mail tone, create in-thread drafts, and alert Telegram after every draft*
 - 🚀 **[QwenPaw on Sumopod + Growth Circle Custom Provider](tutorials/qwenpaw-sumopod-growth-circle.md)** — *Deploy QwenPaw from Sumopod Services, add Growth Circle as an OpenAI-compatible provider, wire free models, and connect Telegram fast*
 - 🧠 **[Second Brain — Private Knowledge OS](tutorials/second-brain-private-knowledge-os.md)** — *10-layer RAG pipeline with hybrid retrieval, cross-encoder reranking, security guardrails, and evaluation harness*
@@ -108,6 +109,7 @@ Bangun sistem multi-agent dengan spesialisasi dan shared memory.
 - **[Multi-Agent System dengan OpenClaw](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-multi-agent-system.md)** — Setup multi-agent dengan spesialisasi, context, dan memory terpisah
 - **[🧠 Multi-Agent Shared Memory System](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/multi-agent-shared-memory.md)** — Multiple agent sharing knowledge lewat GitHub sync
 - **[🏗️ Membangun AI Agent Skill Ecosystem dari 15+ GitHub Repos](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-skill-ecosystem.md)** — Analisis 500K+ stars repos, 16 composite skills, SHARP framework, 324 total skills
+- **[☁️ Mengelola `google/skills` untuk OpenClaw dengan Cara yang Waras](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/google-skills-openclaw-management.md)** — Cara review repo skill dari Google, pilih yang relevan, adapt ke workflow OpenClaw, dan maintain versi lokal tanpa copy-paste buta
 - **[🔄 OpenClaw 2026.4.2 — Task Flow Kembali, YOLO Mode, Breaking Changes](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-2026-4-2.md)** — Review update: Task Flow restoration, managed/mirrored sync, YOLO exec default, security overhaul 50+ fixes
 
 ---
