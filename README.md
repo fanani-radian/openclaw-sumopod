@@ -19,6 +19,7 @@
 
 ## Recently Added
 
+- 🧹 **[How to Back Up an OpenClaw VM to GitHub, Reset the Server, and Restore Everything into One Clean Workspace](tutorials/openclaw-vm-backup-reset-restore.md)** — *Audit a messy OpenClaw VM, preserve identity and memory, push the right files to GitHub, reset the VPS, and restore into a cleaner structure*
 - ☁️ **[How to Use `google/skills` as a Practical Skill Library for OpenClaw](tutorials/google-skills-openclaw-management.md)** — *Review the Google skill repo, adapt only the relevant parts, and turn upstream procedures into clean OpenClaw-native tutorials and skills*
 - 📧 **[Gmail AI Draft Workflow That Writes in Your Real Voice](tutorials/gmail-ai-draft-real-voice.md)** — *Filter inbox noise, read full thread context, match real sent-mail tone, create in-thread drafts, and alert Telegram after every draft*
 - 🚀 **[QwenPaw on Sumopod + Growth Circle Custom Provider](tutorials/qwenpaw-sumopod-growth-circle.md)** — *Deploy QwenPaw from Sumopod Services, add Growth Circle as an OpenAI-compatible provider, wire free models, and connect Telegram fast*
@@ -95,6 +96,7 @@ Kumpulan 37 tutorial praktis untuk membangun automation dengan OpenClaw, dikelom
 
 Panduan instalasi, setup awal, dan konfigurasi dasar.
 
+- **[How to Back Up an OpenClaw VM to GitHub, Reset the Server, and Restore Everything into One Clean Workspace](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-vm-backup-reset-restore.md)** — Backup selective files yang penting, push ke GitHub, reset VPS dengan aman, lalu restore ke satu workspace yang jauh lebih rapi
 - **[QwenPaw on Sumopod + Growth Circle Custom Provider](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/qwenpaw-sumopod-growth-circle.md)** — Deploy QwenPaw tanpa setup VPS dari nol, tambah custom provider Growth Circle, dan sambungkan Telegram
 - **[OpenClaw + Alibaba Cloud Coding Plan: 8 Model AI dengan 1 API Key (Mulai $5/bulan)](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-alibaba-coding-plan.md)** — Setup hemat akses 8 model AI frontier lewat satu API key
 - **[⚠️ JANGAN Update ke OpenClaw 2026.3.7 - 2026.3.10 — Kimi 2.5 Tool Calling BROKEN!](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/avoid-openclaw-2026-3-7-kimi-bug.md)** — Guide versi yang bermasalah dan solusi upgrade ke 2026.3.11
