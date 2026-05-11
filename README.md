@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Tutorials-65-blue?style=for-the-badge" alt="65 Tutorials">
+  <img src="https://img.shields.io/badge/Tutorials-68-blue?style=for-the-badge" alt="65 Tutorials">
   <img src="https://img.shields.io/badge/Language-Bahasa_Indonesia-green?style=for-the-badge" alt="Indonesian">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT">
   <img src="https://img.shields.io/badge/OpenClaw-Community-orange?style=for-the-badge" alt="Community">
@@ -134,6 +134,9 @@ Otomasi Gmail, triage email, dan komunikasi WhatsApp.
 
 Bangun dashboard, monitoring, dan sistem notifikasi real-time.
 
+- **[⚡ OpenClaw for Generator and ATS Monitoring](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-genset-ats-monitoring.md)** — Real-world backup power monitoring pattern with ATS status, WhatsApp alerts, role access, alarm workflows, SUMOPOD VPS hosting, and custom consultation contact
+- **[💧 OpenClaw for Water Tank Monitoring and Pump Alerts](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-water-tank-monitoring.md)** — Practical water level, pump status, low-tank alert, multi-site utility workflow, WhatsApp visibility, SUMOPOD VPS hosting, and custom consultation contact
+- **[🏢 OpenClaw for Apartment Maintenance Operations](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-apartment-maintenance.md)** — Apartment maintenance request intake, ticket routing, SLA tracking, resident WhatsApp updates, technician workflow, SUMOPOD VPS hosting, and custom consultation contact
 - **[🚀 Membangun AI Agent Dashboard — Tutorial Lengkap (Bagian 1)](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/building-ai-agent-dashboard.md)** — Next.js 14 + Tailwind + shadcn/ui + Recharts dari nol
 - **[🏥 Service Health Dashboard with Auto-Retry](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/service-health-dashboard.md)** — Monitor layanan 24/7 + auto-retry + alert Telegram
 - **[Real-Time Notification System di Next.js dengan Auto-Health Checks](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/notification-system-nextjs-health-checks.md)** — Dashboard bell yang hidup dengan health check otomatis
