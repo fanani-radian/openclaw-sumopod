@@ -487,6 +487,117 @@ If you respect that boundary, the system becomes both safer and more useful.
 
 ---
 
+<!-- EXPANDED-3000 -->
+
+## 11. Field Commissioning Checklist
+
+A monitoring workflow only becomes useful after it survives commissioning. Do not skip this part. Most failed automation projects fail here, not in the dashboard code.
+
+Start with the electrical side. Confirm every dry contact, relay output, and sensor signal against the actual panel drawing. If the ATS says utility available, verify that the digital input changes when utility is isolated. If the genset says running, verify it from the controller, not from assumption. If fuel level is read through an analog sensor, compare the displayed value with a manual reading. The first version does not need perfect calibration, but it must be directionally correct.
+
+Then validate the software mapping. Each point should have a clear name, unit, source, and expected normal range. Avoid vague names like `input_01` or `status_a`. Use names a technician can understand six months later, such as `ats_position`, `utility_available`, `genset_running`, `low_fuel_alarm`, and `battery_voltage`. Good naming is boring, but it prevents operational mistakes.
+
+A simple commissioning table works well:
+
+| Signal | Field Test | Expected OpenClaw Status | Pass Criteria |
+|---|---|---|---|
+| Utility available | Isolate and restore utility source | ON then OFF then ON | Status changes within 10 seconds |
+| Genset running | Start genset manually | Running | Alert does not trigger false failure |
+| ATS on generator | Simulate transfer | Generator supply active | Operator receives state update |
+| Low fuel | Force alarm input or test switch | Low fuel alarm | WhatsApp alert sent to maintenance role |
+| Emergency stop | Test safe alarm contact only | E-stop active | Critical alert with escalation |
+
+For every test, capture timestamp, screenshot, and the person who confirmed it. This is not bureaucracy. It is how you stop arguments later when someone says, “the system never worked.”
+
+## 12. Alarm Tuning and False Alarm Control
+
+The fastest way to make operators ignore automation is to spam them.
+
+Genset and ATS monitoring should not send a WhatsApp alert for every tiny state transition. A transfer event may create several signals in a few seconds: utility fail, ATS moving, genset start, voltage available, ATS on generator. If each one becomes a separate loud alert, the system feels noisy.
+
+Use event grouping. When utility fails, start a short observation window, for example 30 to 60 seconds. During that window, collect related changes. Then send one concise message:
+
+> Utility failed at 14:03. Genset started successfully. ATS transferred to generator supply. Building load is on backup power. Fuel level 62 percent. Battery 25.8V.
+
+That is far better than five separate alerts.
+
+Also separate informational events from critical alarms:
+
+- **Info:** routine weekly test started, weekly test completed, generator exercised successfully
+- **Warning:** low fuel, battery voltage low, charger fault, long runtime above threshold
+- **Critical:** failed to start, failed to transfer, emergency stop, generator running but no output voltage
+
+Each level needs a different routing rule. Info can go to a dashboard and daily summary. Warning can go to the technician group. Critical should go to technician, supervisor, and optionally management after a delay.
+
+Add debounce windows too. If a digital input flickers for one second, do not wake up everyone. Require stable state for 3 to 10 seconds depending on the signal. For mechanical contacts, debounce matters. For critical alarms, keep debounce short but still present.
+
+## 13. Maintenance Reporting and Audit Trail
+
+A good backup power system is not just about emergency response. It also helps with maintenance discipline.
+
+OpenClaw can generate weekly or monthly summaries from the same event log:
+
+- Total genset runtime this week
+- Number of utility outage events
+- Longest outage duration
+- Number of failed starts
+- Fuel level trend
+- Battery voltage trend
+- ATS transfer count
+- Test run completion status
+- Open alarms and acknowledged alarms
+
+This creates a simple audit trail for building owners and industrial clients. Management does not need raw logs. They need proof that the standby power system is tested, monitored, and ready.
+
+A monthly report can be sent automatically as PDF or message summary. For example:
+
+```text
+Backup Power Monthly Summary
+Site: Warehouse Balikpapan
+Period: May 2026
+Utility outages: 3
+Total outage duration: 2h 14m
+Genset runtime: 3h 05m
+Failed starts: 0
+ATS transfer failures: 0
+Open issues: Battery charger warning since May 8
+Recommended action: Inspect charger circuit this week
+```
+
+This is where OpenClaw becomes more than a bot. It becomes an operations layer. It gives the client a record, not just a notification.
+
+## 14. Security and Access Control Notes
+
+Do not expose raw device control to everyone in a WhatsApp group. Monitoring and command execution must be separated.
+
+For most sites, start with read-only commands. Let operators ask for status, history, and alarms. Reserve acknowledge and test commands for supervisor roles. Reserve remote start or stop commands for a very controlled environment, and in many cases do not implement them at all.
+
+Recommended access model:
+
+| Role | Allowed Actions |
+|---|---|
+| Viewer | Check status, read summaries |
+| Operator | Acknowledge alarms, request history |
+| Technician | Add maintenance notes, close resolved alarms |
+| Supervisor | Manage escalation, approve test schedule |
+| Admin | Configure users, sites, and sensor mapping |
+
+Every action should be logged. If someone acknowledges a failed-start alarm, the log should show who did it, when, and from which channel. If a technician closes a low fuel issue, require a note. This protects the operator, the contractor, and the owner.
+
+## 15. Example Implementation Roadmap
+
+For a real client, do not sell the whole dream on day one. Sell a small reliable phase.
+
+Phase 1 should be status visibility. Connect the minimum signals: utility available, genset running, ATS source position, common alarm, low fuel, and battery voltage if available. Build WhatsApp status commands and critical alerts.
+
+Phase 2 should add history and reports. Store events, generate daily summaries, and create a simple dashboard. At this point, the client can see patterns: outages, runtime, test compliance, and unresolved alarms.
+
+Phase 3 should add predictive maintenance signals. Runtime-based service reminders, repeated low battery warnings, abnormal start duration, and unusual transfer behavior can all become maintenance insights.
+
+Phase 4 can add integration with ticketing, Google Sheets, ERP, CMMS, or AppSheet depending on the client environment.
+
+This roadmap keeps the project practical. It avoids the classic mistake of building a huge SCADA replacement when the client actually needs visibility, notification, and accountability first.
+
 ## Final Take
 
 OpenClaw is a very good fit for generator and ATS monitoring when you use it in the right role.

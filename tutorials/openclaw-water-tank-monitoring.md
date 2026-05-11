@@ -474,6 +474,165 @@ If you keep that split, the system stays maintainable and trustworthy.
 
 ---
 
+<!-- EXPANDED-3000 -->
+
+## 11. Sensor Placement and Calibration
+
+Water tank monitoring looks simple until the sensor is installed in the wrong place.
+
+A level sensor should not be placed where water turbulence gives unstable readings. If the inlet pipe creates heavy splashing, the reading may jump during filling. If the tank has internal partitions, one sensor may not represent the entire useful volume. If the tank shape is irregular, percentage level may not match actual usable water volume.
+
+Before writing automation rules, define what the reading means:
+
+- Is 0 percent the physical bottom or the lowest usable suction point?
+- Is 100 percent the overflow level or the safe high operating level?
+- Does the pump suction become unsafe below 15 percent?
+- Does the site need volume in liters or only percentage?
+- Is the tank vertical cylinder, rectangular, underground, or roof tank?
+
+For most operational use cases, exact liters are less important than reliable thresholds. The operator needs to know whether the tank is safe, low, critical, filling, or overflowing.
+
+A practical calibration table:
+
+| Level State | Sensor Range | Operational Meaning | Action |
+|---|---:|---|---|
+| Normal | 50 to 90 percent | Enough water for normal operation | No alert |
+| Watch | 30 to 50 percent | Level dropping, monitor closely | Dashboard flag |
+| Low | 15 to 30 percent | Pump or supply issue possible | WhatsApp warning |
+| Critical | below 15 percent | Risk of water outage or dry run | Escalate |
+| High | above 95 percent | Possible overflow or float issue | Warning |
+
+Calibration should be documented in the project handover. If the sensor is replaced later, the team should know how the thresholds were chosen.
+
+## 12. Pump Runtime and Dry-Run Protection
+
+Tank level is only half of the story. Pump behavior matters too.
+
+A pump that runs too often may indicate leakage, float switch failure, pressure issue, or undersized tank capacity. A pump that runs too long without increasing tank level may indicate dry run, broken impeller, closed valve, empty source tank, or blocked line.
+
+OpenClaw can detect simple patterns from status and level history:
+
+| Pattern | Possible Meaning |
+|---|---|
+| Pump ON but tank level not rising | Dry run, valve closed, source empty, pump fault |
+| Pump cycles very frequently | Leak, float switch issue, pressure problem |
+| Tank level drops unusually fast | High usage, leak, outlet valve issue |
+| Tank never reaches full level | Pump capacity issue, supply limitation, high demand |
+| Overflow level reached repeatedly | Float switch or stop control failure |
+
+You do not need advanced machine learning for the first version. Simple rules are enough:
+
+```text
+IF pump_status = ON
+AND tank_level_change < 2 percent
+AND duration > 10 minutes
+THEN send warning: Pump running but tank level is not rising.
+```
+
+This rule alone can prevent a lot of damage.
+
+For dry-run sensitive pumps, route the alert quickly. A burned pump is more expensive than a false warning. But still add debounce and duration checks, because momentary noise can create wrong conclusions.
+
+## 13. Multi-Tank and Multi-Site Design
+
+Many real buildings do not have one tank. They have ground tanks, roof tanks, transfer pumps, booster pumps, and sometimes separate tanks for different towers.
+
+Do not hardcode a single tank model. Use a site-based structure:
+
+```text
+site
+  building
+    tank
+      sensor
+      pump
+      alert rule
+```
+
+For example:
+
+| Site | Tank | Function | Alert Priority |
+|---|---|---|---|
+| Apartment A | Ground Tank 1 | Main storage | High |
+| Apartment A | Roof Tank East | Distribution | Critical |
+| Apartment A | Roof Tank West | Distribution | Critical |
+| Workshop | Process Tank | Production support | High |
+| Office | Domestic Tank | Toilet and pantry | Medium |
+
+This structure makes reporting easier. A manager can ask: “which tanks are below 30 percent?” The system can answer across all sites.
+
+For WhatsApp commands, keep it simple:
+
+```text
+/status water
+/status water apartment-a
+/status tank roof-east
+/alerts water today
+/report water weekly
+```
+
+The trick is not to expose database complexity to the user. The user should not care how many tables exist. They just need an answer.
+
+## 14. Maintenance Workflow
+
+A low tank alert is not the end of the workflow. Someone still has to inspect the cause.
+
+That means the system should create or suggest a maintenance action:
+
+- Check pump panel
+- Check source supply
+- Check float switch
+- Check valve position
+- Check sensor reading physically
+- Check for leakage
+- Confirm if usage spike is expected
+
+If integrated with a ticketing system, OpenClaw can create a ticket automatically for repeated or critical events. If not, it can send a structured WhatsApp message:
+
+```text
+Water Level Critical
+Site: Tower B
+Tank: Roof Tank West
+Level: 12 percent
+Pump: ON for 18 minutes
+Level trend: not rising
+Suggested checks:
+1. Source tank level
+2. Transfer pump condition
+3. Valve position
+4. Float switch
+Please reply ACK WATER-184 to acknowledge.
+```
+
+This message gives the technician context before they arrive. That saves time.
+
+## 15. Reporting That Facility Teams Actually Use
+
+A dashboard is nice, but reports are what management reads.
+
+Weekly water utility reports should answer a few simple questions:
+
+- Did any tank reach critical low level?
+- Which pump had abnormal runtime?
+- Were there overflow warnings?
+- Which site consumed water unusually fast?
+- Which alerts were acknowledged late?
+- Are there repeated issues at the same tank?
+
+A useful summary might look like this:
+
+```text
+Water Utility Weekly Summary
+Site: Residential Complex
+Critical low events: 2
+Longest low-level duration: 42 minutes
+Pump abnormal runtime: Transfer Pump 2, 3 events
+Overflow warnings: 0
+Repeated issue: Roof Tank West low level after 18:00
+Recommendation: inspect transfer pump schedule and evening demand pattern
+```
+
+Again, this is not fancy AI. This is disciplined operations. OpenClaw is useful because it connects the sensor, the message, the report, and the human workflow.
+
 ## Final Take
 
 OpenClaw is a very good fit for water tank monitoring when you use it as the operational intelligence layer rather than a fake PLC replacement.

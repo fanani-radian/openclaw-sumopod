@@ -619,6 +619,182 @@ That boundary keeps the system usable.
 
 ---
 
+<!-- EXPANDED-3000 -->
+
+## 14. Resident Intake Design
+
+The intake flow is the most important part of an apartment maintenance system. If residents cannot report issues easily, the rest of the workflow does not matter.
+
+Do not start with a complicated form. Start with the communication channel residents already use. In Indonesia, that usually means WhatsApp. A resident should be able to send:
+
+```text
+AC kamar utama bocor, air netes ke lantai. Unit 12B. Bisa dicek hari ini?
+```
+
+OpenClaw should convert that messy message into structured data:
+
+| Field | Example |
+|---|---|
+| Unit | 12B |
+| Category | AC / HVAC |
+| Issue | Water leakage from indoor unit |
+| Priority | Medium or High depending on severity |
+| Requested time | Today |
+| Resident contact | WhatsApp sender |
+| Attachment | Photo if provided |
+
+The resident should not need to know categories, ticket codes, or SLA rules. The system can infer those. But the system should ask follow-up questions when key data is missing.
+
+For example:
+
+```text
+Terima kasih. Untuk laporan AC bocor, boleh kirim nomor unit dan foto kondisi saat ini?
+```
+
+This keeps the flow human. It also prevents incomplete tickets.
+
+## 15. Technician Assignment Rules
+
+Technician routing can start simple. You do not need a complex workforce optimization engine on day one.
+
+Common routing rules:
+
+- Plumbing issues go to plumbing technician or general maintenance
+- Electrical issues go to electrical technician only
+- AC issues go to HVAC technician
+- Access card and door issues go to security or building admin
+- Structural leaks go to supervisor review first
+- Emergency issues notify both technician and supervisor
+
+A practical assignment table:
+
+| Category | Default Team | Escalation |
+|---|---|---|
+| Plumbing | Maintenance Team A | Supervisor after 4 hours |
+| Electrical | Electrical Technician | Supervisor immediately if safety risk |
+| AC | HVAC Vendor / Technician | Building manager if repeated issue |
+| Lift | Lift Vendor | Supervisor immediately |
+| Security access | Security desk | Building admin |
+| Civil / leak | Maintenance Team B | Supervisor if water damage |
+
+The goal is not perfect routing. The goal is to stop tickets from sitting in the wrong chat group.
+
+If technician availability is unknown, round-robin assignment is acceptable for MVP. Later, add workload balancing, shift schedules, skill tags, and vendor SLA rules.
+
+## 16. SLA That Does Not Lie
+
+SLA rules should reflect real operational capacity. Do not promise response in 15 minutes if the building has one technician covering three towers.
+
+Start with categories:
+
+| Priority | Example | Response Target | Resolution Target |
+|---|---|---:|---:|
+| Critical | Electrical hazard, major leak, lift trapped passenger | 10 minutes | Immediate handling |
+| High | AC leak, pipe leak, access failure | 30 minutes | Same day |
+| Medium | Minor repair, noisy fixture, small seepage | 4 hours | 2 working days |
+| Low | Cosmetic issue, scheduled inspection | 1 working day | Scheduled |
+
+Track two different things: first response and resolution. Many teams confuse them. A technician saying “received” is not the same as fixing the problem.
+
+OpenClaw can send reminders:
+
+- Ticket created
+- Technician assigned
+- First response due soon
+- SLA breached
+- Resident update required
+- Ticket waiting for resident confirmation
+- Ticket closed
+
+This makes SLA visible without needing everyone to open a dashboard.
+
+## 17. Photo Evidence and Closure Discipline
+
+Maintenance tickets need evidence. Not because you distrust technicians, but because property operations need accountability.
+
+For each ticket, require:
+
+- Before photo if possible
+- Technician note
+- Parts used if any
+- After photo
+- Closure category: fixed, temporary fix, vendor needed, resident unavailable, duplicate, rejected
+- Resident confirmation if required
+
+A good closure message to resident:
+
+```text
+Update ticket MT-2405-018
+Issue: AC leak at Unit 12B
+Status: Completed
+Technician note: Drain line cleaned and water test completed.
+Please reply OK if the issue is resolved, or REOPEN if the problem continues.
+```
+
+This is much better than “done.” It gives the resident a clear next action.
+
+For management, photo evidence reduces disputes. If a resident says the team never came, there is a timestamped record. If the same issue repeats, the history helps diagnose root cause.
+
+## 18. Vendor and Spare Part Handling
+
+Not all maintenance work is internal. Lift, fire alarm, access control, pumps, and HVAC may involve vendors.
+
+OpenClaw can still manage the workflow:
+
+- Create ticket from resident or staff report
+- Classify as vendor-required
+- Notify vendor contact
+- Track vendor response
+- Store quotation or service report
+- Remind building team if vendor is late
+- Update resident with realistic status
+
+For spare parts, keep it lightweight:
+
+| Field | Example |
+|---|---|
+| Part name | AC drain hose |
+| Quantity | 2 meters |
+| Source | Internal stock / purchase |
+| Approval required | Yes or No |
+| Estimated cost | Optional |
+| Status | requested, approved, purchased, installed |
+
+This is not a full ERP. It is enough to stop tickets from disappearing because “waiting spare part” was only mentioned in a chat.
+
+## 19. Monthly Operations Review
+
+Once data is structured, apartment management gets a useful monthly review.
+
+Useful metrics:
+
+- Tickets created by category
+- Average first response time
+- Average resolution time
+- SLA breach count
+- Repeat issues by unit
+- Repeat issues by asset
+- Technician workload
+- Vendor delay count
+- Tickets reopened by resident
+- Most common complaint category
+
+Example summary:
+
+```text
+Apartment Maintenance Monthly Review
+Total tickets: 184
+Top category: Plumbing, 42 tickets
+Average first response: 22 minutes
+Average resolution: 1.4 days
+SLA breaches: 9
+Repeat unit issue: Unit 18C, bathroom leak repeated 3 times
+Vendor delay: Lift vendor, 2 late responses
+Recommendation: inspect vertical plumbing line for Tower B floors 16-20
+```
+
+This is where the system becomes strategic. The building team can stop only reacting and start seeing patterns.
+
 ## Final Take
 
 OpenClaw is a strong fit for apartment maintenance operations because it can sit between real human communication and structured operational data.
