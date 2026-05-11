@@ -7,6 +7,8 @@
 
 ---
 
+![OpenClaw apartment maintenance hero](../images/tutorials/openclaw-apartment-maintenance-day.jpg)
+
 ## Before We Start
 
 This is the technical English version.
@@ -25,8 +27,6 @@ If you want a custom apartment maintenance or property operations system like th
 - **+628115443456**
 
 Consultation is available.
-
-![OpenClaw apartment maintenance hero](../images/tutorials/openclaw-apartment-maintenance-day.jpg)
 
 ---
 

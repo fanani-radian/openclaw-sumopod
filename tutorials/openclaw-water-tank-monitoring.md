@@ -7,6 +7,8 @@
 
 ---
 
+![OpenClaw water tank monitoring hero](../images/tutorials/openclaw-water-tank-day.jpg)
+
 ## Before We Start
 
 This is the technical English version.
@@ -25,8 +27,6 @@ If you want a custom monitoring system like this for a building, plant, workshop
 - **+628115443456**
 
 Consultation is available.
-
-![OpenClaw water tank monitoring hero](../images/tutorials/openclaw-water-tank-day.jpg)
 
 ---
 
