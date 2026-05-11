@@ -19,6 +19,7 @@
 
 ## Recently Added
 
+- ⚓ **[Using OpenClaw as the Backbone of a Simple IoT Port Lighting System](tutorials/openclaw-iot-port-lighting-whatsapp.md)** — *Monitor, switch, alert, and log 16 x 1000W floodlights from WhatsApp using OpenClaw, cloud data, access control, and hardware-flexible field integration*
 - 🧹 **[How to Back Up an OpenClaw VM to GitHub, Reset the Server, and Restore Everything into One Clean Workspace](tutorials/openclaw-vm-backup-reset-restore.md)** — *Audit a messy OpenClaw VM, preserve identity and memory, push the right files to GitHub, reset the VPS, and restore into a cleaner structure*
 - ☁️ **[How to Use `google/skills` as a Practical Skill Library for OpenClaw](tutorials/google-skills-openclaw-management.md)** — *Review the Google skill repo, adapt only the relevant parts, and turn upstream procedures into clean OpenClaw-native tutorials and skills*
 - 📧 **[Gmail AI Draft Workflow That Writes in Your Real Voice](tutorials/gmail-ai-draft-real-voice.md)** — *Filter inbox noise, read full thread context, match real sent-mail tone, create in-thread drafts, and alert Telegram after every draft*
@@ -144,6 +145,7 @@ Bangun dashboard, monitoring, dan sistem notifikasi real-time.
 
 Hubungkan OpenClaw dengan layanan eksternal dan workflow automation.
 
+- **[Using OpenClaw as the Backbone of a Simple IoT Port Lighting System](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/openclaw-iot-port-lighting-whatsapp.md)** — Arsitektur praktis OpenClaw untuk monitor, kontrol, power logging, role access, dan WhatsApp alerts pada sistem lampu pelabuhan
 - **[🔍 gog CLI — Google Workspace dari Terminal](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/gog-cli-google-workspace.md)** — Kontrol Gmail, Drive, Docs, Sheets, Calendar via command line
 - **[OpenClaw + n8n Integration Tutorial](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/n8n-integration.md)** — Hubungkan ke 400+ app lewat n8n workflow tanpa coding
 - **[Integrating External Services with OpenClaw](https://github.com/fanani-radian/openclaw-sumopod/blob/main/tutorials/integrating-external-services-openclaw.md)** — Panduan umum integrasi API dan layanan eksternal
