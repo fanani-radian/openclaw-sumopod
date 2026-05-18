@@ -19,6 +19,7 @@
 
 ## Recently Added
 
+- 💡 **[Quick Tip: 📊 Heartbeat Report - 18:02 WITA](tip/auto/quick-tip-heartbeat-report-1802-wita.md)** — *371 words*
 - 🏠 **[Building a Boarding House Operations System on OpenClaw](tutorials/openclaw-kost-whatsapp-billing.md)** — *Use one WhatsApp bot for room inquiries, pricing, due-date reminders, invoices, QRIS payments, and owner escalation for a boarding house business*
 - ⚓ **[Using OpenClaw as the Backbone of a Simple IoT Port Lighting System](tutorials/openclaw-iot-port-lighting-whatsapp.md)** — *Monitor, switch, alert, and log 16 x 1000W floodlights from WhatsApp using OpenClaw, cloud data, access control, and hardware-flexible field integration*
 - 🧹 **[How to Back Up an OpenClaw VM to GitHub, Reset the Server, and Restore Everything into One Clean Workspace](tutorials/openclaw-vm-backup-reset-restore.md)** — *Audit a messy OpenClaw VM, preserve identity and memory, push the right files to GitHub, reset the VPS, and restore into a cleaner structure*
